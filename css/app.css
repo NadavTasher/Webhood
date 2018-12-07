@@ -10,7 +10,7 @@ body {
     background-size: cover;
 }
 
-body div {
+body > div {
     position: absolute;
     top: 0;
     bottom: 0;
