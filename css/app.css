@@ -17,6 +17,10 @@ body > div {
     width: 96vw;
 }
 
+body > div > div {
+    justify-content: start;
+}
+
 html,
 body {
     display: flex;
