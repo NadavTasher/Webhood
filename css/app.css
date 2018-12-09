@@ -42,6 +42,7 @@ option,
 button {
     font-family: Arial, ArialHebrew, sans-serif;
     font-size: x-large;
+    text-align-last: center;
     text-align: center;
     color: #FFF;
     margin: 1vh;
