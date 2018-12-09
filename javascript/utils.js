@@ -1,17 +1,17 @@
-function hideView(view) {
-    view.style.display = "none";
+function hide(v) {
+    if (typeof "" === typeof v || typeof '' === typeof v) {
+        get(v).style.display = "none";
+    } else {
+        v.state.display = "none";
+    }
 }
 
-function showView(view) {
-    view.style.removeProperty("display");
-}
-
-function hide(id) {
-    get(id).style.display = "none";
-}
-
-function show(id) {
-    get(id).style.removeProperty("display");
+function show(v) {
+    if (typeof "" === typeof v || typeof '' === typeof v) {
+        get(v).style.removeProperty("display");
+    } else {
+        v.style.removeProperty("display");
+    }
 }
 
 function get(id) {
