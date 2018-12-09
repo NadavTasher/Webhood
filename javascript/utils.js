@@ -2,7 +2,7 @@ function hide(v) {
     if (typeof "" === typeof v || typeof '' === typeof v) {
         get(v).style.display = "none";
     } else {
-        v.state.display = "none";
+        v.style.display = "none";
     }
 }
 
