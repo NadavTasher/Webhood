@@ -45,7 +45,7 @@ button {
     font-size: x-large;
     text-align-last: center;
     text-align: center;
-    color: #FFF;
+    color: #000;
     margin: 1vh;
     padding: 1vh;
 }
@@ -57,4 +57,5 @@ button {
     background-color: #333;
     border-radius: 1vh;
     border-color: transparent;
+    color: #FFF;
 }
