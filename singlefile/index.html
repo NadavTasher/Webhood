@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!--
+Created By NadavTasher
+https://github.com/NadavTasher/WebAppBase/
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, minimal-ui"/>
+    <meta name="theme-color" content="#FFFFFF"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+    <meta name="apple-mobile-web-app-title" content="AppName"/>
+    <link rel="apple-touch-icon" href="images/icon_apple.png"/>
+    <link rel="icon" href="images/icon.png"/>
+    <title>AppName</title>
+    <style>
+        html {
+            overflow-x: hidden;
+        }
+
+        body {
+            background-repeat: no-repeat;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+
+        body > div {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 96vw;
+        }
+
+        body > div > div {
+            justify-content: start;
+        }
+
+        html,
+        body {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        div,
+        form {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        p,
+        input,
+        select,
+        option,
+        button {
+            -webkit-appearance: none;
+            font-family: Arial, ArialHebrew, sans-serif;
+            font-size: x-large;
+            text-align-last: center;
+            text-align: center;
+            color: #000;
+            margin: 1vh;
+            padding: 1vh;
+        }
+
+        input,
+        select,
+        option,
+        button {
+            background-color: #333;
+            border-radius: 1vh;
+            border-color: transparent;
+            color: #FFF;
+        }
+    </style>
+    <script>
+        function load() {
+        }
+
+        function hide(v) {
+            if (typeof "" === typeof v || typeof '' === typeof v) {
+                get(v).style.display = "none";
+            } else {
+                v.style.display = "none";
+            }
+        }
+
+        function show(v) {
+            if (typeof "" === typeof v || typeof '' === typeof v) {
+                get(v).style.removeProperty("display");
+            } else {
+                v.style.removeProperty("display");
+            }
+        }
+
+        function get(id) {
+            return document.getElementById(id);
+        }
+
+        function clear(view) {
+            while (view.firstChild) {
+                view.removeChild(view.firstChild);
+            }
+        }
+
+        function title(title) {
+            document.title = title;
+        }
+
+        function theme(color) {
+            let meta = document.getElementsByTagName("meta")["theme-color"];
+            if (meta !== undefined) {
+                meta.content = color;
+            } else {
+                meta = document.createElement("meta");
+                meta.name = "theme-color";
+                meta.content = color;
+                document.head.appendChild(meta);
+            }
+
+        }
+    </script>
+</head>
+<body onload="load()">
+<div>
+    <div>
+        <!--Your App Body-->
+    </div>
+</div>
+</body>
+</html>
