@@ -40,3 +40,10 @@ function theme(color) {
     }
 
 }
+
+function worker(w = "worker.js") {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(w).then((result) => {
+        });
+    }
+}
