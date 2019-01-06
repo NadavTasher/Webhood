@@ -3,22 +3,22 @@ html {
 }
 
 body {
-    background-repeat: no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+    background-repeat: no-repeat;
+    background-color: #FFFFFF;
 }
 
 body > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     position: absolute;
     top: 0;
     bottom: 0;
     width: 96vw;
-}
-
-body > div > div {
-    justify-content: start;
 }
 
 html,
@@ -32,7 +32,6 @@ div,
 form {
     display: flex;
     flex-direction: column;
-    justify-content: center;
 }
 
 p,
