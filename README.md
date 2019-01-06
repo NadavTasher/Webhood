@@ -1,2 +1,2 @@
 # WebAppBase
-Base project for a mobile/desktop web app.
+Base project for a mobile/desktop progressive web app.
