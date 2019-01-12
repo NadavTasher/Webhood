@@ -1,7 +1,7 @@
 self.addEventListener('install', function (event) {
     event.waitUntil(
         caches.open('v1').then(function (cache) {
-            fetch("public/offline.html").then((response) => {
+            fetch("resources/offline.html").then((response) => {
                 cache.put("offline.html", response);
             });
         })
