@@ -53,8 +53,16 @@ input,
 select,
 option,
 button {
-    background-color: #333;
+    transition-duration: 0.4s;
+    background-color: #555;
     border-radius: 1vh;
     border-color: transparent;
     color: #FFF;
+}
+
+input:hover,
+select:hover,
+option:hover,
+button:hover {
+    background-color: #333;
 }
