@@ -9,7 +9,11 @@ self.addEventListener('install', function (event) {
 });
 self.addEventListener('fetch', function (event) {
     event.respondWith(
-        fetch(event.request).then(function (fetchResponse) {
+        fetch(event.request, {
+            cache: "no-store",
+            headers: {
+                'Cache-Control': 'no-cache'
+            }).then(function (fetchResponse) {
             return fetchResponse;
         }).catch(function () {
             return caches.match(new Request("offline.html")) || new Response("Offline");
