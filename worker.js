@@ -13,7 +13,8 @@ self.addEventListener('fetch', function (event) {
             cache: "no-store",
             headers: {
                 'Cache-Control': 'no-cache'
-            }).then(function (fetchResponse) {
+            }
+        }).then(function (fetchResponse) {
             return fetchResponse;
         }).catch(function () {
             return caches.match(new Request("offline.html")) || new Response("Offline");
