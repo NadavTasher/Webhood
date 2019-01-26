@@ -9,7 +9,6 @@ self.addEventListener('install', function (event) {
 });
 self.addEventListener('fetch', function (event) {
     event.request.cache = "no-store";
-    event.request.headers.set("Cache-Control", "no-cache");
     event.respondWith(
         fetch(event.request).then(function (fetchResponse) {
             return fetchResponse;
