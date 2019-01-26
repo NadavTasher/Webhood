@@ -11,3 +11,9 @@ Find `AppName` and replace it with your app name.
 Find `AppDescription` and replace it with your app description.
 
 Find `#FFFFFF` and replace it with your app color.
+
+Files to replace:
+1. index.html
+2. css/app.css
+3. resources/manifest.json
+4. resources/offline.html
