@@ -1,21 +1,23 @@
-function hide(v) {
-    if (typeof "" === typeof v || typeof '' === typeof v) {
-        get(v).style.display = "none";
-    } else {
-        v.style.display = "none";
+function view(v) {
+    let element = get(v);
+    let parent = element.parentNode;
+    for (let n = 0; n < parent.children.length; n++) {
+        hide(parent.children[n]);
     }
+    show(element);
+}
+
+function hide(v) {
+    get(v).style.display = "none";
 }
 
 function show(v) {
-    if (typeof "" === typeof v || typeof '' === typeof v) {
-        get(v).style.removeProperty("display");
-    } else {
-        v.style.removeProperty("display");
-    }
+    get(v).style.removeProperty("display");
+
 }
 
-function get(id) {
-    return document.getElementById(id);
+function get(v) {
+    return (typeof "" === typeof v || typeof '' === typeof v) ? document.getElementById(v) : v;
 }
 
 function clear(view) {
