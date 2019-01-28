@@ -35,6 +35,7 @@ form {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
 }
 
 p,
@@ -43,6 +44,7 @@ select,
 option,
 button {
     -webkit-appearance: none;
+    align-self: stretch;
     font-family: Arial, ArialHebrew, sans-serif;
     font-size: x-large;
     text-align-last: center;
