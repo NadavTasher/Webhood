@@ -20,7 +20,8 @@ function get(v) {
     return (typeof "" === typeof v || typeof '' === typeof v) ? document.getElementById(v) : v;
 }
 
-function clear(view) {
+function clear(v) {
+    let view = get(v);
     while (view.firstChild) {
         view.removeChild(view.firstChild);
     }
