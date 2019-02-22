@@ -44,6 +44,49 @@ function theme(color) {
 
 }
 
+function gestures(up, down, left, right, upgoing, downgoing, leftgoing, rightgoing) {
+    let touchX, touchY, deltaX, deltaY;
+    document.ontouchstart = (event) => {
+        touchX = event.touches[0].clientX;
+        touchY = event.touches[0].clientY;
+    };
+    document.ontouchmove = (event) => {
+        deltaX = touchX - event.touches[0].clientX;
+        deltaY = touchY - event.touches[0].clientY;
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            if (deltaX > 0) {
+                if (leftgoing !== undefined) leftgoing();
+            } else {
+                if (rightgoing !== undefined) rightgoing();
+            }
+        } else {
+            if (deltaY > 0) {
+                if (upgoing !== undefined) upgoing();
+            } else {
+                if (downgoing !== undefined) downgoing();
+            }
+        }
+
+    };
+    document.ontouchend = () => {
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            if (deltaX > 0) {
+                if (left !== undefined) left();
+            } else {
+                if (right !== undefined) right();
+            }
+        } else {
+            if (deltaY > 0) {
+                if (up !== undefined) up();
+            } else {
+                if (down !== undefined) down();
+            }
+        }
+        touchX = undefined;
+        touchY = undefined;
+    };
+}
+
 function worker(w = "worker.js") {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register(w).then((result) => {
