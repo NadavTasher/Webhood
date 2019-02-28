@@ -13,11 +13,14 @@ function hide(v) {
 
 function show(v) {
     get(v).style.removeProperty("display");
-
 }
 
 function get(v) {
     return (typeof "" === typeof v || typeof '' === typeof v) ? document.getElementById(v) : v;
+}
+
+function visible(v) {
+    return (get(v).style.getPropertyValue("display") !== "none");
 }
 
 function clear(v) {
