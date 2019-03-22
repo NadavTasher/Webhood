@@ -47,10 +47,10 @@ function theme(color) {
 
 }
 
-function download(file, data) {
+function download(file, data, type = "text/plain", encoding = "utf8") {
     let link = document.createElement("a");
     link.download = file;
-    link.href = "data:text/plain," + data;
+    link.href = "data:" + type + ";" + encoding + "," + data;
     link.click();
 }
 
