@@ -47,6 +47,13 @@ function theme(color) {
 
 }
 
+function download(file, data) {
+    let link = document.createElement("a");
+    link.download = file;
+    link.href = "data:text/plain," + data;
+    link.click();
+}
+
 function gestures(up, down, left, right, upgoing, downgoing, leftgoing, rightgoing) {
     let touchX, touchY, deltaX, deltaY;
     document.ontouchstart = (event) => {
