@@ -54,6 +54,23 @@ function download(file, data, type = "text/plain", encoding = "utf8") {
     link.click();
 }
 
+function slide(v, direction = false, callback = undefined) {
+    let view = get(v);
+    let current = -(view.offsetWidth + view.offsetLeft);
+    let interval = setInterval(function () {
+        if (current < 0) {
+            current++;
+            view.style.position = "relative";
+            view.style[direction ? "right" : "left"] = current + "px";
+        } else {
+            clearInterval(interval);
+            view.style.removeProperty(direction ? "right" : "left");
+            view.style.removeProperty("position");
+            if (callback !== undefined) callback();
+        }
+    }, 1);
+}
+
 function gestures(up, down, left, right, upgoing, downgoing, leftgoing, rightgoing) {
     let touchX, touchY, deltaX, deltaY;
     document.ontouchstart = (event) => {
