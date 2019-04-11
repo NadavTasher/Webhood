@@ -40,6 +40,10 @@ form {
     min-height: fit-content;
 }
 
+div > div, div > form {
+    align-self: stretch;
+}
+
 p,
 input,
 select,
