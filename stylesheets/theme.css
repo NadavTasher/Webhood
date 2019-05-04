@@ -8,8 +8,8 @@ body {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    background: no-repeat fixed;
-}
+    background-attachment: fixed;
+    background-repeat: no-repeat;}
 
 body > div {
     display: flex;
