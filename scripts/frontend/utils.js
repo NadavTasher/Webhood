@@ -144,7 +144,7 @@ function html() {
                 method: "get"
             }).then(response => {
                 response.text().then((app) => {
-                    document.body.children[0].innerHTML = template.replace("<!--Your App Body-->", app);
+                    document.body.children[0].innerHTML = template.replace("<!--App Body-->", app);
                 });
             });
         });
