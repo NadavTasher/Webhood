@@ -37,9 +37,9 @@
       "name": "layout",
       "description": "App Layout",
       "pattern": ".+",
-      "needle": "<!--Your App Body-->",
+      "needle": "<!--Your App Layout-->",
       "haystacks": [
-        "index.html"
+        "layouts/app.html"
       ]
     },
     {
