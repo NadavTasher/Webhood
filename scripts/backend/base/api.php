@@ -41,6 +41,14 @@ function filter($source)
     return $source;
 }
 
+function put($api, $type, $key, $value)
+{
+    global $result;
+    if (!isset($result->$api)) $result->$api = new stdClass();
+    if (!isset($result->$api->$type)) $result->$api->$type = new stdClass();
+    $result->$api->$type->$key = $value;
+}
+
 function random($length)
 {
     $current = str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")[0];
@@ -48,14 +56,6 @@ function random($length)
         return $current . random($length - 1);
     }
     return "";
-}
-
-function put($api, $type, $key, $value)
-{
-    global $result;
-    if (!isset($result->$api)) $result->$api = new stdClass();
-    if (!isset($result->$api->$type)) $result->$api->$type = new stdClass();
-    $result->$api->$type->$key = $value;
 }
 
 function result($api, $action, $result)
