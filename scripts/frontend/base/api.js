@@ -44,9 +44,11 @@ function api(endpoint = null, api = null, action = null, parameters = null, call
                                 callback(false, null, status);
                             }
                         }
+                    } else {
+                        callback(false, null, "Base API not detected in JSON");
                     }
                 } else {
-                    callback(false, null, "\"" + api + "\" not found in JSON");
+                    callback(false, null, "Base API (\"" + api + "\") not found in JSON");
                 }
             }
         });
