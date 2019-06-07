@@ -15,30 +15,38 @@ function animate(v, from, to, seconds, property, callback = undefined) {
     };
 }
 
-function api(endpoint = "", api = "", action = "", parameters = {}, callback = undefined, body = new FormData()) {
-    body.append(api, JSON.stringify({
-        action: action,
-        parameters: parameters
-    }));
+function api(endpoint = undefined, api = undefined, action = undefined, parameters = undefined, callback = undefined, body = new FormData()) {
+    if (api !== undefined) {
+        let content = {};
+        if (action !== undefined) {
+            content.action = action;
+            if (parameters !== undefined) {
+                content.parameters = parameters;
+            }
+        }
+        body.append(api, JSON.stringify(content));
+    }
     fetch(endpoint, {
         method: "post",
         body: body
     }).then(response => {
         response.text().then((result) => {
-            if (callback !== undefined) {
+            if (callback !== undefined && api !== undefined && action !== undefined) {
                 let json = JSON.parse(result);
                 if (json.hasOwnProperty(api)) {
-                    if (json[api].hasOwnProperty(action)) {
-                        if (json[api][action].hasOwnProperty("success")) {
-                            callback(json[api][action].success, json[api][action]);
-                        } else {
-                            callback(true, json[api][action]);
+                    if (json[api].hasOwnProperty("status") && json[api].hasOwnProperty("result")) {
+                        if (json[api]["status"].hasOwnProperty(action) && json[api]["result"].hasOwnProperty(action)) {
+                            let status = json[api]["status"][action];
+                            let result = json[api]["result"][action];
+                            if (status === true) {
+                                callback(true, result, undefined);
+                            } else {
+                                callback(false, undefined, status);
+                            }
                         }
-                    } else {
-                        callback(false, {});
                     }
                 } else {
-                    callback(false, {});
+                    callback(false, undefined, "\"" + api + "\" not found in JSON");
                 }
             }
         });
