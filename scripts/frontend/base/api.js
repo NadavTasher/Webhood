@@ -1,4 +1,4 @@
-function animate(v, from, to, seconds, property, callback = undefined) {
+function animate(v, from, to, seconds, property, callback = null) {
     let view = get(v);
     view.style.removeProperty(property);
     view.style.position = "relative";
@@ -10,17 +10,17 @@ function animate(v, from, to, seconds, property, callback = undefined) {
     animation.onfinish = () => {
         view.style[property] = to;
         view.style.animationTimingFunction = null;
-        if (callback !== undefined)
+        if (callback !== null)
             callback();
     };
 }
 
-function api(endpoint = undefined, api = undefined, action = undefined, parameters = undefined, callback = undefined, body = new FormData()) {
-    if (api !== undefined) {
+function api(endpoint = null, api = null, action = null, parameters = null, callback = null, body = new FormData()) {
+    if (api !== null) {
         let content = {};
-        if (action !== undefined) {
+        if (action !== null) {
             content.action = action;
-            if (parameters !== undefined) {
+            if (parameters !== null) {
                 content.parameters = parameters;
             }
         }
@@ -31,7 +31,7 @@ function api(endpoint = undefined, api = undefined, action = undefined, paramete
         body: body
     }).then(response => {
         response.text().then((result) => {
-            if (callback !== undefined && api !== undefined && action !== undefined) {
+            if (callback !== null && api !== null && action !== null) {
                 let json = JSON.parse(result);
                 if (json.hasOwnProperty(api)) {
                     if (json[api].hasOwnProperty("status") && json[api].hasOwnProperty("result")) {
@@ -39,14 +39,14 @@ function api(endpoint = undefined, api = undefined, action = undefined, paramete
                             let status = json[api]["status"][action];
                             let result = json[api]["result"][action];
                             if (status === true) {
-                                callback(true, result, undefined);
+                                callback(true, result, null);
                             } else {
-                                callback(false, undefined, status);
+                                callback(false, null, status);
                             }
                         }
                     }
                 } else {
-                    callback(false, undefined, "\"" + api + "\" not found in JSON");
+                    callback(false, null, "\"" + api + "\" not found in JSON");
                 }
             }
         });
@@ -86,15 +86,15 @@ function gestures(up, down, left, right, upgoing, downgoing, leftgoing, rightgoi
         deltaY = touchY - event.touches[0].clientY;
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
             if (deltaX > 0) {
-                if (leftgoing !== undefined) leftgoing();
+                if (leftgoing !== null) leftgoing();
             } else {
-                if (rightgoing !== undefined) rightgoing();
+                if (rightgoing !== null) rightgoing();
             }
         } else {
             if (deltaY > 0) {
-                if (upgoing !== undefined) upgoing();
+                if (upgoing !== null) upgoing();
             } else {
-                if (downgoing !== undefined) downgoing();
+                if (downgoing !== null) downgoing();
             }
         }
 
@@ -102,19 +102,19 @@ function gestures(up, down, left, right, upgoing, downgoing, leftgoing, rightgoi
     document.ontouchend = () => {
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
             if (deltaX > 0) {
-                if (left !== undefined) left();
+                if (left !== null) left();
             } else {
-                if (right !== undefined) right();
+                if (right !== null) right();
             }
         } else {
             if (deltaY > 0) {
-                if (up !== undefined) up();
+                if (up !== null) up();
             } else {
-                if (down !== undefined) down();
+                if (down !== null) down();
             }
         }
-        touchX = undefined;
-        touchY = undefined;
+        touchX = null;
+        touchY = null;
     };
 }
 
@@ -122,7 +122,7 @@ function hide(v) {
     get(v).style.display = "none";
 }
 
-function html(callback = undefined) {
+function html(callback = null) {
     fetch("layouts/template.html", {
         method: "get"
     }).then(response => {
@@ -132,7 +132,7 @@ function html(callback = undefined) {
             }).then(response => {
                 response.text().then((app) => {
                     document.body.children[0].innerHTML = template.replace("<!--App Body-->", app);
-                    if (callback !== undefined) callback();
+                    if (callback !== null) callback();
                 });
             });
         });
@@ -145,7 +145,7 @@ function show(v) {
 
 function theme(color) {
     let meta = document.getElementsByTagName("meta")["theme-color"];
-    if (meta !== undefined) {
+    if (meta !== null) {
         meta.content = color;
     } else {
         meta = document.createElement("meta");
@@ -173,7 +173,7 @@ function visible(v) {
     return (get(v).style.getPropertyValue("display") !== "none");
 }
 
-function slide(v, motion = true, direction = true, callback = undefined) {
+function slide(v, motion = true, direction = true, callback = null) {
     let offsets = {
         right: window.innerWidth - (get(v).getBoundingClientRect().right - get(v).offsetWidth),
         left: -(get(v).getBoundingClientRect().left + get(v).offsetWidth)
