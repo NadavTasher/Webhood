@@ -6,7 +6,7 @@
 function animate(v, from, to, seconds, property, callback = null) {
     let view = get(v);
     view.style.removeProperty(property);
-    if (view.style.position.length === 0)
+    if (getComputedStyle(view).position === "static")
         view.style.position = "relative";
     view.style.animationTimingFunction = "linear";
     let fromFrame = {}, toFrame = {};
