@@ -55,7 +55,9 @@ a, p, input, select, option, button, table, textarea {
 a, p, input, select, option, button, table {
     display: flex;
     justify-content: center;
+    justify-items: center;
     align-items: center;
+    align-content: center;
 }
 
 input, select, option, button, textarea {
