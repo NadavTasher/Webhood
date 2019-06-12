@@ -3,6 +3,28 @@
  * https://github.com/NadavTasher/WebAppBase/
  **/
 
+function animate(v, from, to, seconds, property, keep = false, callback = null) {
+    let view = get(v);
+    // view.removeAttribute("style");
+    let position = getComputedStyle(view).position;
+    if (position === "static" || position === "sticky") {
+        view.style.position = "relative";
+    }
+    let fired = false;
+    let finish = (isTimeout) => {
+        if (!fired && callback !== null) {
+            fired = true;
+            callback();
+        }
+    };
+    setTimeout(() => finish(true), seconds * 1000 + 100);
+    view.animate([{[property]: from}, {[property]: to}], {
+        duration: seconds * 1000,
+        fill: keep ? "forwards" : "backwards",
+        easing: "linear"
+    }).onfinish = () => finish(false);
+}
+
 function api(endpoint = null, api = null, action = null, parameters = null, callback = null, form = body()) {
     fetch(endpoint, {
         method: "post",
@@ -161,6 +183,15 @@ function view(v) {
 
 function visible(v) {
     return (get(v).style.getPropertyValue("display") !== "none");
+}
+
+function slide(v, motion = true, direction = true, callback = null) {
+    let offsets = {
+        right: window.innerWidth - (get(v).getBoundingClientRect().right - get(v).offsetWidth),
+        left: -(get(v).getBoundingClientRect().left + get(v).offsetWidth)
+    };
+    let offset = direction ? offsets.right : offsets.left;
+    animate(v, (motion ? offset : 0) + "px", (!motion ? offset : 0) + "px", 0.5, "left", false, callback);
 }
 
 function worker(w = "worker.js") {
