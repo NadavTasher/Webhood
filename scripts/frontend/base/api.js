@@ -3,34 +3,6 @@
  * https://github.com/NadavTasher/WebAppBase/
  **/
 
-function animate(v, from, to, seconds, property, callback = null) {
-    let view = get(v);
-    view.style.removeProperty(property);
-    let position = getComputedStyle(view).position;
-    if (position === "static" || position === "sticky")
-        view.style.position = "relative";
-    setTimeout(() => {
-        view.style[property] = from;
-        view.style.transition = seconds + "s";
-        view.style.webkitTransition = seconds + "s";
-        view.style.transitionTimingFunction = "linear";
-        view.style.webkitTransitionTimingFunction = "linear";
-        setTimeout(() => {
-            view.style[property] = to;
-            let onend = () => {
-                view.transition = null;
-                view.style.transitionTimingFunction = null;
-                view.style.webkitTransitionTimingFunction = null;
-                if (callback !== null) {
-                    callback();
-                }
-            };
-            view.transitionend = onend;
-            view.webkitTransitionEnd = onend;
-        }, 100);
-    }, 0);
-}
-
 function api(endpoint = null, api = null, action = null, parameters = null, callback = null, form = body()) {
     fetch(endpoint, {
         method: "post",
@@ -189,15 +161,6 @@ function view(v) {
 
 function visible(v) {
     return (get(v).style.getPropertyValue("display") !== "none");
-}
-
-function slide(v, motion = true, direction = true, callback = null) {
-    let offsets = {
-        right: window.innerWidth - (get(v).getBoundingClientRect().right - get(v).offsetWidth),
-        left: -(get(v).getBoundingClientRect().left + get(v).offsetWidth)
-    };
-    let offset = direction ? offsets.right : offsets.left;
-    animate(v, (motion ? offset : 0) + "px", (!motion ? offset : 0) + "px", 0.2, "left", callback);
 }
 
 function worker(w = "worker.js") {
