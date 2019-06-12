@@ -187,7 +187,7 @@ function slide(v, motion = true, direction = true, callback = null) {
         left: -(get(v).getBoundingClientRect().left + get(v).offsetWidth)
     };
     let offset = direction ? offsets.right : offsets.left;
-    animate(v, (motion ? offset : 0) + "px", (!motion ? offset : 0) + "px", 1, "left", callback);
+    animate(v, (motion ? offset : 0) + "px", (!motion ? offset : 0) + "px", 0.5, "left", callback);
 }
 
 function worker(w = "worker.js") {
