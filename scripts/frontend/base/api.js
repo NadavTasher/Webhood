@@ -6,19 +6,50 @@
 function animate(v, from, to, seconds, property, callback = null) {
     let view = get(v);
     view.style.removeProperty(property);
-    if (getComputedStyle(view).position === "static")
+    let position = getComputedStyle(view).position;
+    if (position === "static" || position === "sticky")
         view.style.position = "relative";
     view.style.animationTimingFunction = "linear";
+    view.style.webkitAnimationTimingFunction = "linear";
     let fromFrame = {}, toFrame = {};
     fromFrame[property] = from;
     toFrame[property] = to;
     let animation = view.animate([fromFrame, toFrame], {duration: seconds * 1000});
     animation.onfinish = () => {
         view.style[property] = to;
+        view.style.webkitAnimationTimingFunction = null;
         view.style.animationTimingFunction = null;
         if (callback !== null)
             callback();
     };
+}
+
+function animate(v, from, to, seconds, property, callback = null) {
+    let view = get(v);
+    view.style.removeProperty(property);
+    let position = getComputedStyle(view).position;
+    if (position === "static" || position === "sticky")
+        view.style.position = "relative";
+    setTimeout(() => {
+        view.style[property] = from;
+        view.style.transition = seconds + "s";
+        view.style.webkitTransition = seconds + "s";
+        view.style.transitionTimingFunction = "linear";
+        view.style.webkitTransitionTimingFunction = "linear";
+        setTimeout(() => {
+            view.style[property] = to;
+            let onend = () => {
+                view.transition = null;
+                view.style.transitionTimingFunction = null;
+                view.style.webkitTransitionTimingFunction = null;
+                if (callback !== null) {
+                    callback();
+                }
+            };
+            view.transitionend = onend;
+            view.webkitTransitionEnd = onend;
+        }, 100);
+    }, 0);
 }
 
 function api(endpoint = null, api = null, action = null, parameters = null, callback = null, form = body()) {
