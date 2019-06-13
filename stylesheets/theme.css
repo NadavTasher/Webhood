@@ -54,8 +54,6 @@ a, b, i, u, p, input, select, option, button, table, textarea, div, form {
     /* Shaping */
     border-radius: 1vh;
     border-color: transparent;
-    /* Sizing */
-    min-height: fit-content;
 }
 
 p {
