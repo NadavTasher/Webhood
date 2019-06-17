@@ -9,6 +9,7 @@ html {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    /* Positioning */
     position: fixed;
     top: 0;
     bottom: 0;
