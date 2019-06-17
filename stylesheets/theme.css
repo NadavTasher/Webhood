@@ -6,8 +6,10 @@
 html {
     /* Overflow */
     overflow-x: hidden;
+    /* Flex */
     display: flex;
     flex-direction: column;
+    /* Alignment */
     justify-content: center;
     /* Positioning */
     position: fixed;
