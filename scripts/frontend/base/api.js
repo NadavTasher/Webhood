@@ -60,7 +60,7 @@ function apply(configuration, target = null) {
             if (configuration.hasOwnProperty(id) && exists(id)) apply(configuration[id], get(id));
         }
     } else {
-        let target = get(target);
+        target = get(target);
         if (target !== null) {
             for (let property in configuration) {
                 if (configuration.hasOwnProperty(property)) {
