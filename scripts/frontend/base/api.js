@@ -66,7 +66,7 @@ function apply(configuration, target = null) {
                 for (let property in configuration) {
                     if (configuration.hasOwnProperty(property)) {
                         if (typeof configuration[property] === typeof {}) {
-                            if (!target.hasOwnProperty(property)) target[property] = {};
+                            if ((target.hasAttribute !== undefined && !target.hasAttribute(property)) || (target.hasAttribute === undefined && !target.hasOwnProperty(property))) target[property] = {};
                             apply(configuration[property], target[property]);
                         } else {
                             target[property] = configuration[property];
@@ -172,6 +172,14 @@ function html(callback = null) {
             });
         });
     });
+}
+
+function isArray(a) {
+    return typeof [] === typeof a;
+}
+
+function isObject(o){
+    return typeof {} === typeof o;
 }
 
 function isString(s) {
