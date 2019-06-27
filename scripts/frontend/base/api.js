@@ -65,7 +65,7 @@ function apply(configuration, target = null) {
             if (target !== null) {
                 for (let property in configuration) {
                     if (configuration.hasOwnProperty(property)) {
-                        if (typeof configuration[property] === typeof {}) {
+                        if (isObject(configuration[property])) {
                             if ((target.hasAttribute !== undefined && !target.hasAttribute(property)) || (target.hasAttribute === undefined && !target.hasOwnProperty(property))) target[property] = {};
                             apply(configuration[property], target[property]);
                         } else {
@@ -178,7 +178,7 @@ function isArray(a) {
     return typeof [] === typeof a;
 }
 
-function isObject(o){
+function isObject(o) {
     return typeof {} === typeof o;
 }
 
