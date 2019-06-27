@@ -54,26 +54,32 @@ function api(endpoint = null, api = null, action = null, parameters = null, call
     });
 }
 
-function apply(configuration, target = null) {
-    if (target === null) {
-        for (let id in configuration) {
-            if (configuration.hasOwnProperty(id) && exists(id)) apply(configuration[id], get(id));
-        }
-    } else {
-        target = get(target);
-        if (!isString(target)) {
-            if (target !== null) {
-                for (let property in configuration) {
-                    if (configuration.hasOwnProperty(property)) {
-                        if (isObject(configuration[property])) {
-                            if ((target.hasAttribute !== undefined && !target.hasAttribute(property)) || (target.hasAttribute === undefined && !target.hasOwnProperty(property))) target[property] = {};
-                            apply(configuration[property], target[property]);
-                        } else {
-                            target[property] = configuration[property];
+function apply(configurations, target = null) {
+    if (isObject(configurations)) {
+        if (target === null) {
+            for (let id in configurations) {
+                if (configurations.hasOwnProperty(id) && exists(id)) apply(configurations[id], get(id));
+            }
+        } else {
+            target = get(target);
+            if (!isString(target)) {
+                if (target !== null) {
+                    for (let property in configurations) {
+                        if (configurations.hasOwnProperty(property)) {
+                            if (isObject(configurations[property])) {
+                                if ((target.hasAttribute !== undefined && !target.hasAttribute(property)) || (target.hasAttribute === undefined && !target.hasOwnProperty(property))) target[property] = {};
+                                apply(configurations[property], target[property]);
+                            } else {
+                                target[property] = configurations[property];
+                            }
                         }
                     }
                 }
             }
+        }
+    } else if (isArray(configurations)) {
+        for (let c = 0; c < configurations.length; c++) {
+            apply(configurations[c], target);
         }
     }
 }
@@ -175,15 +181,30 @@ function html(callback = null) {
 }
 
 function isArray(a) {
-    return typeof [] === typeof a;
+    return a instanceof Array;
 }
 
 function isObject(o) {
-    return typeof {} === typeof o;
+    return o instanceof Object && !isArray(o);
 }
 
 function isString(s) {
     return (typeof "" === typeof s || typeof '' === typeof s);
+}
+
+function make(type, content = null, configurations = null) {
+    let made = document.createElement(type);
+    if (content !== null) {
+        if (!isString(content)) {
+            made.appendChild(content);
+        } else {
+            made.innerText = content;
+        }
+    }
+    if (configurations !== null) {
+        apply(configurations, made);
+    }
+    return made;
 }
 
 function show(v) {
