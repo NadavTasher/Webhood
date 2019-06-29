@@ -21,9 +21,9 @@ html {
 
 body {
     /* Scrolling */
-    overflow-y: -moz-scrollbars-none;
-    overflow-y: scroll;
     scroll-behavior: smooth;
+    overflow-y: scroll;
+    overflow-y: -moz-scrollbars-none;
     /* Background */
     -webkit-background-size: cover;
     -moz-background-size: cover;
