@@ -51,6 +51,7 @@ a, p, input, select, option, button, textarea {
     /* Alignment */
     justify-content: center;
     align-content: center;
+    align-items: center;
     /* Shaping */
     border-radius: 1vh;
     border-color: transparent;
