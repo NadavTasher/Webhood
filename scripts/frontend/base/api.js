@@ -232,7 +232,7 @@ function title(title) {
 function transition(v, type = OUT, callback = null) {
     let element = get(v);
     for (let n = 0; n < element.children.length; n++) {
-        slide(element.children[n], type, RIGHT, 0.4, 0.2 * n);
+        slide(element.children[n], type, RIGHT, 0.4, 0.2 * n, n === element.children.length - 1 ? callback : null);
     }
 }
 
