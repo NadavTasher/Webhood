@@ -3,6 +3,11 @@
  * https://github.com/NadavTasher/WebAppBase/
  **/
 
+const LEFT = false;
+const RIGHT = !LEFT;
+const IN = true;
+const OUT = !IN;
+
 function animate(v, from, to, seconds, property, keep = false, callback = null) {
     let view = get(v);
     view.removeAttribute("style");
@@ -10,18 +15,19 @@ function animate(v, from, to, seconds, property, keep = false, callback = null) 
     if (position === "static" || position === "sticky") {
         view.style.position = "relative";
     }
-    try {
-        view.animate([{[property]: from}, {[property]: to}], {
-            duration: seconds * 1000,
-            fill: keep ? "forwards" : "backwards",
-            easing: "linear"
-        }).onfinish = () => {
+    view.style["transition-duration"] = seconds + "s";
+    view.style["transition-timing-function"] = "ease";
+    view.style[property] = from;
+    setTimeout(() => {
+        view.style[property] = to;
+        setTimeout(() => {
+            view.removeAttribute("style");
+            if (keep) {
+                view.style[property] = to;
+            }
             if (callback !== null) callback();
-        };
-    } catch (e) {
-        if (callback !== null) callback();
-    }
-
+        }, seconds * 1000);
+    }, 0);
 }
 
 function api(endpoint = null, api = null, action = null, parameters = null, callback = null, form = body()) {
@@ -241,7 +247,7 @@ function visible(v) {
     return (get(v).style.getPropertyValue("display") !== "none");
 }
 
-function slide(v, motion = true, direction = true, callback = null) {
+function slide(v, motion = LEFT, direction = IN, callback = null) {
     let offsets = {
         right: window.innerWidth - (get(v).getBoundingClientRect().right - get(v).offsetWidth),
         left: -(get(v).getBoundingClientRect().left + get(v).offsetWidth)
