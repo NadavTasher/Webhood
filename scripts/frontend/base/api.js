@@ -8,14 +8,7 @@ const RIGHT = !LEFT;
 const IN = true;
 const OUT = !IN;
 
-function animate(v, parameters = {
-    name: "left",
-    origin: "0px",
-    destination: "0px",
-    length: 1,
-    delay: 0,
-    preserve: false
-}, callback = null) {
+function animate(v, parameters, callback = null) {
     let view = get(v);
     view.removeAttribute("style");
     if (getComputedStyle(view).position === "static" || getComputedStyle(view).position === "sticky")
@@ -257,18 +250,14 @@ function visible(v) {
 }
 
 function slide(v, motion = IN, direction = RIGHT, length = 0.2, delay = 0, callback = null) {
-    let offsets = {
-        right: window.innerWidth - (get(v).getBoundingClientRect().right - get(v).offsetWidth),
-        left: -(get(v).getBoundingClientRect().left + get(v).offsetWidth)
-    };
-
-    console.log(offsets);
-
-    let offset = direction ? offsets.right : offsets.left;
-    animate(v, {
+    let view = get(v);
+    let style = getComputedStyle(view);
+    let origin = (isNaN(parseInt(style.left)) ? 0 : parseInt(style.left)) + "px";
+    let destination = (motion === IN ? 0 : (direction === RIGHT ? 1 : -1) * screen.width) + "px";
+    animate(view, {
         name: "left",
-        origin: (motion ? offset + 1 : 0) + "px",
-        destination: (!motion ? offset + 1 : 0) + "px",
+        origin: origin,
+        destination: destination,
         length: length,
         delay: delay,
         preserve: true
