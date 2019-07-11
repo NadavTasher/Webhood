@@ -8,26 +8,28 @@ const RIGHT = !LEFT;
 const IN = true;
 const OUT = !IN;
 
-function animate(v, from, to, seconds, property, keep = false, callback = null) {
+function animate(v, parameters = {
+    name: "left",
+    origin: "0px",
+    destination: "0px",
+    length: 1,
+    delay: 0,
+    preserve: false
+}, callback = null) {
     let view = get(v);
     view.removeAttribute("style");
-    let position = getComputedStyle(view).position;
-    if (position === "static" || position === "sticky") {
+    if (getComputedStyle(view).position === "static" || getComputedStyle(view).position === "sticky")
         view.style.position = "relative";
-    }
-    view.style["transition-duration"] = seconds + "s";
-    view.style["transition-timing-function"] = "ease";
-    view.style[property] = from;
+    view.style.transitionDuration = parameters.length + "s";
+    view.style.transitionTimingFunction = "ease";
+    view.style[parameters.name] = parameters.origin;
     setTimeout(() => {
-        view.style[property] = to;
+        view.style[parameters.name] = parameters.destination;
         setTimeout(() => {
-            view.removeAttribute("style");
-            if (keep) {
-                view.style[property] = to;
-            }
+            if (!parameters.preserve) view.removeAttribute("style");
             if (callback !== null) callback();
-        }, seconds * 1000);
-    }, 0);
+        }, parameters.length * 1000);
+    }, 100 + parameters.delay * 1000);
 }
 
 function api(endpoint = null, api = null, action = null, parameters = null, callback = null, form = body()) {
@@ -234,6 +236,13 @@ function title(title) {
     document.title = title;
 }
 
+function transition(v, type = OUT, callback = null) {
+    let element = get(v);
+    for (let n = 0; n < element.children.length; n++) {
+        slide(element.children[n], type, RIGHT, 0.4, 0.2 * n);
+    }
+}
+
 function view(v) {
     let element = get(v);
     let parent = element.parentNode;
@@ -247,13 +256,23 @@ function visible(v) {
     return (get(v).style.getPropertyValue("display") !== "none");
 }
 
-function slide(v, motion = LEFT, direction = IN, callback = null) {
+function slide(v, motion = IN, direction = RIGHT, length = 0.2, delay = 0, callback = null) {
     let offsets = {
         right: window.innerWidth - (get(v).getBoundingClientRect().right - get(v).offsetWidth),
         left: -(get(v).getBoundingClientRect().left + get(v).offsetWidth)
     };
+
+    console.log(offsets);
+
     let offset = direction ? offsets.right : offsets.left;
-    animate(v, (motion ? offset : 0) + "px", (!motion ? offset : 0) + "px", 0.2, "left", false, callback);
+    animate(v, {
+        name: "left",
+        origin: (motion ? offset + 1 : 0) + "px",
+        destination: (!motion ? offset + 1 : 0) + "px",
+        length: length,
+        delay: delay,
+        preserve: true
+    }, callback);
 }
 
 function worker(w = "worker.js") {
