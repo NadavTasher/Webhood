@@ -76,6 +76,7 @@ div, body {
     /* Alignment */
     justify-content: center;
     align-content: center;
+    align-items: center;
     /* Positioning */
     margin: 0;
     padding: 0;
