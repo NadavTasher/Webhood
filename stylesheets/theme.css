@@ -81,6 +81,20 @@ div, body {
     padding: 0;
 }
 
+div[column] {
+    /* Flex */
+    flex-direction: column;
+    /* Alignment */
+    align-items: stretch;
+}
+
+div[row] {
+    /* Flex */
+    flex-direction: row;
+    /* Alignment */
+    align-items: center;
+}
+
 p {
     flex-flow: wrap;
     height: auto;
