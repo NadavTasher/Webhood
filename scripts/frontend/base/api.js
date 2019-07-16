@@ -77,7 +77,11 @@ function apply(configurations, target = null) {
                                 if ((target.hasAttribute !== undefined && !target.hasAttribute(property)) || (target.hasAttribute === undefined && !target.hasOwnProperty(property))) target[property] = {};
                                 apply(configurations[property], target[property]);
                             } else {
-                                target[property] = configurations[property];
+                                if (target.setAttribute !== undefined) {
+                                    target.setAttribute(property, configurations[property]);
+                                } else {
+                                    target[property] = configurations[property];
+                                }
                             }
                         }
                     }
