@@ -95,14 +95,14 @@ textarea {
     padding: 0;
 }
 
-[column] {
+[column = ""], [column = "true"] {
     /* Flex */
     flex-direction: column;
     /* Alignment */
     align-items: stretch;
 }
 
-[row] {
+[row = ""], [row = "true"] {
     /* Flex */
     flex-direction: row;
     /* Alignment */
