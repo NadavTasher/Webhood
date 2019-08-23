@@ -130,10 +130,6 @@ function clear(v) {
     }
 }
 
-function column(v) {
-    get(v).setAttribute("column", "true");
-    get(v).setAttribute("row", "false");
-}
 
 function exists(v) {
     return get(v) !== undefined;
@@ -171,11 +167,6 @@ function page(from, to, callback = null) {
         view(temporary);
         transition(to, IN, callback);
     });
-}
-
-function row(v) {
-    get(v).setAttribute("row", "true");
-    get(v).setAttribute("column", "false");
 }
 
 function show(v) {
@@ -217,6 +208,26 @@ function view(v) {
 
 function visible(v) {
     return (get(v).style.getPropertyValue("display") !== "none");
+}
+
+/* Special HTML */
+
+function column(v) {
+    get(v).setAttribute("column", true);
+    get(v).setAttribute("row", false);
+}
+
+function input(v) {
+    get(v).setAttribute("input", true);
+}
+
+function row(v) {
+    get(v).setAttribute("row", true);
+    get(v).setAttribute("column", false);
+}
+
+function text(v) {
+    get(v).setAttribute("text", true);
 }
 
 /* UI */
