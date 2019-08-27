@@ -81,7 +81,7 @@ function instruct(title = null, safaricheck = true, callback = null) {
         let div = make("div");
         let text = make("p");
         let share = make("img");
-        let arrow = make("p");
+        let then = make("p");
         let add = make("img");
         // Make the prompt horizontal and button-like
         row(div);
@@ -101,21 +101,22 @@ function instruct(title = null, safaricheck = true, callback = null) {
         div.style.height = "6vh";
         div.style.backgroundColor = "#ffffffee";
         // Contents
-        text.innerText = "To add " + ((title === null) ? document.title : title) + ", ";
+        text.innerText = "To add " + ((title === null) ? ("\"" + document.title + "\"") : title) + ", ";
         share.src = "resources/svg/icons/safari/share.svg";
-        arrow.innerText = "➔";
+        then.innerText = "then";
         add.src = "resources/svg/icons/safari/add.svg";
-        // Arrow
-        arrow.style.fontSize = "5vh";
+        // Indentations
+        text.style.fontStyle = "italic";
+        then.style.fontStyle = "italic";
         // Heights
         text.style.maxHeight = "5vh";
         share.style.maxHeight = "5vh";
-        arrow.style.maxHeight = "5vh";
+        then.style.maxHeight = "5vh";
         add.style.maxHeight = "5vh";
         // Add components
         div.appendChild(text);
         div.appendChild(share);
-        div.appendChild(arrow);
+        div.appendChild(then);
         div.appendChild(add);
         document.body.appendChild(div);
     }
