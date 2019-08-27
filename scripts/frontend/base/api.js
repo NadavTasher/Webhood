@@ -103,10 +103,10 @@ function instruct(title = null, safaricheck = true, callback = null) {
         // Contents
         text.innerText = "To add " + ((title === null) ? document.title : title) + ", ";
         share.src = "resources/svg/icons/safari/share.svg";
-        arrow.innerText = "▶";
+        arrow.innerText = "➔";
         add.src = "resources/svg/icons/safari/add.svg";
         // Arrow
-        arrow.fontSize = "6vh";
+        arrow.style.fontSize = "5vh";
         // Heights
         text.style.maxHeight = "5vh";
         share.style.maxHeight = "5vh";
