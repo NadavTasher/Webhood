@@ -50,13 +50,17 @@ function popup(contents, color = null, timeout = 2000, onclick = null) {
     // Make the prompt horizontal and button-like
     row(div);
     input(div);
-    // OnClick
-    div.onclick = (onclick !== null) ? onclick : () => {
-        div.onclick = null;
-        animate(div, "opacity", ["1", "0"], 0.5, () => {
-            div.parentElement.removeChild(div);
-        });
+    // Dismiss callback
+    let dismiss = () => {
+        if (div.parentElement !== null) {
+            div.onclick = null;
+            animate(div, "opacity", ["1", "0"], 0.5, () => {
+                div.parentElement.removeChild(div);
+            });
+        }
     };
+    // OnClick
+    div.onclick = (onclick !== null) ? onclick : dismiss;
     // Style
     div.style.position = "fixed";
     div.style.bottom = "0";
@@ -77,13 +81,14 @@ function popup(contents, color = null, timeout = 2000, onclick = null) {
     animate(div, "opacity", ["0", "1"], 0.5, () => {
         if (timeout > 0) {
             setTimeout(() => {
-                if (div.onclick !== null)
-                    div.onclick(null);
+                dismiss();
             }, timeout);
         }
     });
     // Add To Body
     document.body.appendChild(div);
+    // Return dismiss function
+    return dismiss;
 }
 
 function download(file, data, type = "text/plain", encoding = "utf8") {
