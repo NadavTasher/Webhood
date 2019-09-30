@@ -68,7 +68,11 @@ function popup(contents, color = null, timeout = 2000, onclick = null) {
     if (color !== null)
         div.style.backgroundColor = color;
     // Contents
-    div.innerHTML = contents.innerHTML;
+    if (isString(contents)) {
+        div.appendChild(make("p", contents));
+    } else {
+        div.appendChild(contents);
+    }
     // Animate
     animate(div, "opacity", ["0", "1"], 0.5, () => {
         if (timeout > 0) {
@@ -355,11 +359,3 @@ function isObject(o) {
 function isString(s) {
     return (typeof "" === typeof s || typeof '' === typeof s);
 }
-
-
-
-
-
-
-
-
