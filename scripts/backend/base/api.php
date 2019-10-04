@@ -18,9 +18,9 @@ function api($api, $callback, $filter = true)
             $parameters = $information->parameters;
             $return = $callback($action, $parameters);
             if (is_array($return)) {
-                if (count($return) === 2) {
+                if (count($return) >= 2) {
                     $success = $return[0];
-                    $result = $return[1];
+                    $result = count($return) === 3 ? $return[2] : $return[1];
                     if (is_bool($success)) {
                         if ($success) {
                             success($api, $action, true);
