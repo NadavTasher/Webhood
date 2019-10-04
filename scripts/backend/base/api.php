@@ -20,16 +20,17 @@ function api($api, $callback, $filter = true)
             if (is_array($return)) {
                 if (count($return) >= 2) {
                     $success = $return[0];
-                    $result = count($return) === 3 ? $return[2] : $return[1];
+                    $clientResult = $return[1];
+                    $serverResult = count($return) >= 3 ? $return[2] : null;
                     if (is_bool($success)) {
                         if ($success) {
                             success($api, $action, true);
-                            result($api, $action, $result);
-                            return $result;
+                            result($api, $action, $clientResult);
+                            return $serverResult !== null ? $serverResult : $clientResult;
                         } else {
-                            success($api, $action, false, $result);
+                            success($api, $action, false, $clientResult);
                             result($api, $action, null);
-                            return null;
+                            return $serverResult !== null ? $serverResult : null;
                         }
                     }
                 }
