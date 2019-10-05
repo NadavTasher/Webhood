@@ -328,7 +328,7 @@ function isString(s) {
     return (typeof "" === typeof s || typeof '' === typeof s);
 }
 
-function open(callback = null, read = false) {
+function upload(callback = null, read = false) {
     let selector = make("input");
     selector.type = "file";
     selector.style.display = "none";
@@ -355,7 +355,7 @@ function open(callback = null, read = false) {
     selector.click();
 }
 
-function save(file, data, type = "text/plain", encoding = "utf8") {
+function download(file, data, type = "text/plain", encoding = "utf8") {
     let link = document.createElement("a");
     link.download = file;
     link.href = "data:" + type + ";" + encoding + "," + data;
