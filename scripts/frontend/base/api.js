@@ -24,8 +24,8 @@ function api(endpoint = null, api = null, action = null, parameters = null, call
         response.text().then((result) => {
             if (callback !== null && api !== null && action !== null) {
                 let json = JSON.parse(result);
-                if (json.hasOwnProperty(api)) {
-                    if (json[api].hasOwnProperty("success") && json[api].hasOwnProperty("result")) {
+                if (api in json) {
+                    if ("success" in json[api] && "result" in json[api]) {
                         callback(json[api]["success"] === true, json[api]["result"]);
                     } else {
                         callback(false, null, "API parameters not found");
@@ -47,11 +47,13 @@ function api(endpoint = null, api = null, action = null, parameters = null, call
  * @returns {FormData} API call hook
  */
 function hook(api = null, action = null, parameters = null, APIs = {}) {
-    if (api !== null && action !== null && parameters !== null) {
-        APIs[api] = {
-            action: action,
-            parameters: parameters
-        };
+    if (!(api in APIs)) {
+        if (api !== null && action !== null && parameters !== null) {
+            APIs[api] = {
+                action: action,
+                parameters: parameters
+            };
+        }
     }
     return APIs;
 }
