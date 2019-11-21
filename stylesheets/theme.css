@@ -106,7 +106,7 @@ textarea {
 
 [column = ""] > *, [column = true] > * {
     /* Width */
-    width: min-content;
+    min-width: min-content;
 }
 
 [row = ""] > *, [row = true] > * {
