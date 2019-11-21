@@ -244,7 +244,7 @@ const OUT = !IN;
  * @param length Length of each animation stop
  * @param callback Function to run after animation is finished
  */
-function animate(v, property = "left", stops = ["0px", "0px"], length = 1, callback = null) {
+function animate(v, property = "left", stops = ["0px", "0px"], length = 1000, callback = null) {
     let view = get(v);
     let interval = null;
     let next = () => {
@@ -262,7 +262,7 @@ function animate(v, property = "left", stops = ["0px", "0px"], length = 1, callb
         }
     };
     next();
-    interval = setInterval(loop, length * 1000);
+    interval = setInterval(loop, length);
     setTimeout(() => {
         view.style.transitionDuration = length + "s";
         view.style.transitionTimingFunction = "ease";
@@ -278,7 +278,7 @@ function animate(v, property = "left", stops = ["0px", "0px"], length = 1, callb
  * @param length Length of animation
  * @param callback Function to run after animation is finished
  */
-function slide(v, motion = IN, direction = RIGHT, length = 0.2, callback = null) {
+function slide(v, motion = IN, direction = RIGHT, length = 200, callback = null) {
     let view = get(v);
     let style = getComputedStyle(view);
     let edge = (direction === RIGHT ? 1 : -1) * screen.width;
@@ -298,8 +298,8 @@ function slide(v, motion = IN, direction = RIGHT, length = 0.2, callback = null)
  * @param v View
  */
 function column(v) {
-    get(v).setAttribute("column", true);
-    get(v).setAttribute("row", false);
+    get(v).setAttribute("column", "true");
+    get(v).setAttribute("row", "false");
 }
 
 /**
@@ -307,7 +307,7 @@ function column(v) {
  * @param v View
  */
 function input(v) {
-    get(v).setAttribute("input", true);
+    get(v).setAttribute("input", "true");
 }
 
 /**
@@ -315,8 +315,8 @@ function input(v) {
  * @param v View
  */
 function row(v) {
-    get(v).setAttribute("row", true);
-    get(v).setAttribute("column", false);
+    get(v).setAttribute("row", "true");
+    get(v).setAttribute("column", "false");
 }
 
 /**
@@ -324,7 +324,7 @@ function row(v) {
  * @param v View
  */
 function text(v) {
-    get(v).setAttribute("text", true);
+    get(v).setAttribute("text", "true");
 }
 
 /* Interface */
@@ -337,14 +337,14 @@ function text(v) {
  * @param onclick The click action for the popup (null - Dismiss)
  * @returns {function} Dismiss callback
  */
-function popup(contents, timeout = null, color = null, onclick = null) {
+function popup(contents, timeout = 2000, color = null, onclick = null) {
     let div = make("div");
     column(div);
     input(div);
     let dismiss = () => {
         if (div.parentElement !== null) {
             div.onclick = null;
-            animate(div, "opacity", ["1", "0"], 0.5, () => {
+            animate(div, "opacity", ["1", "0"], 500, () => {
                 div.parentElement.removeChild(div);
             });
         }
@@ -364,11 +364,11 @@ function popup(contents, timeout = null, color = null, onclick = null) {
     } else {
         div.appendChild(contents);
     }
-    animate(div, "opacity", ["0", "1"], 0.5, () => {
-        if (timeout > 0 || timeout === null) {
+    animate(div, "opacity", ["0", "1"], 500, () => {
+        if (timeout > 0) {
             setTimeout(() => {
                 dismiss();
-            }, (timeout === null ? 2 : timeout) * 1000);
+            }, timeout);
         }
     });
     document.body.appendChild(div);
@@ -418,50 +418,4 @@ function isMobile(){
  */
 function isDesktop(){
     return !isMobile();
-}
-
-/**
- * This function lets the user pick a file, then calls callback with the result.
- * @param callback Function to run after file pick
- * @param read Whether to read the file
- */
-function upload(callback = null, read = false) {
-    let selector = make("input");
-    selector.type = "file";
-    selector.style.display = "none";
-    document.body.appendChild(selector);
-    selector.oninput = () => {
-        selector.parentElement.removeChild(selector);
-        if (selector.files.length > 0) {
-            let file = selector.files[0];
-            if (callback !== null) {
-                if (read) {
-                    let reader = new FileReader();
-                    reader.onload = (result) => {
-                        callback(file, result.target.result);
-                    };
-                    reader.readAsText(file);
-                } else {
-                    callback(file, null);
-                }
-            }
-
-
-        }
-    };
-    selector.click();
-}
-
-/**
- * This function downloads a file.
- * @param file File's name
- * @param data File's contents
- * @param type File's mime-type
- * @param encoding File's encoding
- */
-function download(file, data, type = "text/plain", encoding = "utf8") {
-    let link = document.createElement("a");
-    link.download = file;
-    link.href = "data:" + type + ";" + encoding + "," + data;
-    link.click();
 }
