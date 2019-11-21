@@ -36,7 +36,7 @@ textarea {
     /* WebKit */
     -webkit-appearance: none;
     /* Overflow */
-    overflow: hidden;
+    overflow-y: hidden;
     /* Display */
     display: flex;
     flex-direction: column;
@@ -102,11 +102,6 @@ textarea {
     flex-direction: row;
     /* Alignment */
     align-items: center;
-}
-
-[column = ""] > *, [column = true] > * {
-    /* Width */
-    min-width: min-content;
 }
 
 [row = ""] > *, [row = true] > * {
