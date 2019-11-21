@@ -104,6 +104,11 @@ textarea {
     align-items: center;
 }
 
+[column = ""] > *, [column = true] > * {
+    /* Width */
+    width: min-content;
+}
+
 [row = ""] > *, [row = true] > * {
     /* Width */
     width: 100%;
