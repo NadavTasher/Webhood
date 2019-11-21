@@ -17,25 +17,39 @@
 function api(endpoint = null, api = null, action = null, parameters = null, callback = null, APIs = {}) {
     let form = new FormData();
     form.append("api", JSON.stringify(hook(api, action, parameters, APIs)));
-    fetch(endpoint, {
-        method: "post",
-        body: form
-    }).then(response => {
-        response.text().then((result) => {
-            if (callback !== null && api !== null && action !== null) {
-                let json = JSON.parse(result);
-                if (api in json) {
-                    if ("success" in json[api] && "result" in json[api]) {
-                        callback(json[api]["success"] === true, json[api]["result"]);
-                    } else {
-                        callback(false, null, "API parameters not found");
+    if (window.navigator.onLine) {
+        fetch(endpoint, {
+            method: "post",
+            body: form
+        }).then(response => {
+            response.text().then((result) => {
+                if (callback !== null && api !== null && action !== null) {
+                    try {
+                        let json = JSON.parse(result);
+                        try {
+                            if (api in json) {
+                                if ("success" in json[api] && "result" in json[api]) {
+                                    callback(json[api]["success"] === true, json[api]["result"]);
+                                } else {
+                                    callback(false, "API parameters not found");
+                                }
+                            } else {
+                                callback(false, "API not found");
+                            }
+                        } catch {
+                        }
+                    } catch {
+                        try {
+                            callback(false, "API result isn't JSON");
+                        } catch {
+                        }
                     }
-                } else {
-                    callback(false, null, "API not found");
                 }
-            }
+            });
         });
-    });
+    } else {
+        callback(false, "Offline");
+    }
 }
 
 /**
@@ -131,15 +145,6 @@ function clear(v) {
     while (view.firstChild) {
         view.removeChild(view.firstChild);
     }
-}
-
-/**
- * This function checks if a view exists.
- * @param v View
- * @returns {boolean} View exists
- */
-function exists(v) {
-    return get(v) !== undefined;
 }
 
 /**
@@ -408,7 +413,7 @@ function isString(s) {
  * This function returns whether the device is a mobile phone
  * @returns {boolean} Is mobile
  */
-function isMobile(){
+function isMobile() {
     return window.innerHeight > window.innerWidth;
 }
 
@@ -416,6 +421,6 @@ function isMobile(){
  * This function return whether the device is a desktop.
  * @returns {boolean} Is desktop
  */
-function isDesktop(){
+function isDesktop() {
     return !isMobile();
 }
