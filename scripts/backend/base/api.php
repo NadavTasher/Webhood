@@ -251,7 +251,7 @@ function database_set($row, $column, $value)
             // Read contents
             $contents = file_get_contents($index_path);
             // Separate lines
-            $rows = explode($contents, DATABASE_SEPARATOR);
+            $rows = explode(DATABASE_SEPARATOR, $contents);
         }
         // Insert row to rows
         array_push($rows, $row);
@@ -287,7 +287,7 @@ function database_unset($row, $column)
                 // Read contents
                 $contents = file_get_contents($index_path);
                 // Separate lines
-                $rows = explode($contents, DATABASE_SEPARATOR);
+                $rows = explode(DATABASE_SEPARATOR, $contents);
                 // Remove row from rows
                 unset($rows[array_search($row, $rows)]);
                 // Write contents
@@ -340,7 +340,7 @@ function database_search($column, $value)
             // Read contents
             $contents = file_get_contents($index_path);
             // Separate lines
-            $rows = explode($contents, DATABASE_SEPARATOR);
+            $rows = explode(DATABASE_SEPARATOR, $contents);
         }
     }
     return $rows;
