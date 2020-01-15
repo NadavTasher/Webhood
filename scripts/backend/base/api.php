@@ -179,6 +179,25 @@ function database_has_link($link)
 }
 
 /**
+ * Follows a link and retrieves the row ID it points to.
+ * @param string $link Link value
+ * @return string | null Row ID
+ */
+function database_follow_link($link)
+{
+    // Check if link exists
+    if (database_has_link($link)) {
+        // Generate hashed string
+        $hashed = database_hash($link);
+        // Store path
+        $path = DATABASE_LINKS_DIRECTORY . DIRECTORY_SEPARATOR . $hashed;
+        // Read link
+        return file_get_contents($path);
+    }
+    return null;
+}
+
+/**
  * Check whether a database value exists.
  * @param string $row Row ID
  * @param string $column Column name
