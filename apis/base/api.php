@@ -5,13 +5,19 @@
  * https://github.com/NadavTasher/BaseTemplate/
  **/
 
-$result = new stdClass();
-
 /**
  * Base API for handling requests.
  */
 class API
 {
+
+    private static $result = null;
+
+    public static function init()
+    {
+        self::$result = new stdClass();
+    }
+
     /**
      * Handles API calls by handing them over to the callback.
      * @param string $API The API to listen to
@@ -56,6 +62,11 @@ class API
             }
         }
         return null;
+    }
+
+    public static function finish()
+    {
+        echo json_encode(self::$result);
     }
 }
 
