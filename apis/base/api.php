@@ -10,9 +10,11 @@
  */
 class API
 {
-
     private static $result = null;
 
+    /**
+     * Creates the result JSON.
+     */
     public static function init()
     {
         self::$result = new stdClass();
@@ -27,7 +29,6 @@ class API
      */
     public static function handle($API, $callback, $filter = true)
     {
-        global $result;
         if (isset($_POST["api"])) {
             $request = $_POST["api"];
             if ($filter) {
@@ -46,9 +47,9 @@ class API
                         if (is_array($action_result)) {
                             if (count($action_result) >= 2) {
                                 if (is_bool($action_result[0])) {
-                                    $result->$API = new stdClass();
-                                    $result->$API->success = $action_result[0];
-                                    $result->$API->result = $action_result[1];
+                                    self::$result->$API = new stdClass();
+                                    self::$result->$API->success = $action_result[0];
+                                    self::$result->$API->result = $action_result[1];
                                     if (count($action_result) >= 3) {
                                         return $action_result[2];
                                     } else {
@@ -64,6 +65,9 @@ class API
         return null;
     }
 
+    /**
+     * Echos the result JSON.
+     */
     public static function finish()
     {
         echo json_encode(self::$result);
