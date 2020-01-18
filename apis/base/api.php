@@ -442,9 +442,8 @@ class Authority
     private const LENGTH_RANDOM = 32;
     private const LENGTH_SECRET = 512;
     // Token properties
-    private const VALIDITY_TOKEN = 31 * 24 * 60 * 60;
-    private const SEPARATOR_PART = "&";
-    private const SEPARATOR_HASH = "#";
+    private const VALIDITY = 31 * 24 * 60 * 60;
+    private const SEPARATOR = ":";
     // Hashing properties
     private const HASHING_ALGORITHM = "sha256";
     private const HASHING_ROUNDS = 1024;
@@ -510,16 +509,22 @@ class Authority
      * @param float | int $validity Validity time
      * @return string Token
      */
-    public function issue($issuer, $contents, $validity = self::VALIDITY_TOKEN)
+    public function issue($issuer, $contents, $validity = self::VALIDITY)
     {
         // Calculate expiry time
         $time = time() + intval($validity);
+        $token_parts = [
+            self::random(self::LENGTH_RANDOM),
+            $issuer,
+            $contents,
+            strval($time)
+        ];
         // Create token string
-        $string = bin2hex(self::random(self::LENGTH_RANDOM)) . self::SEPARATOR_PART . bin2hex($issuer) . self::SEPARATOR_PART . bin2hex($contents) . self::SEPARATOR_PART . bin2hex(strval($time));
+        $token = implode(self::SEPARATOR, $token_parts);
         // Calculate signature
-        $signature = self::hash($string, $this->secret());
+        $signature = self::hash($token, $this->secret());
         // Return combined message
-        return $string . self::SEPARATOR_HASH . $signature;
+        return bin2hex(implode(self::SEPARATOR, [$token, $signature]));
     }
 
     /**
@@ -531,32 +536,30 @@ class Authority
     public function validate($issuer, $token)
     {
         // Separate string
-        $token_sections = explode(self::SEPARATOR_HASH, $token);
+        $token_parts = explode(self::SEPARATOR, hex2bin($token));
         // Validate content count
-        if (count($token_sections) === 2) {
+        if (count($token_parts) === 5) {
+            // Store parts
+            $token_random = $token_parts[0];
+            $token_issuer = $token_parts[1];
+            $token_contents = $token_parts[2];
+            $token_time = $token_parts[3];
+            $token_signature = $token_parts[4];
+            // Regenerate token string
+            $token = implode(self::SEPARATOR, array_slice($token_parts, 0, 4));
             // Validate signature
-            if (self::hash($token_sections[0], $this->secret()) === $token_sections[1]) {
-                // Validate time
-                $token_parts = explode(self::SEPARATOR_PART, $token_sections[0]);
-                // Validate part count
-                if (count($token_parts) === 4) {
-                    // Store variables
-                    $token_issuer = hex2bin($token_parts[1]);
-                    $token_contents = hex2bin($token_parts[2]);
-                    $token_time = hex2bin($token_parts[3]);
-                    // Validate issuer
-                    if ($token_issuer === $issuer) {
-                        // Check against time
-                        $time = intval($token_time);
-                        if ($time > time()) {
-                            // Return token contents
-                            return [true, $token_contents];
-                        }
-                        return [false, "Token expired"];
+            if (self::hash($token, $this->secret()) === $token_signature) {
+                // Validate issuer
+                if ($token_issuer === $issuer) {
+                    // Check against time
+                    $time = intval($token_time);
+                    if ($time > time()) {
+                        // Return token contents
+                        return [true, $token_contents];
                     }
-                    return [false, "Invalid token issuer"];
+                    return [false, "Token expired"];
                 }
-                return [false, "Invalid token format"];
+                return [false, "Invalid token issuer"];
             }
             return [false, "Invalid token signature"];
         }
