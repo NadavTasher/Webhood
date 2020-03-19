@@ -54,13 +54,24 @@ class API
      */
     public static function handle($API, $callback, $filter = true)
     {
+        // Initialize the request
+        $request = null;
+        // Load the request from POST or GET
         if (isset($_POST["api"])) {
             $request = $_POST["api"];
+        } else if (isset($_GET["api"])) {
+            $request = $_GET["api"];
+        }
+        // Make sure the request is initialized
+        if ($request !== null) {
+            // Filter the request
             if ($filter) {
                 $request = str_replace("<", "", $request);
                 $request = str_replace(">", "", $request);
             }
+            // Decode the request
             $APIs = json_decode($request);
+            // Parse the APIs
             if (isset($APIs->$API)) {
                 if (isset($APIs->$API->action) &&
                     isset($APIs->$API->parameters)) {
@@ -87,6 +98,7 @@ class API
                 }
             }
         }
+        // Fallback result
         return null;
     }
 }
