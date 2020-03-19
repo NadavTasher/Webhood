@@ -192,19 +192,6 @@ class App {
 class UI {
 
     /**
-     * Removes all children of a given view.
-     * @param v View
-     */
-    static clear(v) {
-        // Store view
-        let view = UI.get(v);
-        // Remove all views
-        while (view.firstChild) {
-            view.removeChild(view.firstChild);
-        }
-    }
-
-    /**
      * Returns a view by its ID or by it's own value.
      * @param v View
      * @returns {HTMLElement} View
@@ -265,6 +252,19 @@ class UI {
         }
         // View temporary
         UI.view(temporary);
+    }
+
+    /**
+     * Removes all children of a given view.
+     * @param v View
+     */
+    static clear(v) {
+        // Store view
+        let view = UI.get(v);
+        // Remove all views
+        while (view.firstChild) {
+            view.removeChild(view.firstChild);
+        }
     }
 }
 
