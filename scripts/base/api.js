@@ -115,6 +115,59 @@ class API {
     }
 }
 
+class Authority {
+
+    /**
+     * Validates a given token and return its contents.
+     * @param token Token
+     * @param permissions Permissions array
+     */
+    static validate(token, permissions = []) {
+        // Split the token
+        let token_parts = Authority.hex2bin(token).split(":");
+        // Make sure the token is two parts
+        if (token_parts.length === 2) {
+            // Parse object
+            let token_object = JSON.parse(token_parts[0]);
+            // Validate structure
+            if (token_object.hasOwnProperty("contents") && token_object.hasOwnProperty("permissions") && token_object.hasOwnProperty("issuer") && token_object.hasOwnProperty("expiry")) {
+                // Validate time
+                if (token_object.expiry < Math.floor(Date.now() / 1000)) {
+                    // Validate permissions
+                    for (let permission of permissions) {
+                        // Make sure permission exists
+                        if (!token_object.permissions.includes(permission)) {
+                            // Fallback error
+                            return [false, "Insufficient token permissions"];
+                        }
+                    }
+                    // Return token
+                    return [true, token_object.contents];
+                }
+                // Fallback error
+                return [false, "Invalid token expiry"];
+            }
+            // Fallback error
+            return [false, "Invalid token structure"];
+        }
+        // Fallback error
+        return [false, "Invalid token format"];
+    }
+
+    /**
+     * Converts a hexadecimal string to a raw byte string.
+     * @param hexadecimal Hexadecimal string
+     * @return {string} String
+     */
+    static hex2bin(hexadecimal) {
+        let string = "";
+        for (let n = 0; n < hexadecimal.length; n += 2) {
+            string += String.fromCharCode(parseInt(hexadecimal.substr(n, 2), 16));
+        }
+        return string;
+    }
+}
+
 /**
  * Base API for preparing the app.
  */
@@ -128,21 +181,8 @@ class App {
         if ("serviceWorker" in navigator)
             navigator.serviceWorker.register("worker.js").then();
         // Load layouts
-        fetch("layouts/template.html", {
-            method: "get"
-        }).then(response => {
-            response.text().then((template) => {
-                fetch("layouts/app.html", {
-                    method: "get"
-                }).then(response => {
-                    response.text().then((app) => {
-                        document.body.innerHTML = template.replace("<!--App Body-->", app);
-                        if (callback !== null)
-                            callback()
-                    });
-                });
-            });
-        });
+        if (callback !== null)
+            callback();
     }
 }
 
@@ -150,156 +190,6 @@ class App {
  * Base API for creating the UI.
  */
 class UI {
-    /**
-     * Animates a given view's property, while jumping from stop to stop every length amount of time.
-     * @param v View
-     * @param property View's style property to animate
-     * @param stops Value stops
-     * @param length Length of each animation stop
-     * @param callback Function to run after animation is finished
-     */
-    static animate(v, property = "left", stops = ["0px", "0px"], length = 1000, callback = null) {
-        // Store the view
-        let view = UI.get(v);
-        // Initialize the interval
-        let interval = null;
-        // Initialize a next function
-        let next = () => {
-            view.style[property] = stops[0];
-            stops.splice(0, 1);
-        };
-        // Initialize a loop function
-        let loop = () => {
-            if (stops.length > 0) {
-                next();
-            } else {
-                clearInterval(interval);
-                view.style.removeProperty("transitionDuration");
-                view.style.removeProperty("transitionTimingFunction");
-                if (callback !== null) callback();
-            }
-        };
-        // Call the next function
-        next();
-        // Start the interval
-        interval = setInterval(loop, length);
-        // Run the first loop
-        setTimeout(() => {
-            view.style.transitionDuration = length + "ms";
-            view.style.transitionTimingFunction = "ease";
-            loop();
-        }, 0);
-    }
-
-    /**
-     * Pops up a popup at the bottom of the screen.
-     * @param contents The content to be displayed (View / Text)
-     * @param timeout The time before the popup dismisses (0 - Forever, null - Default)
-     * @param color The background color of the popup
-     * @param onclick The click action for the popup (null - Dismiss)
-     * @returns {function} Dismiss callback
-     */
-    static popup(contents, timeout = 3000, color = null, onclick = null) {
-        // Initialize the popup's view
-        let popupView = document.createElement("div");
-        // Style the popup like a button
-        UI.column(popupView);
-        UI.input(popupView);
-        // Create the dismiss function
-        let dismiss = () => {
-            if (popupView.parentElement !== null) {
-                popupView.onclick = null;
-                UI.animate(popupView, "opacity", ["1", "0"], 500, () => {
-                    popupView.parentElement.removeChild(popupView);
-                });
-            }
-        };
-        // Add a click listener for the view
-        popupView.addEventListener("click", (onclick !== null) ? onclick : dismiss);
-        // Style the view
-        popupView.style.position = "fixed";
-        popupView.style.bottom = "0";
-        popupView.style.left = "0";
-        popupView.style.right = "0";
-        popupView.style.margin = "1vh";
-        popupView.style.height = "6vh";
-        // Set background color if set
-        if (color !== null)
-            popupView.style.backgroundColor = color;
-        // Set contents
-        if (Utils.isString(contents)) {
-            // Contents are text
-            let text = document.createElement("p");
-            text.innerText = contents;
-            popupView.appendChild(text);
-        } else {
-            // Contents are views
-            popupView.appendChild(contents);
-        }
-        // Fade in
-        UI.animate(popupView, "opacity", ["0", "1"], 500, () => {
-            if (timeout > 0) {
-                setTimeout(() => {
-                    dismiss();
-                }, timeout);
-            }
-        });
-        // Add to document
-        document.body.appendChild(popupView);
-        // Return dismiss function
-        return dismiss;
-    }
-
-    /**
-     * This function pops up installation instructions for Safari users.
-     * @param title App's Name
-     */
-    static instruct(title = null) {
-        // Check if the device is a mobilesafari browser
-        let agent = window.navigator.userAgent.toLowerCase();
-        let devices = ["iphone", "ipad", "ipod"];
-        let safari = false;
-        for (let i = 0; i < devices.length; i++) {
-            if (agent.includes(devices[i])) safari = true;
-        }
-        // Only show is the device is on mobilesafari
-        if (true || (safari && !("standalone" in window.navigator && window.navigator.standalone))) {
-            // Initialize views
-            let popupView = document.createElement("div");
-            let text = document.createElement("p");
-            let share = document.createElement("img");
-            let then = document.createElement("p");
-            let add = document.createElement("img");
-            // Make the main view a row
-            UI.row(popupView);
-            // Set text for the text views
-            text.innerText = "To add " + ((title === null) ? ("\"" + document.title + "\"") : title) + ", ";
-            then.innerText = "then";
-            // Set the src for the image views
-            share.src = "resources/svg/icons/safari/share.svg";
-            add.src = "resources/svg/icons/safari/add.svg";
-            // Style the text views
-            text.style.fontStyle = "italic";
-            then.style.fontStyle = "italic";
-            text.style.maxHeight = "5vh";
-            then.style.maxHeight = "5vh";
-            // Style the image views
-            share.style.maxHeight = "4vh";
-            add.style.maxHeight = "4vh";
-            // Style all
-            text.style.width = "auto";
-            then.style.width = "auto";
-            share.style.width = "auto";
-            add.style.width = "auto";
-            // Add to main view
-            popupView.appendChild(text);
-            popupView.appendChild(share);
-            popupView.appendChild(then);
-            popupView.appendChild(add);
-            // Popup view
-            UI.popup(popupView, 0, "#ffffffee");
-        }
-    }
 
     /**
      * Makes a given view a row.
@@ -319,24 +209,6 @@ class UI {
         // Set attributes
         UI.get(v).setAttribute("column", "true");
         UI.get(v).setAttribute("row", "false");
-    }
-
-    /**
-     * Makes a given view an input.
-     * @param v View
-     */
-    static input(v) {
-        // Set attribute
-        UI.get(v).setAttribute("input", "true");
-    }
-
-    /**
-     * Makes a given view a text.
-     * @param v View
-     */
-    static text(v) {
-        // Set attribute
-        UI.get(v).setAttribute("text", "true");
     }
 
     /**
@@ -414,16 +286,6 @@ class UI {
         // View temporary
         UI.view(temporary);
     }
-
-    /**
-     * Returns whether a view is visible.
-     * @param v View
-     * @returns {boolean} Visible
-     */
-    static isVisible(v) {
-        // Return visibility state
-        return (UI.get(v).style.getPropertyValue("display") !== "none");
-    }
 }
 
 /**
@@ -446,37 +308,5 @@ class Device {
     static isDesktop() {
         // Check if the device is not mobile
         return !Device.isMobile();
-    }
-}
-
-/**
- * Base API for general tools.
- */
-class Utils {
-    /**
-     * Returns whether the given parameter is an array.
-     * @param a Parameter
-     * @returns {boolean} Is an array
-     */
-    static isArray(a) {
-        return a instanceof Array;
-    }
-
-    /**
-     * Returns whether the given parameter is an object.
-     * @param o Parameter
-     * @returns {boolean} Is an object
-     */
-    static isObject(o) {
-        return o instanceof Object && !Utils.isArray(o);
-    }
-
-    /**
-     * Returns whether the given parameter is a string.
-     * @param s Parameter
-     * @returns {boolean} Is a string
-     */
-    static isString(s) {
-        return (typeof "" === typeof s || typeof '' === typeof s);
     }
 }

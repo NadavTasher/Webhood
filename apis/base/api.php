@@ -626,26 +626,31 @@ class Authority
                 if (self::sign($token_object_string, $secret[1]) === $token_signature) {
                     // Parse token object
                     $token_object = json_decode($token_object_string);
-                    // Validate issuer
-                    if ($token_object->issuer === self::hash($this->issuer)) {
-                        // Validate expiry
-                        if ($token_object->expiry > time()) {
-                            // Validate permissions
-                            foreach ($permissions as $permission) {
-                                // Make sure permission exists
-                                if (array_search($permission, $token_object->permissions) === false) {
-                                    // Fallback error
-                                    return [false, "Insufficient token permissions"];
+                    // Validate existence
+                    if (isset($token_object->contents) && isset($token_object->permissions) && isset($token_object->issuer) && isset($token_object->expiry)) {
+                        // Validate issuer
+                        if ($token_object->issuer === self::hash($this->issuer)) {
+                            // Validate expiry
+                            if (time() < $token_object->expiry) {
+                                // Validate permissions
+                                foreach ($permissions as $permission) {
+                                    // Make sure permission exists
+                                    if (array_search($permission, $token_object->permissions) === false) {
+                                        // Fallback error
+                                        return [false, "Insufficient token permissions"];
+                                    }
                                 }
+                                // Return token
+                                return [true, $token_object->contents];
                             }
-                            // Return token
-                            return [true, $token_object->contents];
+                            // Fallback error
+                            return [false, "Invalid token expiry"];
                         }
                         // Fallback error
-                        return [false, "Invalid token expiry"];
+                        return [false, "Invalid token issuer"];
                     }
                     // Fallback error
-                    return [false, "Invalid token issuer"];
+                    return [false, "Invalid token structure"];
                 }
                 // Fallback error
                 return [false, "Invalid token signature"];
