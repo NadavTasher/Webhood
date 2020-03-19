@@ -198,7 +198,7 @@ class UI {
      */
     static get(v) {
         // Return requested view
-        return Utils.isString(v) ? document.getElementById(v) : v;
+        return (typeof "" === typeof v || typeof '' === typeof v) ? document.getElementById(v) : v;
     }
 
     /**
