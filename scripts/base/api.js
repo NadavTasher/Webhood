@@ -192,26 +192,6 @@ class App {
 class UI {
 
     /**
-     * Makes a given view a row.
-     * @param v View
-     */
-    static row(v) {
-        // Set attributes
-        UI.get(v).setAttribute("row", "true");
-        UI.get(v).setAttribute("column", "false");
-    }
-
-    /**
-     * Makes a given view a column.
-     * @param v View
-     */
-    static column(v) {
-        // Set attributes
-        UI.get(v).setAttribute("column", "true");
-        UI.get(v).setAttribute("row", "false");
-    }
-
-    /**
      * Removes all children of a given view.
      * @param v View
      */
