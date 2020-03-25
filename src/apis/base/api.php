@@ -608,7 +608,7 @@ class Authority
             // Create parts
             $token_parts = [$token_object_string, $token_signature];
             // Combine all into token
-            $token = bin2hex(implode(self::SEPARATOR, $token_parts));
+            $token = implode(self::SEPARATOR, $token_parts);
             // Return combined message
             return [true, $token];
         }
@@ -628,8 +628,9 @@ class Authority
         $secret = $this->secret();
         // Make sure secret exists
         if ($secret[0]) {
+            // Try parsing
             // Separate string
-            $token_parts = explode(self::SEPARATOR, hex2bin($token));
+            $token_parts = explode(self::SEPARATOR, $token);
             // Validate content count
             if (count($token_parts) === 2) {
                 // Store parts
