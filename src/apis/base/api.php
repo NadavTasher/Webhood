@@ -534,9 +534,6 @@ class Authority
     // Token properties
     private const VALIDITY = 31 * 24 * 60 * 60;
     private const SEPARATOR = ":";
-    // Hashing properties
-    private const HASHING_ALGORITHM = "sha256";
-    private const HASHING_ROUNDS = 1024;
 
     /**
      * Authority constructor.
@@ -614,7 +611,7 @@ class Authority
             $token_object = new stdClass();
             $token_object->contents = $contents;
             $token_object->permissions = $permissions;
-            $token_object->issuer = self::hash($this->issuer);
+            $token_object->issuer = Utils::hash($this->issuer);
             $token_object->expiry = time() + intval($validity);
             // Create token string
             $token_object_string = bin2hex(json_encode($token_object));
@@ -658,7 +655,7 @@ class Authority
                     // Validate existence
                     if (isset($token_object->contents) && isset($token_object->permissions) && isset($token_object->issuer) && isset($token_object->expiry)) {
                         // Validate issuer
-                        if ($token_object->issuer === self::hash($this->issuer)) {
+                        if ($token_object->issuer === Utils::hash($this->issuer)) {
                             // Validate expiry
                             if (time() < $token_object->expiry) {
                                 // Validate permissions
@@ -689,20 +686,5 @@ class Authority
         }
         // Fallback error
         return $secret;
-    }
-
-    /**
-     * Hashes a message.
-     * @param string $message Message
-     * @param int $rounds Number of rounds
-     * @return string Hash
-     */
-    private static function hash($message, $rounds = self::HASHING_ROUNDS)
-    {
-        if ($rounds === 0) {
-            return hash(self::HASHING_ALGORITHM, $message);
-        } else {
-            return hash(self::HASHING_ALGORITHM, self::hash($message, $rounds - 1));
-        }
     }
 }
