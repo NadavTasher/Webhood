@@ -24,7 +24,7 @@ body {
     background-color: var(--theme);
 }
 
-p, button, input, select, div {
+p, button, input, select, div, body, html {
     /* Display */
     display: flex;
     flex-direction: column;
@@ -73,7 +73,7 @@ button:hover, input:hover, select:hover, textarea:hover {
     background-color: var(--dark);
 }
 
-[row = ""], [row = true], [column = ""], [column = true], div {
+[row = ""], [row = true], [column = ""], [column = true], div, body, html {
     /* Alignment */
     justify-content: center;
     align-content: center;

@@ -58,7 +58,7 @@
             background-color: var(--theme);
         }
 
-        p, button, input, select, div {
+        p, button, input, select, div, body, html {
             /* Display */
             display: flex;
             flex-direction: column;
@@ -107,7 +107,7 @@
             background-color: var(--dark);
         }
 
-        [row = ""], [row = true], [column = ""], [column = true], div {
+        [row = ""], [row = true], [column = ""], [column = true], div, body, html {
             /* Alignment */
             justify-content: center;
             align-content: center;
@@ -146,7 +146,7 @@
     </style>
 </head>
 <body column>
-<p size="huge">Offline</p>
-<p size="normal">Touch to reload</p>
+<p style="font-size: larger;">Offline</p>
+<p style="font-size: large">Touch to reload</p>
 </body>
 </html>
