@@ -13,16 +13,11 @@ class Base
     // Constants
     public const API = "base";
 
-    // API results
-    private static stdClass $result;
+    public const OK = 200;
 
-    /**
-     * Creates the result object.
-     */
-    public static function init()
-    {
-        self::$result = new stdClass();
-    }
+    // API results
+    private static int $code;
+    private static stdClass $result;
 
     /**
      * Handles API calls by handing them over to the callback.
@@ -33,8 +28,15 @@ class Base
      */
     public static function handle($API, $callback, $filter = true)
     {
+        // Initialize the response
+        self::$code = self::OK;
+        self::$result = new stdClass();
         // Initialize the request
         $requestString = null;
+        // Check if request is POST
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+        }
         // Load the request from POST or GET
         if (isset($_POST[$API])) {
             if (is_string($_POST[$API])) {
@@ -70,30 +72,28 @@ class Base
                 $requestResult = $callback($requestAction, $requestParameters);
                 // Parse the results
                 if (is_array($requestResult)) {
-                    if (count($requestResult) >= 2) {
-                        if (is_bool($requestResult[0])) {
-                            self::$result->$API = new stdClass();
-                            self::$result->$API->success = $requestResult[0];
-                            self::$result->$API->result = $requestResult[1];
-                            if (count($requestResult) >= 3) {
-                                return $requestResult[2];
+                    if (count($requestResult) === 2) {
+                        if (is_integer($requestResult[0])) {
+                            // Set response code
+                            self::$code = $requestResult[0];
+                            // Parse result
+                            if (is_object($requestResult[1])) {
+                                // Successful action
+                                self::$result = $requestResult[1];
                             } else {
-                                return null;
+                                // Returns error
+                                self::$result->error = $requestResult[1];
                             }
                         }
                     }
                 }
             }
         }
-        // Fallback result
-        return null;
-    }
-
-    /**
-     * Echos the result object as JSON.
-     */
-    public static function echo()
-    {
+        // Change the response type
+        header("Content-Type: application/json");
+        // Change the response code
+        http_response_code(self::$code);
+        // Echo response
         echo json_encode(self::$result);
     }
 }
