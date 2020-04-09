@@ -13,88 +13,45 @@ class Base
     // Constants
     public const API = "base";
 
-    public const OK = 200;
-
-    // API results
-    private static int $code;
-    private static stdClass $result;
-
     /**
      * Handles API calls by handing them over to the callback.
-     * @param string $API The API to listen to
-     * @param callable $callback The callback to be called with action and parameters
-     * @param bool $filter Whether to filter XSS characters
-     * @return mixed|null A result array with [success, result|error]
+     * @param callable $callback Callback to handle the request
      */
-    public static function handle($API, $callback, $filter = true)
+    public static function handle($callback)
     {
         // Initialize the response
-        self::$code = self::OK;
-        self::$result = new stdClass();
-        // Initialize the request
-        $requestString = null;
-        // Check if request is POST
-        if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
+        $result = new stdClass();
+        // Initialize the action
+        $requestAction = array_pop(explode(DIRECTORY_SEPARATOR, $_SERVER["REQUEST_URI"]));
+        // Parse the parameters
+        $requestParameters = new stdClass();
+        // Loop over GET parameters
+        foreach ($_GET as $name => $value) {
+            if (is_string($value))
+                $requestParameters->$name = $value;
         }
-        // Load the request from POST or GET
-        if (isset($_POST[$API])) {
-            if (is_string($_POST[$API])) {
-                $requestString = $_POST[$API];
-            }
-        } else if (isset($_GET[$API])) {
-            if (is_string($_GET[$API])) {
-                $requestString = $_GET[$API];
-            }
+        // Loop over POST parameters
+        foreach ($_POST as $name => $value) {
+            if (is_string($value))
+                $requestParameters->$name = $value;
         }
-        // Make sure the request is initialized
-        if ($requestString !== null) {
-            // Filter the request
-            if ($filter) {
-                $requestString = str_replace("<", "", $requestString);
-                $requestString = str_replace(">", "", $requestString);
-            }
-            // Decode the request
-            $requestObject = json_decode($requestString);
-            // Make sure the object is not null
-            if ($requestObject !== null) {
-                // Default action & parameters
-                $requestAction = null;
-                $requestParameters = null;
-                // Check for overriding inputs
-                if (isset($requestObject->action) && is_string($requestObject->action)) {
-                    $requestAction = $requestObject->action;
-                }
-                if (isset($requestObject->parameters) && is_object($requestObject->parameters)) {
-                    $requestParameters = $requestObject->parameters;
-                }
-                // Execute the call
-                $requestResult = $callback($requestAction, $requestParameters);
-                // Parse the results
-                if (is_array($requestResult)) {
-                    if (count($requestResult) === 2) {
-                        if (is_integer($requestResult[0])) {
-                            // Set response code
-                            self::$code = $requestResult[0];
-                            // Parse result
-                            if (is_object($requestResult[1])) {
-                                // Successful action
-                                self::$result = $requestResult[1];
-                            } else {
-                                // Returns error
-                                self::$result->error = $requestResult[1];
-                            }
-                        }
-                    }
+        // Execute the call
+        $requestResult = $callback($requestAction, $requestParameters);
+        // Parse the results
+        if (is_array($requestResult)) {
+            if (count($requestResult) === 2) {
+                if (is_bool($requestResult[0])) {
+                    // Set status
+                    $result->status = $requestResult[0];
+                    // Set result
+                    $result->result = $requestResult[1];
                 }
             }
         }
         // Change the response type
         header("Content-Type: application/json");
-        // Change the response code
-        http_response_code(self::$code);
         // Echo response
-        echo json_encode(self::$result);
+        echo json_encode($result);
     }
 }
 
