@@ -37,6 +37,8 @@ class Base
                 if (is_string($value))
                     $requestParameters->$name = $value;
             }
+            // Unset the action
+            unset($requestParameters->$requestAction);
             // Execute the call
             $requestResult = $callback($requestAction, $requestParameters);
             // Parse the results
