@@ -22,29 +22,32 @@ class Base
         // Initialize the response
         $result = new stdClass();
         // Initialize the action
-        $requestAction = array_pop(explode(DIRECTORY_SEPARATOR, $_SERVER["REQUEST_URI"]));
-        // Parse the parameters
-        $requestParameters = new stdClass();
-        // Loop over GET parameters
-        foreach ($_GET as $name => $value) {
-            if (is_string($value))
-                $requestParameters->$name = $value;
-        }
-        // Loop over POST parameters
-        foreach ($_POST as $name => $value) {
-            if (is_string($value))
-                $requestParameters->$name = $value;
-        }
-        // Execute the call
-        $requestResult = $callback($requestAction, $requestParameters);
-        // Parse the results
-        if (is_array($requestResult)) {
-            if (count($requestResult) === 2) {
-                if (is_bool($requestResult[0])) {
-                    // Set status
-                    $result->status = $requestResult[0];
-                    // Set result
-                    $result->result = $requestResult[1];
+        if (count($_GET) > 0) {
+            // Get the action
+            $requestAction = array_key_first($_GET);
+            // Parse the parameters
+            $requestParameters = new stdClass();
+            // Loop over GET parameters
+            foreach ($_GET as $name => $value) {
+                if (is_string($value))
+                    $requestParameters->$name = $value;
+            }
+            // Loop over POST parameters
+            foreach ($_POST as $name => $value) {
+                if (is_string($value))
+                    $requestParameters->$name = $value;
+            }
+            // Execute the call
+            $requestResult = $callback($requestAction, $requestParameters);
+            // Parse the results
+            if (is_array($requestResult)) {
+                if (count($requestResult) === 2) {
+                    if (is_bool($requestResult[0])) {
+                        // Set status
+                        $result->status = $requestResult[0];
+                        // Set result
+                        $result->result = $requestResult[1];
+                    }
                 }
             }
         }
