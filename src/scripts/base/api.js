@@ -32,9 +32,8 @@ class API {
      * @param action Action
      * @param parameters Parameters
      * @param callback Callback
-     * @param token Token
      */
-    static send(endpoint = null, action = null, parameters = null, callback = null, token = null) {
+    static call(endpoint = null, action = null, parameters = null, callback = null) {
         // Create a form
         let form = new FormData();
         // Append parameters to form
@@ -42,9 +41,6 @@ class API {
             if (parameters.hasOwnProperty(key))
                 form.append(key, parameters[key]);
         }
-        // Append token to form
-        if (token !== null)
-            form.append("token", token);
         // Perform the request
         fetch("apis/" + endpoint + "/" + "?" + action, {
             method: "post",
