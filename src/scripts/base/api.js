@@ -220,7 +220,7 @@ class UI {
         let templateElements = document.getElementsByTagName("template");
         // Find the template
         for (let templateElement of templateElements) {
-            if (templateElement.getAttribute("name").toLowerCase() === template.toLowerCase()) {
+            if (templateElement.id.toLowerCase() === template.toLowerCase()) {
                 // Create the element
                 let created = document.createElement("div");
                 // Add the HTML
