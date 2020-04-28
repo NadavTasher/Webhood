@@ -419,7 +419,6 @@ class Authority
                 // Validate existence
                 if (isset($tokenObject->contents) &&
                     isset($tokenObject->permissions) &&
-                    isset($tokenObject->issuer) &&
                     isset($tokenObject->expiry)) {
                     // Validate expiry
                     if (time() < $tokenObject->expiry) {
