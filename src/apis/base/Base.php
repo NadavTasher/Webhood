@@ -5,7 +5,8 @@
  * https://github.com/NadavTasher/BaseTemplate/
  **/
 
-include_once __DIR__ . DIRECTORY_SEPARATOR;
+include_once __DIR__ . DIRECTORY_SEPARATOR . "Authority.php";
+include_once __DIR__ . DIRECTORY_SEPARATOR . "Database.php";
 
 /**
  * Base API for general utilities.
