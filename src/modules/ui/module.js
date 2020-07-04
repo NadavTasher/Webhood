@@ -1,10 +1,9 @@
 /**
  * Copyright (c) 2019 Nadav Tasher
- * https://github.com/NadavTasher/BaseTemplate/
+ * https://github.com/NadavTasher/WebTemplate/
  **/
 
 class UI {
-
     /**
      * Returns a view by its ID or by it's own value.
      * @param v View
@@ -99,23 +98,33 @@ class UI {
         // Remove all views
         view.innerHTML = "";
     }
+}
 
+class Template {
     /**
      * Creates a template from HTML.
-     * @param html HTML
+     * @param module Module
+     * @param template Template
      */
-    static template(html) {
-        // Create the template
-        let template = document.createElement("template");
-        template.innerHTML = html;
-        // Populate
-        return template;
+    static load(module, template) {
+        return new Promise((resolve, reject) => {
+            fetch("modules/" + Module.name(module) + "/templates/" + template + ".html").then(response => {
+                response.text().then(contents => {
+                    // Create the template
+                    let template = document.createElement("template");
+                    // Fill the template
+                    template.innerHTML = contents;
+                    // Resolve
+                    resolve(template);
+                }).catch(reject);
+            }).catch(reject);
+        });
     }
 
     /**
-     * Finds a template and populates a clone of it.
+     * Populates a template.
      * @param template Template
-     * @param parameters Cloning parameters
+     * @param parameters Parameters
      */
     static populate(template, parameters = {}) {
         // Find the template

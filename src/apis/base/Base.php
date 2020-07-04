@@ -2,7 +2,7 @@
 
 /**
  * Copyright (c) 2019 Nadav Tasher
- * https://github.com/NadavTasher/BaseTemplate/
+ * https://github.com/NadavTasher/WebTemplate/
  **/
 
 include_once __DIR__ . DIRECTORY_SEPARATOR . "Authority.php";

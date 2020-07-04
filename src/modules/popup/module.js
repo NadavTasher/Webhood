@@ -1,13 +1,9 @@
 /**
  * Copyright (c) 2019 Nadav Tasher
- * https://github.com/NadavTasher/BaseTemplate/
+ * https://github.com/NadavTasher/WebTemplate/
  **/
 
-// Load the UI API
-Module.load("UI");
-
 class Popup {
-
     /**
      * Pops up a simple information popup.
      * @param title Title
@@ -16,11 +12,11 @@ class Popup {
      */
     static information(title, message) {
         return new Promise(function (resolve, reject) {
-            Popup.template("information").then(template => {
+            Template.load(Popup.name, "information").then((template) => {
                 // Generate a random ID
                 let id = Math.floor(Math.random() * 100000);
                 // Populate views
-                document.body.appendChild(UI.populate(template, {
+                document.body.appendChild(Template.populate(template, {
                     id: id,
                     title: title,
                     message: message
@@ -44,11 +40,11 @@ class Popup {
      */
     static input(title, message) {
         return new Promise(function (resolve, reject) {
-            Popup.template("input").then(template => {
+            Template.load(Popup.name, "input").then((template) => {
                 // Generate a random ID
                 let id = Math.floor(Math.random() * 100000);
                 // Populate views
-                document.body.appendChild(UI.populate(template, {
+                document.body.appendChild(Template.populate(template, {
                     id: id,
                     title: title,
                     message: message
@@ -80,11 +76,11 @@ class Popup {
      */
     static toast(message) {
         return new Promise(function (resolve, reject) {
-            Popup.template("toast").then(template => {
+            Template.load(Popup.name, "toast").then((template) => {
                 // Generate a random ID
                 let id = Math.floor(Math.random() * 100000);
                 // Populate views
-                document.body.appendChild(UI.populate(template, {
+                document.body.appendChild(Template.populate(template, {
                     id: id,
                     message: message
                 }));
@@ -96,20 +92,6 @@ class Popup {
                     resolve();
                 }, 3000);
             });
-        });
-    }
-
-    /**
-     * Loads the HTML for a template.
-     * @param template Template
-     */
-    static template(template) {
-        return new Promise((resolve, reject) => {
-            fetch("modules/popup/templates/" + template + ".html").then(response => {
-                response.text().then(contents => {
-                    resolve(UI.template(contents));
-                }).catch(reject);
-            }).catch(reject);
         });
     }
 }
