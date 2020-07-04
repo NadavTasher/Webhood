@@ -18,8 +18,9 @@ class Module {
 
     /**
      * Loads modules.
+     * @param module Module
      */
-    static load() {
+    static load(module) {
         if (arguments.length > 1) {
             let promises = [];
             for (let module of arguments) {
@@ -29,7 +30,7 @@ class Module {
         } else {
             return new Promise((resolve, reject) => {
                 // Filter the name
-                let module = Module.name(arguments[0]);
+                module = Module.name(module);
                 // Make sure the module isn't loaded
                 if (!Module.modules.hasOwnProperty(module)) {
                     // Create a script tag
