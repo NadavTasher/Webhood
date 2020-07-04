@@ -1,9 +1,10 @@
 /**
  * Copyright (c) 2019 Nadav Tasher
- * https://github.com/NadavTasher/AuthenticationTemplate/
+ * https://github.com/NadavTasher/WebTemplate/
  **/
 
 class Authenticate {
+
     // API name
     static API = "authenticate";
 
@@ -21,8 +22,7 @@ class Authenticate {
             // Load the token
             Authenticate.token = localStorage.getItem(Authenticate.name.toLowerCase());
             // Load the page's contents
-            if (Authenticate.contents === null)
-                Authenticate.contents = document.body.innerHTML;
+            Authenticate.contents = document.body.innerHTML;
             // Load the template
             Template.load(Authenticate.name, "authenticate").then((template) => {
                 // Clear the body
