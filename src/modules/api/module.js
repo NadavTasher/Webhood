@@ -3,9 +3,6 @@
  * https://github.com/NadavTasher/BaseTemplate/
  **/
 
-/**
- * This class is used to communicate with server side APIs.
- */
 class API {
 
     /**
@@ -50,32 +47,5 @@ class API {
                 }
             }));
         });
-    }
-}
-
-/**
- * This class is used to load extra client side APIs.
- */
-class Plugin {
-
-    /**
-     * Loads a plugin.
-     * @param plugin Plugin
-     */
-    static load(plugin) {
-        // Make name lower-case
-        plugin = plugin.toLowerCase();
-        // Create a script tag
-        let script = document.createElement("script");
-        // Set the ID
-        script.id = "script-" + plugin;
-        // Set the type
-        script.type = "text/javascript";
-        // Set the source
-        script.src = "plugins/" + plugin + "/api.js";
-        // Make sure the script was not loaded yet
-        if (!document.getElementById(script.id)) {
-            document.head.appendChild(script);
-        }
     }
 }

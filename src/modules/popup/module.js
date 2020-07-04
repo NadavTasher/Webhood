@@ -4,7 +4,7 @@
  **/
 
 // Load the UI API
-Plugin.load("UI");
+Module.load("UI");
 
 class Popup {
 
@@ -105,7 +105,7 @@ class Popup {
      */
     static template(template) {
         return new Promise((resolve, reject) => {
-            fetch("plugins/popup/templates/" + template + ".html").then(response => {
+            fetch("modules/popup/templates/" + template + ".html").then(response => {
                 response.text().then(contents => {
                     resolve(UI.template(contents));
                 }).catch(reject);
