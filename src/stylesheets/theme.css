@@ -24,100 +24,163 @@ body {
     background-color: var(--theme);
 }
 
-p, button, input, select, div, body, html {
+/* Base flex */
+
+[text], [button], [input], [row], [column], p, button, input, div, body, html {
     /* Display */
     display: flex;
     flex-direction: column;
-    /* Text */
-    color: var(--text);
-    /* Size */
-    font-size: large;
-    font-family: Arial, ArialHebrew, sans-serif;
-    /* Text Alignment */
-    text-align: center;
-    text-align-last: center;
-    /* Minimal Sizing */
-    min-height: fit-content;
-    line-height: 100%;
+    /* Font */
+    font-family: sans-serif;
+    /* Transition */
+    transition-duration: 0.5s;
     /* Outline */
     outline: none;
 }
 
-p, button, input, select {
-    /* Positioning */
-    margin: 1vh;
-    padding: 1.5vh;
+/* Alignment */
+
+[text], [button], [input], p, button, input {
     /* Alignment */
     justify-content: center;
     justify-items: center;
     align-content: center;
     align-items: stretch;
-    /* Border */
-    border-radius: 0.5vh;
-    border-width: 0.5vh;
-    border-style: solid;
-    border-color: transparent;
-    /* Transition */
-    transition-duration: 0.2s;
-    /* Width */
-    width: auto;
 }
 
-p {
-    flex-flow: wrap;
-    height: auto;
-}
-
-button, input, select {
-    /* Border */
-    border-color: var(--light);
-    /* Background */
-    background-color: var(--light);
-}
-
-button:hover, input:hover, select:hover {
-    /* Border */
-    border-color: var(--light);
-    /* Background */
-    background-color: var(--dark);
-}
-
-button:active, input:active, select:active {
-    /* Shaping */
-    border-color: var(--dark);
-    /* Background */
-    background-color: var(--dark);
-}
-
-[row = ""], [row = true], [column = ""], [column = true], div, body, html {
+[row], [column], div, body, html {
     /* Alignment */
     justify-content: center;
     align-content: center;
-    /* Positioning */
-    margin: 0;
-    padding: 0;
 }
 
-[column = ""], [column = true] {
-    /* Flex */
-    flex-direction: column;
-    /* Alignment */
-    align-items: stretch;
-}
-
-[row = ""], [row = true] {
+[row] {
     /* Flex */
     flex-direction: row;
     /* Alignment */
     align-items: stretch;
 }
 
-[row = ""] > *, [row = true] > * {
+[column] {
+    /* Flex */
+    flex-direction: column;
+    /* Alignment */
+    align-items: stretch;
+}
+
+/* Padding, Margins */
+
+[text], [button], [input], p, button, input {
+    /* Padding, Margins */
+    padding: 1vh;
+    margin: 1vh;
+}
+
+[row], [column], div, body, html {
+    /* Padding, Margins */
+    padding: 0;
+    margin: 0;
+}
+
+/* Sizing */
+
+[text], [button], [input], [row], [column], p, button, input, div, body, html {
+    /* Sizing */
+    line-height: 100%;
+    /* Height */
+    min-height: fit-content;
+}
+
+[button], [input], button, input {
+    /* Width */
+    width: auto;
+}
+
+[row] > * {
     /* Width */
     width: 100%;
 }
 
-[hidden = ""], [hidden = true] {
+/* Border */
+
+[button], [input], button, input {
+    /* Border */
+    border-style: solid;
+    border-radius: 0.5vh;
+}
+
+[input], input {
+    border-width: 0 0 0.5vh 0;
+}
+
+[button], button {
+    border-width: 0.5vh;
+}
+
+/* Colors */
+
+[text], [button], [input], p, button, input {
+    /* Background */
+    background-color: transparent;
+}
+
+[button], [input], button, input {
+    /* Colors */
+    color: var(--passive);
+    border-color: var(--passive);
+}
+
+[button]:hover, [input]:hover, button:hover, input:hover {
+    /* Colors */
+    color: var(--active);
+    border-color: var(--active);
+}
+
+[text], p {
+    /* Colors */
+    color: var(--passive);
+}
+
+/* Alignment */
+
+[center] {
+    /* Text */
+    text-align: center;
+    text-align-last: center;
+}
+
+[left] {
+    /* Text */
+    text-align: start;
+    text-align-last: start;
+}
+
+[right] {
+    /* Text */
+    text-align: end;
+    text-align-last: end;
+}
+
+/* Text */
+
+[small] {
+    /* Font */
+    font-size: 2.5vh;
+}
+
+[medium] {
+    /* Font */
+    font-size: 4vh;
+}
+
+[large] {
+    /* Font */
+    font-size: 6vh;
+}
+
+/* Additional */
+
+[hidden] {
     display: none !important;
 }
 

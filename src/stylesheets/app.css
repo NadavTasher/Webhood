@@ -4,10 +4,10 @@
  **/
 
 :root {
-    --light: #DDDDEE;
-    --dark: #BBBBCC;
     --theme: #FFFFFF;
-    --text: black;
+    --passive: #333344;
+    --active: #777788;
+    --coaster: #DDDDEE;
 }
 
 body {
