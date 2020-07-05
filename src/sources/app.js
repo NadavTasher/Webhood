@@ -1,3 +1,1 @@
-function load() {
-    // App Code
-}
+function load() {}

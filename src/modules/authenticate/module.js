@@ -5,24 +5,13 @@
 
 class Authenticate {
 
-    // API name
-    static API = "authenticate";
-
-    // Holds the token
-    static token = null;
-
-    // Holds the page's contents
-    static contents = null;
-
     /**
      * Authenticates the user by requiring sign-up, sign-in and token validation.
      */
     static initialize() {
         return new Promise((resolve, reject) => {
-            // Load the token
-            Authenticate.token = localStorage.getItem(Authenticate.name.toLowerCase());
             // Load the page's contents
-            Authenticate.contents = document.body.innerHTML;
+            let contents = document.body.innerHTML;
             // Load the template
             Template.load(Authenticate.name, "authenticate").then((template) => {
                 // Clear the body
@@ -32,19 +21,17 @@ class Authenticate {
                     title: document.title
                 }));
                 // Check token initialization
-                if (Authenticate.token !== null) {
+                if (Authenticate.getToken() !== null) {
                     // Hide the inputs
                     UI.hide("inputs");
                     // Change the output message
                     Authenticate.output("Hold on - Authenticating...");
                     // Send the API call
                     API.call(Authenticate.name.toLowerCase(), "validate", {
-                        token: Authenticate.token
+                        token: Authenticate.getToken()
                     }).then(result => {
                         // Change the page's contents
-                        document.body.innerHTML = Authenticate.contents;
-                        // Clear the contents
-                        Authenticate.contents = null;
+                        document.body.innerHTML = contents;
                         // Resolve
                         resolve();
                     }).catch(result => {
@@ -102,7 +89,7 @@ class Authenticate {
                 password: UI.find("password").value
             }).then(result => {
                 // Push the token
-                localStorage.setItem(Authenticate.name.toLowerCase(), Authenticate.token = result);
+                Authenticate.setToken(result);
                 // Resolve
                 resolve();
             }).catch(result => {
@@ -122,6 +109,20 @@ class Authenticate {
     static signOut() {
         // Remove from localStorage
         localStorage.removeItem(Authenticate.name.toLowerCase());
+    }
+
+    /**
+     * Gets the authentication token.
+     */
+    static getToken() {
+        return localStorage.getItem(Authenticate.name.toLowerCase());
+    }
+
+    /**
+     * Sets the authentication token.
+     */
+    static setToken(token) {
+        localStorage.setItem(Authenticate.name.toLowerCase(), token);
     }
 
     /**

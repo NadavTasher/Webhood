@@ -5,9 +5,6 @@
 
 class Module {
 
-    // Holds the loaded modules
-    static modules = {};
-
     /**
      * Filters a module's name.
      * @param module Module
@@ -31,27 +28,28 @@ class Module {
             return new Promise((resolve, reject) => {
                 // Filter the name
                 module = Module.name(module);
+                // Create a script tag
+                let script = document.createElement("script");
+                // Prepare the script tag
+                script.type = "text/javascript";
+                script.src = "modules/" + module + "/module.js";
+                // Hook to state handlers
+                script.onload = function () {
+                    resolve("Module was loaded");
+                };
+                script.onerror = function () {
+                    reject("Module was not loaded");
+                };
                 // Make sure the module isn't loaded
-                if (!Module.modules.hasOwnProperty(module)) {
-                    // Create a script tag
-                    let script = document.createElement("script");
-                    // Prepare the script tag
-                    script.type = "text/javascript";
-                    script.src = "modules/" + module + "/module.js";
-                    // Hook to state handlers
-                    script.onload = function () {
-                        resolve("Module was loaded");
-                    };
-                    script.onerror = function () {
-                        reject("Module was not loaded");
-                    };
-                    // Append to modules object
-                    Module.modules[module] = script;
-                    // Append to head
-                    document.head.appendChild(script);
-                } else {
-                    resolve("Module was already loaded");
+                for (let i = 0; i < document.scripts.length; i++) {
+                    if (document.scripts[i].outerHTML === script.outerHTML) {
+                        resolve("Module was already loaded");
+                        // Return
+                        return;
+                    }
                 }
+                // Append to head
+                document.head.appendChild(script);
             });
         }
     }
