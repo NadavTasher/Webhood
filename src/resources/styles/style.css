@@ -72,8 +72,8 @@ body {
 
 [text], [button], [input], p, button, input {
     /* Padding, Margins */
-    padding: 1vh;
-    margin: 1vh;
+    padding: 1.5vh;
+    margin: 1.5vh;
 }
 
 [row], [column], div, body, html {
