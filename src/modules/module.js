@@ -5,7 +5,7 @@
 
 const MODULE_TAG_PREFIX = "module-script-";
 const MODULE_LOCAL_URL = "modules";
-const MODULE_GLOBAL_URL = "https://nadavtasher.github.io/WebModules/modules";
+const MODULE_GLOBAL_URL = "https://nadavtasher.github.io/Modules";
 
 class Module {
     /**
