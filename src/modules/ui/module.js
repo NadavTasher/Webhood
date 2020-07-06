@@ -96,18 +96,24 @@ class UI {
 
 class Template {
     /**
-     * Creates a template from HTML.
-     * @param module Module
-     * @param template Template
+     * Creates a template.
+     * @param html HTML
+     * @returns HTMLTemplateElement
      */
-    static load(module, template) {
-
+    static create(html) {
+        // Create the template
+        let template = document.createElement("template");
+        // Fill the template
+        template.innerHTML = html;
+        // Return
+        return template;
     }
 
     /**
      * Populates a template.
      * @param template Template
      * @param parameters Parameters
+     * @return HTMLElement
      */
     static populate(template, parameters = {}) {
         // Find the template

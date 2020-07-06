@@ -4,7 +4,6 @@
  **/
 
 class Authenticate {
-
     /**
      * Authenticates the user by requiring sign-up, sign-in and token validation.
      */
@@ -13,11 +12,11 @@ class Authenticate {
             // Load the page's contents
             let contents = document.body.innerHTML;
             // Load the template
-            Template.load(Authenticate.name, "authenticate").then((template) => {
+            Module.resource(Authenticate, "authenticate.html").then((html) => {
                 // Clear the body
                 UI.clear(document.body);
                 // Append a populated template
-                document.body.appendChild(Template.populate(template, {
+                document.body.appendChild(Template.populate(Template.create(html), {
                     title: document.title
                 }));
                 // Check token initialization
@@ -144,5 +143,4 @@ class Authenticate {
             output.style.removeProperty("color");
         }
     }
-
 }

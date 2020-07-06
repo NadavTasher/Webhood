@@ -4,7 +4,6 @@
  **/
 
 class API {
-
     /**
      * Sends an API call.
      * @param endpoint API to call

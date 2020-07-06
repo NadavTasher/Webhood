@@ -4,13 +4,20 @@
  **/
 
 class Module {
-
     /**
-     * Filters a module's name.
+     * Loads a resource.
      * @param module Module
+     * @param name Name
      */
-    static name(module) {
-        return module.toLowerCase();
+    static resource(module, name) {
+        return new Promise((resolve, reject) => {
+            fetch("modules/" + module.name.toLowerCase() + "/resources/" + name).then(response => {
+                response.text().then(contents => {
+                    // Resolve
+                    resolve(contents);
+                }).catch(reject);
+            }).catch(reject);
+        });
     }
 
     /**
@@ -19,20 +26,14 @@ class Module {
      */
     static load(module) {
         if (arguments.length > 1) {
-            let promises = [];
-            for (let module of arguments) {
-                promises.push(Module.load(module));
-            }
-            return Promise.all(promises);
+            return Promise.all(Array.from(arguments).map((module) => Module.load(module)));
         } else {
             return new Promise((resolve, reject) => {
-                // Filter the name
-                module = Module.name(module);
                 // Create a script tag
                 let script = document.createElement("script");
                 // Prepare the script tag
                 script.type = "text/javascript";
-                script.src = "modules/" + module + "/module.js";
+                script.src = "modules/" + module.toLowerCase() + "/module.js";
                 // Hook to state handlers
                 script.onload = function () {
                     resolve("Module was loaded");

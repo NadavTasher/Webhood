@@ -12,11 +12,12 @@ class Popup {
      */
     static information(title, message) {
         return new Promise(function (resolve, reject) {
-            Template.load(Popup.name, "information").then((template) => {
+            // Fetch the resource
+            Module.resource(Popup, "information.html").then((html) => {
                 // Generate a random ID
                 let id = Math.floor(Math.random() * 100000);
-                // Populate views
-                document.body.appendChild(Template.populate(template, {
+                // Populate template
+                document.body.appendChild(Template.populate(Template.create(html), {
                     id: id,
                     title: title,
                     message: message
@@ -40,11 +41,12 @@ class Popup {
      */
     static input(title, message) {
         return new Promise(function (resolve, reject) {
-            Template.load(Popup.name, "input").then((template) => {
+            // Fetch the resource
+            Module.resource(Popup, "input.html").then((html) => {
                 // Generate a random ID
                 let id = Math.floor(Math.random() * 100000);
-                // Populate views
-                document.body.appendChild(Template.populate(template, {
+                // Populate template
+                document.body.appendChild(Template.populate(Template.create(html), {
                     id: id,
                     title: title,
                     message: message
@@ -55,7 +57,6 @@ class Popup {
                     UI.remove("popup-input-" + id);
                     // Reject promise
                     reject();
-
                 });
                 UI.find("popup-input-" + id + "-finish").addEventListener("click", function () {
                     // Read value
@@ -76,11 +77,12 @@ class Popup {
      */
     static toast(message) {
         return new Promise(function (resolve, reject) {
-            Template.load(Popup.name, "toast").then((template) => {
+            // Fetch the resource
+            Module.resource(Popup, "toast.html").then((html) => {
                 // Generate a random ID
                 let id = Math.floor(Math.random() * 100000);
-                // Populate views
-                document.body.appendChild(Template.populate(template, {
+                // Populate template
+                document.body.appendChild(Template.populate(Template.create(html), {
                     id: id,
                     message: message
                 }));
