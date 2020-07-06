@@ -3,6 +3,11 @@
  * https://github.com/NadavTasher/WebTemplate/
  **/
 
+window.onpopstate = function (event) {
+    // Change contents
+    document.body.innerHTML = event.state;
+};
+
 class UI {
     /**
      * Returns a view by its ID or by it's own value.
@@ -43,6 +48,17 @@ class UI {
     }
 
     /**
+     * Removes all children of a given view.
+     * @param v View
+     */
+    static clear(v) {
+        // Store view
+        let view = UI.find(v);
+        // Remove all views
+        view.innerHTML = "";
+    }
+
+    /**
      * Removes a given view.
      * @param v View
      */
@@ -54,49 +70,27 @@ class UI {
     }
 
     /**
-     * Shows a given view while hiding it's brothers.
+     * Changes a view's visibility.
      * @param v View
      */
     static view(v) {
-        // Store view
-        let element = UI.find(v);
-        // Store parent
-        let parent = element.parentNode;
-        // Hide all
-        for (let child of parent.children) {
-            UI.hide(child);
+        // Add history
+        window.history.replaceState(document.body.innerHTML, document.title);
+        // Change views
+        for (let view of Array.from(arguments)) {
+            // Store view
+            let element = UI.find(view);
+            // Store parent
+            let parent = element.parentNode;
+            // Hide all
+            for (let child of parent.children) {
+                UI.hide(child);
+            }
+            // Show view
+            UI.show(element);
         }
-        // Show view
-        UI.show(element);
-    }
-
-    /**
-     * Sets a given target as the only visible part of the page.
-     * @param target View
-     */
-    static page(target) {
-        // Store current target
-        let temporary = UI.find(target);
-        // Recursively get parent
-        while (temporary.parentNode !== document.body && temporary.parentNode !== document.body) {
-            // View temporary
-            UI.view(temporary);
-            // Set temporary to it's parent
-            temporary = temporary.parentNode;
-        }
-        // View temporary
-        UI.view(temporary);
-    }
-
-    /**
-     * Removes all children of a given view.
-     * @param v View
-     */
-    static clear(v) {
-        // Store view
-        let view = UI.find(v);
-        // Remove all views
-        view.innerHTML = "";
+        // Add history
+        window.history.pushState(document.body.innerHTML, document.title);
     }
 }
 
@@ -107,18 +101,7 @@ class Template {
      * @param template Template
      */
     static load(module, template) {
-        return new Promise((resolve, reject) => {
-            fetch("modules/" + Module.name(module) + "/templates/" + template + ".html").then(response => {
-                response.text().then(contents => {
-                    // Create the template
-                    let template = document.createElement("template");
-                    // Fill the template
-                    template.innerHTML = contents;
-                    // Resolve
-                    resolve(template);
-                }).catch(reject);
-            }).catch(reject);
-        });
+
     }
 
     /**
