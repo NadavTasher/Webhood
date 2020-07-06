@@ -2,7 +2,7 @@
 
 /**
  * Copyright (c) 2019 Nadav Tasher
- * https://github.com/NadavTasher/WebTemplate/
+ * https://github.com/NadavTasher/Template/
  **/
 
 include_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "base" . DIRECTORY_SEPARATOR . "Base.php";
