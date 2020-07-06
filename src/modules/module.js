@@ -3,6 +3,10 @@
  * https://github.com/NadavTasher/WebTemplate/
  **/
 
+const MODULE_TAG_PREFIX = "module-script-";
+const MODULE_LOCAL_URL = "modules";
+const MODULE_GLOBAL_URL = "https://nadavtasher.github.io/WebModules";
+
 class Module {
     /**
      * Loads a resource.
@@ -11,7 +15,10 @@ class Module {
      */
     static resource(module, name) {
         return new Promise((resolve, reject) => {
-            fetch("modules/" + module.name.toLowerCase() + "/resources/" + name).then(response => {
+            // Fetch resource directory
+            let resourcesURL = document.getElementById(MODULE_TAG_PREFIX + module.toLowerCase()).resources;
+            // Fetch resource
+            fetch(resourcesURL + "/" + name).then(response => {
                 response.text().then(contents => {
                     // Resolve
                     resolve(contents);
@@ -30,27 +37,36 @@ class Module {
         } else {
             return new Promise((resolve, reject) => {
                 // Create a script tag
-                let script = document.createElement("script");
+                let scriptElement = document.createElement("script");
+                // Transform name
+                let moduleName = module.toLowerCase();
+                // Initialize URL
+                let baseURL = MODULE_LOCAL_URL;
+                // Decide sources
+                if (moduleName.startsWith("global:")) {
+                    // Shift name
+                    moduleName = moduleName.slice(7);
+                    // Change baseURL
+                    baseURL = MODULE_GLOBAL_URL;
+                }
                 // Prepare the script tag
-                script.type = "text/javascript";
-                script.src = "modules/" + module.toLowerCase() + "/module.js";
+                scriptElement.id = MODULE_TAG_PREFIX + moduleName;
+                scriptElement.type = "text/javascript";
+                scriptElement.src = baseURL + "/" + moduleName + "/module.js";
+                scriptElement.resources = baseURL + "/" + moduleName + "/resources";
                 // Hook to state handlers
-                script.onload = function () {
-                    resolve("Module was loaded");
-                };
-                script.onerror = function () {
-                    reject("Module was not loaded");
-                };
+                scriptElement.onload = () => resolve("Module was loaded");
+                scriptElement.onerror = () => reject("Module was not loaded");
                 // Make sure the module isn't loaded
                 for (let i = 0; i < document.scripts.length; i++) {
-                    if (document.scripts[i].outerHTML === script.outerHTML) {
+                    if (document.getElementById(MODULE_TAG_PREFIX + moduleName) !== null) {
                         resolve("Module was already loaded");
                         // Return
                         return;
                     }
                 }
                 // Append to head
-                document.head.appendChild(script);
+                document.head.appendChild(scriptElement);
             });
         }
     }

@@ -13,7 +13,7 @@ class Popup {
     static information(title, message) {
         return new Promise(function (resolve, reject) {
             // Fetch the resource
-            Module.resource(Popup, "information.html").then((html) => {
+            Module.resource(Popup.name, "information.html").then((html) => {
                 // Generate a random ID
                 let id = Math.floor(Math.random() * 100000);
                 // Populate template
@@ -42,7 +42,7 @@ class Popup {
     static input(title, message) {
         return new Promise(function (resolve, reject) {
             // Fetch the resource
-            Module.resource(Popup, "input.html").then((html) => {
+            Module.resource(Popup.name, "input.html").then((html) => {
                 // Generate a random ID
                 let id = Math.floor(Math.random() * 100000);
                 // Populate template
@@ -78,7 +78,7 @@ class Popup {
     static toast(message) {
         return new Promise(function (resolve, reject) {
             // Fetch the resource
-            Module.resource(Popup, "toast.html").then((html) => {
+            Module.resource(Popup.name, "toast.html").then((html) => {
                 // Generate a random ID
                 let id = Math.floor(Math.random() * 100000);
                 // Populate template

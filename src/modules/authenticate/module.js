@@ -12,7 +12,7 @@ class Authenticate {
             // Load the page's contents
             let contents = document.body.innerHTML;
             // Load the template
-            Module.resource(Authenticate, "authenticate.html").then((html) => {
+            Module.resource(Authenticate.name, "authenticate.html").then((html) => {
                 // Clear the body
                 UI.clear(document.body);
                 // Append a populated template
