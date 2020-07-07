@@ -149,10 +149,10 @@ class Popup {
      * @param message Message
      * @return Promise
      */
-    static information(title, message) {
+    static alert(title, message) {
         return new Promise(function (resolve, reject) {
             // Fetch the resource
-            Module.resource(UI.name, "information.html").then((html) => {
+            Module.resource(UI.name, "alert.html").then((html) => {
                 // Generate a random ID
                 let id = Popup.id();
                 // Populate template
@@ -178,10 +178,10 @@ class Popup {
      * @param message Message
      * @return Promise
      */
-    static input(title, message) {
+    static prompt(title, message) {
         return new Promise(function (resolve, reject) {
             // Fetch the resource
-            Module.resource(UI.name, "input.html").then((html) => {
+            Module.resource(UI.name, "prompt.html").then((html) => {
                 // Generate a random ID
                 let id = Popup.id();
                 // Populate template
