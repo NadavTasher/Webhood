@@ -96,20 +96,6 @@ class UI {
 
 class Template {
     /**
-     * Creates a template.
-     * @param html HTML
-     * @returns HTMLTemplateElement
-     */
-    static create(html) {
-        // Create the template
-        let template = document.createElement("template");
-        // Fill the template
-        template.innerHTML = html;
-        // Return
-        return template;
-    }
-
-    /**
      * Populates a template.
      * @param template Template
      * @param parameters Parameters
@@ -118,9 +104,15 @@ class Template {
     static populate(template, parameters = {}) {
         // Find the template
         let templateElement = UI.find(template);
-        // Create the element
+        // If the element is null, create one
+        if (templateElement === null) {
+            templateElement = document.createElement("template");
+            // Fill the contents
+            templateElement.innerHTML = template;
+        }
+        // Create the cloned node
         let created = templateElement.cloneNode(true);
-        // Add the HTML
+        // Modify the HTML
         let html = created.innerHTML;
         // Replace parameters
         for (let key in parameters) {
@@ -136,6 +128,7 @@ class Template {
                     html = html.replace(search, value);
             }
         }
+        // Replace the HTML
         created.innerHTML = html;
         // Return created element
         return created.content;
@@ -143,6 +136,13 @@ class Template {
 }
 
 class Popup {
+    /**
+     * Generates a random ID.
+     */
+    static id() {
+        return Math.floor(Math.random() * 100000).toString();
+    }
+
     /**
      * Pops up a simple information popup.
      * @param title Title
@@ -154,17 +154,17 @@ class Popup {
             // Fetch the resource
             Module.resource(UI.name, "information.html").then((html) => {
                 // Generate a random ID
-                let id = Math.floor(Math.random() * 100000);
+                let id = Popup.id();
                 // Populate template
-                document.body.appendChild(Template.populate(Template.create(html), {
+                document.body.appendChild(Template.populate(html, {
                     id: id,
                     title: title,
                     message: message
                 }));
                 // Set click listener
-                UI.find("popup-information-" + id + "-close").addEventListener("click", function () {
+                UI.find(id + "-close").addEventListener("click", function () {
                     // Close popup
-                    UI.remove("popup-information-" + id);
+                    UI.remove(id);
                     // Resolve promise
                     resolve();
                 });
@@ -183,25 +183,25 @@ class Popup {
             // Fetch the resource
             Module.resource(UI.name, "input.html").then((html) => {
                 // Generate a random ID
-                let id = Math.floor(Math.random() * 100000);
+                let id = Popup.id();
                 // Populate template
-                document.body.appendChild(Template.populate(Template.create(html), {
+                document.body.appendChild(Template.populate(html, {
                     id: id,
                     title: title,
                     message: message
                 }));
                 // Set click listeners
-                UI.find("popup-input-" + id + "-cancel").addEventListener("click", function () {
+                UI.find(id + "-cancel").addEventListener("click", function () {
                     // Close popup
-                    UI.remove("popup-input-" + id);
+                    UI.remove(id);
                     // Reject promise
                     reject();
                 });
-                UI.find("popup-input-" + id + "-finish").addEventListener("click", function () {
+                UI.find(id + "-finish").addEventListener("click", function () {
                     // Read value
-                    let value = UI.find("popup-input-" + id + "-input").value;
+                    let value = UI.find(id + "-input").value;
                     // Close popup
-                    UI.remove("popup-input-" + id);
+                    UI.remove(id);
                     // Resolve promise
                     resolve(value);
                 });
@@ -219,16 +219,16 @@ class Popup {
             // Fetch the resource
             Module.resource(UI.name, "toast.html").then((html) => {
                 // Generate a random ID
-                let id = Math.floor(Math.random() * 100000);
+                let id = Popup.id();
                 // Populate template
-                document.body.appendChild(Template.populate(Template.create(html), {
+                document.body.appendChild(Template.populate(html, {
                     id: id,
                     message: message
                 }));
                 // Set timeout
                 setTimeout(function () {
                     // Close popup
-                    UI.remove("popup-toast-" + id);
+                    UI.remove(id);
                     // Resolve the promise
                     resolve();
                 }, 3000);

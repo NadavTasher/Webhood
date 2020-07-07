@@ -3,9 +3,16 @@
  * https://github.com/NadavTasher/Template/
  **/
 
-const MODULE_TAG_PREFIX = "module-script-";
-const MODULE_LOCAL_URL = "modules";
-const MODULE_GLOBAL_URL = "https://nadavtasher.github.io/Modules";
+const MODULE_PREFIX_TAG = "module:";
+const MODULE_PREFIX_GLOBAL = "global:";
+
+const MODULE_ATTRIBUTE_ID = "id";
+const MODULE_ATTRIBUTE_TYPE = "type";
+const MODULE_ATTRIBUTE_SOURCE = "src";
+const MODULE_ATTRIBUTE_RESOURCES = "resources";
+
+const MODULE_URL_LOCAL = "modules";
+const MODULE_URL_GLOBAL = "https://nadavtasher.github.io/Modules";
 
 class Module {
     /**
@@ -16,7 +23,7 @@ class Module {
     static resource(module, name) {
         return new Promise((resolve, reject) => {
             // Fetch resource directory
-            let resourcesURL = document.getElementById(MODULE_TAG_PREFIX + module.toLowerCase()).resources;
+            let resourcesURL = document.getElementById(MODULE_PREFIX_TAG + module.toLowerCase()).getAttribute(MODULE_ATTRIBUTE_RESOURCES);
             // Fetch resource
             fetch(resourcesURL + "/" + name).then(response => {
                 response.text().then(contents => {
@@ -41,25 +48,25 @@ class Module {
                 // Transform name
                 let moduleName = module.toLowerCase();
                 // Initialize URL
-                let baseURL = MODULE_LOCAL_URL;
+                let baseURL = MODULE_URL_LOCAL;
                 // Decide sources
-                if (moduleName.startsWith("global:")) {
+                if (moduleName.startsWith(MODULE_PREFIX_GLOBAL)) {
                     // Shift name
-                    moduleName = moduleName.slice(7);
+                    moduleName = moduleName.slice(MODULE_PREFIX_GLOBAL.length);
                     // Change baseURL
-                    baseURL = MODULE_GLOBAL_URL;
+                    baseURL = MODULE_URL_GLOBAL;
                 }
                 // Prepare the script tag
-                scriptElement.id = MODULE_TAG_PREFIX + moduleName;
-                scriptElement.type = "text/javascript";
-                scriptElement.src = baseURL + "/" + moduleName + "/module.js";
-                scriptElement.resources = baseURL + "/" + moduleName + "/resources";
+                scriptElement.setAttribute(MODULE_ATTRIBUTE_TYPE, "text/javascript");
+                scriptElement.setAttribute(MODULE_ATTRIBUTE_ID, MODULE_PREFIX_TAG + moduleName);
+                scriptElement.setAttribute(MODULE_ATTRIBUTE_SOURCE, baseURL + "/" + moduleName + "/module.js");
+                scriptElement.setAttribute(MODULE_ATTRIBUTE_RESOURCES, baseURL + "/" + moduleName + "/resources");
                 // Hook to state handlers
                 scriptElement.onload = () => resolve("Module was loaded");
                 scriptElement.onerror = () => reject("Module was not loaded");
                 // Make sure the module isn't loaded
                 for (let i = 0; i < document.scripts.length; i++) {
-                    if (document.getElementById(MODULE_TAG_PREFIX + moduleName) !== null) {
+                    if (document.getElementById(MODULE_PREFIX_TAG + moduleName) !== null) {
                         resolve("Module was already loaded");
                         // Return
                         return;
