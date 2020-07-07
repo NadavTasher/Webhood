@@ -3,9 +3,10 @@
  * https://github.com/NadavTasher/Template/
  **/
 
+// Register a popstate listener
 window.addEventListener("popstate", (event) => {
     // Change contents
-    document.body.innerHTML = event.state;
+    State.restore(event.state);
 });
 
 class UI {
@@ -75,7 +76,7 @@ class UI {
      */
     static view(v) {
         // Add history
-        window.history.replaceState(document.body.innerHTML, document.title);
+        window.history.replaceState(State.preserve(), document.title);
         // Change views
         for (let view of Array.from(arguments)) {
             // Store view
@@ -90,7 +91,46 @@ class UI {
             UI.show(element);
         }
         // Add history
-        window.history.pushState(document.body.innerHTML, document.title);
+        window.history.pushState(State.preserve(), document.title);
+    }
+}
+
+class State {
+    /**
+     * Creates a restartable DOM visibility map.
+     * @return Array
+     */
+    static preserve() {
+        // Initialize map
+        let states = [];
+        // Find all elements
+        let elements = document.getElementsByTagName("*");
+        // Loop over all elements
+        for (let element of elements) {
+            // Make sure the element has an ID
+            if (element.id.length === 0) {
+                element.id = Math.floor(Math.random() * 1000000).toString();
+            }
+            // Add to object
+            states.push([element.id, element.hasAttribute("hidden")]);
+        }
+        // Return map
+        return states;
+    }
+
+    /**
+     * Restores a restartable DOM visibility map.
+     * @param map Map
+     */
+    static restore(map = []) {
+        // Loop over map
+        for (let [id, value] of map) {
+            if (value) {
+                UI.hide(id);
+            } else {
+                UI.show(id);
+            }
+        }
     }
 }
 
@@ -137,13 +177,6 @@ class Template {
 
 class Popup {
     /**
-     * Generates a random ID.
-     */
-    static id() {
-        return Math.floor(Math.random() * 100000).toString();
-    }
-
-    /**
      * Pops up a simple information popup.
      * @param title Title
      * @param message Message
@@ -153,18 +186,15 @@ class Popup {
         return new Promise(function (resolve, reject) {
             // Fetch the resource
             Module.resource(UI.name, "alert.html").then((html) => {
-                // Generate a random ID
-                let id = Popup.id();
                 // Populate template
                 document.body.appendChild(Template.populate(html, {
-                    id: id,
                     title: title,
                     message: message
                 }));
                 // Set click listener
-                UI.find(id + "-close").addEventListener("click", function () {
+                UI.find("popup-alert-close").addEventListener("click", function () {
                     // Close popup
-                    UI.remove(id);
+                    UI.remove("popup-alert");
                     // Resolve promise
                     resolve();
                 });
@@ -182,26 +212,23 @@ class Popup {
         return new Promise(function (resolve, reject) {
             // Fetch the resource
             Module.resource(UI.name, "prompt.html").then((html) => {
-                // Generate a random ID
-                let id = Popup.id();
                 // Populate template
                 document.body.appendChild(Template.populate(html, {
-                    id: id,
                     title: title,
                     message: message
                 }));
                 // Set click listeners
-                UI.find(id + "-cancel").addEventListener("click", function () {
+                UI.find("popup-prompt-cancel").addEventListener("click", function () {
                     // Close popup
-                    UI.remove(id);
+                    UI.remove("popup-prompt");
                     // Reject promise
                     reject();
                 });
-                UI.find(id + "-finish").addEventListener("click", function () {
+                UI.find("popup-prompt-finish").addEventListener("click", function () {
                     // Read value
-                    let value = UI.find(id + "-input").value;
+                    let value = UI.find("popup-prompt-input").value;
                     // Close popup
-                    UI.remove(id);
+                    UI.remove("popup-prompt");
                     // Resolve promise
                     resolve(value);
                 });
@@ -218,17 +245,14 @@ class Popup {
         return new Promise(function (resolve, reject) {
             // Fetch the resource
             Module.resource(UI.name, "toast.html").then((html) => {
-                // Generate a random ID
-                let id = Popup.id();
                 // Populate template
                 document.body.appendChild(Template.populate(html, {
-                    id: id,
                     message: message
                 }));
                 // Set timeout
                 setTimeout(function () {
                     // Close popup
-                    UI.remove(id);
+                    UI.remove("popup-toast");
                     // Resolve the promise
                     resolve();
                 }, 3000);
