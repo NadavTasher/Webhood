@@ -3,10 +3,10 @@
  * https://github.com/NadavTasher/Template/
  **/
 
-window.onpopstate = function (event) {
+window.addEventListener("popstate", (event) => {
     // Change contents
     document.body.innerHTML = event.state;
-};
+});
 
 class UI {
     /**
