@@ -16,25 +16,6 @@ const MODULE_URL_GLOBAL = "https://nadavtasher.github.io/Modules";
 
 class Module {
     /**
-     * Loads a resource.
-     * @param module Module
-     * @param name Name
-     */
-    static resource(module, name) {
-        return new Promise((resolve, reject) => {
-            // Fetch resource directory
-            let resourcesURL = document.getElementById(MODULE_PREFIX_TAG + module.toLowerCase()).getAttribute(MODULE_ATTRIBUTE_RESOURCES);
-            // Fetch resource
-            fetch(resourcesURL + "/" + name).then(response => {
-                response.text().then(contents => {
-                    // Resolve
-                    resolve(contents);
-                }).catch(reject);
-            }).catch(reject);
-        });
-    }
-
-    /**
      * Loads modules.
      * @param module Module
      */
@@ -76,5 +57,24 @@ class Module {
                 document.head.appendChild(scriptElement);
             });
         }
+    }
+
+    /**
+     * Loads a resource.
+     * @param module Module
+     * @param name Name
+     */
+    static resource(module, name) {
+        return new Promise((resolve, reject) => {
+            // Fetch resource directory
+            let resourcesURL = document.getElementById(MODULE_PREFIX_TAG + module.toLowerCase()).getAttribute(MODULE_ATTRIBUTE_RESOURCES);
+            // Fetch resource
+            fetch(resourcesURL + "/" + name).then(response => {
+                response.text().then(contents => {
+                    // Resolve
+                    resolve(contents);
+                }).catch(reject);
+            }).catch(reject);
+        });
     }
 }
