@@ -3,10 +3,41 @@
  * https://github.com/NadavTasher/Template/
  **/
 
-// Register a popstate listener
+// Register a popstate listener to restore states.
 window.addEventListener("popstate", (event) => {
     // Change contents
-    State.restore(event.state);
+    window.restore(event.state);
+});
+
+// Register a preservation function to preserve states.
+window.preserve = (() => {
+    // Initialize map
+    let state = [];
+    // Find all elements
+    let elements = document.getElementsByTagName("*");
+    // Loop over all elements
+    for (let element of elements) {
+        // Make sure the element has an ID
+        if (element.id.length === 0) {
+            element.id = Math.floor(Math.random() * 1000000).toString();
+        }
+        // Add to object
+        state.push([element.id, element.hasAttribute("hidden")]);
+    }
+    // Return map
+    return state;
+});
+
+// Register a restoration function to restore states.
+window.restore = ((state) => {
+    // Loop over map
+    for (let [id, value] of state) {
+        if (value) {
+            UI.hide(id);
+        } else {
+            UI.show(id);
+        }
+    }
 });
 
 class UI {
@@ -76,7 +107,7 @@ class UI {
      */
     static view(v) {
         // Add history
-        window.history.replaceState(State.preserve(), document.title);
+        window.history.replaceState(window.preserve(), document.title);
         // Change views
         for (let view of Array.from(arguments)) {
             // Store view
@@ -91,46 +122,7 @@ class UI {
             UI.show(element);
         }
         // Add history
-        window.history.pushState(State.preserve(), document.title);
-    }
-}
-
-class State {
-    /**
-     * Creates a restartable DOM visibility map.
-     * @return Array
-     */
-    static preserve() {
-        // Initialize map
-        let states = [];
-        // Find all elements
-        let elements = document.getElementsByTagName("*");
-        // Loop over all elements
-        for (let element of elements) {
-            // Make sure the element has an ID
-            if (element.id.length === 0) {
-                element.id = Math.floor(Math.random() * 1000000).toString();
-            }
-            // Add to object
-            states.push([element.id, element.hasAttribute("hidden")]);
-        }
-        // Return map
-        return states;
-    }
-
-    /**
-     * Restores a restartable DOM visibility map.
-     * @param map Map
-     */
-    static restore(map = []) {
-        // Loop over map
-        for (let [id, value] of map) {
-            if (value) {
-                UI.hide(id);
-            } else {
-                UI.show(id);
-            }
-        }
+        window.history.pushState(window.preserve(), document.title);
     }
 }
 
