@@ -29,8 +29,9 @@ body {
     font-family: sans-serif;
     /* Transition */
     transition-duration: 0.5s;
-    /* Outline */
+    /* Outline and Decoration */
     outline: none;
+    text-decoration: none;
 }
 
 /* Alignment */
