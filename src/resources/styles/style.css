@@ -69,7 +69,7 @@ body {
 [text], [button], [input], p, button, input {
     /* Padding, Margins */
     padding: 1.5vh;
-    margin: 1.5vh;
+    margin: 0.75vh;
 }
 
 [row], [column], div, body, html {
@@ -182,18 +182,6 @@ body {
 [huge] {
     /* Font */
     font-size: 8vh;
-}
-
-/* Padding, Margins */
-
-[paddingless] {
-    /* Padding */
-    padding: 0;
-}
-
-[marginless] {
-    /* Margin */
-    margin: 0;
 }
 
 /* Additional */
