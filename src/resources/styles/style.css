@@ -159,6 +159,11 @@ body {
 
 /* Text */
 
+[tiny] {
+    /* Font */
+    font-size: 1.75vh;
+}
+
 [small] {
     /* Font */
     font-size: 2.5vh;
@@ -172,6 +177,23 @@ body {
 [large] {
     /* Font */
     font-size: 6vh;
+}
+
+[huge] {
+    /* Font */
+    font-size: 8vh;
+}
+
+/* Padding, Margins */
+
+[paddingless] {
+    /* Padding */
+    padding: 0;
+}
+
+[marginless] {
+    /* Margin */
+    margin: 0;
 }
 
 /* Additional */
