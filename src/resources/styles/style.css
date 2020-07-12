@@ -19,9 +19,20 @@ body {
     margin: auto !important;
 }
 
+/* Base */
+
+[text], [button], [input], [row], [column], p, button, input, div, body, html {
+    /* Font */
+    font-family: sans-serif;
+    text-decoration: none;
+    /* Transition and Outline */
+    outline: none;
+    transition-duration: 0.5s;
+}
+
 /* Flex */
 
-[text], [button], [input], [row], [column], [spinner], p, button, input, div, body, html {
+[text], [button], [input], [row], [column], p, button, input, div, body, html {
     display: flex;
     flex-direction: column;
 }
@@ -56,10 +67,6 @@ body {
     align-items: stretch;
 }
 
-[spinner] {
-    align-self: center;
-}
-
 /* Padding, Margins */
 
 [text], [button], [input], p, button, input {
@@ -72,13 +79,9 @@ body {
     margin: 0;
 }
 
-[spinner] {
-    margin: 1vh;
-}
-
 /* Sizing */
 
-[text], [button], [input], [row], [column], [spinner], p, button, input, div, body, html {
+[text], [button], [input], [row], [column], p, button, input, div, body, html {
     line-height: 100%;
     min-height: fit-content;
 }
@@ -89,11 +92,6 @@ body {
 
 [row] > * {
     width: 100%;
-}
-
-[spinner] {
-    height: 7vh;
-    width: 7vh;
 }
 
 /* Border */
@@ -109,14 +107,6 @@ body {
 
 [button], button {
     border-width: 0.5vh;
-}
-
-[spinner] {
-    border-style: solid;
-    border-radius: 50%;
-    border-width: 1vh;
-    border-color: var(--coaster);
-    border-top-color: var(--passive);
 }
 
 /* Colors */
@@ -139,14 +129,7 @@ body {
     color: var(--passive);
 }
 
-/* Text */
-
-[text], [button], [input], [row], [column], [spinner], p, button, input, div, body, html {
-    font-family: sans-serif;
-    text-decoration: none;
-}
-
-/* Text Alignment */
+/* Text alignment */
 
 [center] {
     text-align: center;
@@ -163,7 +146,7 @@ body {
     text-align-last: end;
 }
 
-/* Text Size */
+/* Text size */
 
 [tiny] {
     font-size: 1.75vh;
@@ -185,39 +168,12 @@ body {
     font-size: 8vh;
 }
 
-/* Animations and Transitions */
-
-[text], [button], [input], [row], [column], [spinner], p, button, input, div, body, html {
-    transition-duration: 0.5s;
-}
-
-[spinner] {
-    animation: spin 2s ease infinite;
-    animation-name: spinner;
-    animation-duration: 1s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-}
-
-@keyframes spinner {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
 /* Additional */
-
-[text], [button], [input], [row], [column], [spinner], p, button, input, div, body, html {
-    outline: none;
-}
 
 [hidden] {
     display: none !important;
 }
 
 *::-webkit-scrollbar {
-    display: none;
+    display: none !important;
 }
