@@ -114,7 +114,7 @@ class UI {
      */
     static view(v) {
         // Add history
-        window.history.replaceState(window.preserve(), document.title);
+        window.history.replaceState(History.preserve(), document.title);
         // Change views
         for (let view of Array.from(arguments)) {
             // Store view
@@ -129,7 +129,7 @@ class UI {
             UI.show(element);
         }
         // Add history
-        window.history.pushState(window.preserve(), document.title);
+        window.history.pushState(History.preserve(), document.title);
     }
 
     /**
