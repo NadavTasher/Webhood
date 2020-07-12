@@ -19,25 +19,24 @@ body {
     margin: auto !important;
 }
 
-/* Base flex */
+/* Flex */
 
-[text], [button], [input], [row], [column], p, button, input, div, body, html {
-    /* Display */
+[text], [button], [input], [row], [column], [spinner], p, button, input, div, body, html {
     display: flex;
     flex-direction: column;
-    /* Font */
-    font-family: sans-serif;
-    /* Transition */
-    transition-duration: 0.5s;
-    /* Outline and Decoration */
-    outline: none;
-    text-decoration: none;
+}
+
+[row] {
+    flex-direction: row;
+}
+
+[column] {
+    flex-direction: column;
 }
 
 /* Alignment */
 
 [text], [button], [input], p, button, input {
-    /* Alignment */
     justify-content: center;
     justify-items: center;
     align-content: center;
@@ -45,62 +44,61 @@ body {
 }
 
 [row], [column], div, body, html {
-    /* Alignment */
     justify-content: center;
     align-content: center;
 }
 
 [row] {
-    /* Flex */
-    flex-direction: row;
-    /* Alignment */
     align-items: stretch;
 }
 
 [column] {
-    /* Flex */
-    flex-direction: column;
-    /* Alignment */
     align-items: stretch;
+}
+
+[spinner] {
+    align-self: center;
 }
 
 /* Padding, Margins */
 
 [text], [button], [input], p, button, input {
-    /* Padding, Margins */
     padding: 1.5vh;
     margin: 1vh;
 }
 
 [row], [column], div, body, html {
-    /* Padding, Margins */
     padding: 0;
     margin: 0;
 }
 
+[spinner] {
+    margin: 1vh;
+}
+
 /* Sizing */
 
-[text], [button], [input], [row], [column], p, button, input, div, body, html {
-    /* Sizing */
+[text], [button], [input], [row], [column], [spinner], p, button, input, div, body, html {
     line-height: 100%;
-    /* Height */
     min-height: fit-content;
 }
 
 [button], [input], button, input {
-    /* Width */
     width: auto;
 }
 
 [row] > * {
-    /* Width */
     width: 100%;
+}
+
+[spinner] {
+    height: 7vh;
+    width: 7vh;
 }
 
 /* Border */
 
 [button], [input], button, input {
-    /* Border */
     border-style: solid;
     border-radius: 0.5vh;
 }
@@ -113,78 +111,108 @@ body {
     border-width: 0.5vh;
 }
 
+[spinner] {
+    border-style: solid;
+    border-radius: 50%;
+    border-width: 1vh;
+    border-color: var(--coaster);
+    border-top-color: var(--passive);
+}
+
 /* Colors */
 
 [text], [button], [input], p, button, input {
-    /* Background */
     background-color: transparent;
 }
 
 [button], [input], button, input {
-    /* Colors */
     color: var(--passive);
     border-color: var(--passive);
 }
 
 [button]:hover, [input]:hover, button:hover, input:hover {
-    /* Colors */
     color: var(--active);
     border-color: var(--active);
 }
 
 [text], p {
-    /* Colors */
     color: var(--passive);
 }
 
-/* Alignment */
+/* Text */
+
+[text], [button], [input], [row], [column], [spinner], p, button, input, div, body, html {
+    font-family: sans-serif;
+    text-decoration: none;
+}
+
+/* Text Alignment */
 
 [center] {
-    /* Text */
     text-align: center;
     text-align-last: center;
 }
 
 [left] {
-    /* Text */
     text-align: start;
     text-align-last: start;
 }
 
 [right] {
-    /* Text */
     text-align: end;
     text-align-last: end;
 }
 
-/* Text */
+/* Text Size */
 
 [tiny] {
-    /* Font */
     font-size: 1.75vh;
 }
 
 [small] {
-    /* Font */
     font-size: 2.5vh;
 }
 
 [medium] {
-    /* Font */
     font-size: 4vh;
 }
 
 [large] {
-    /* Font */
     font-size: 6vh;
 }
 
 [huge] {
-    /* Font */
     font-size: 8vh;
 }
 
+/* Animations and Transitions */
+
+[text], [button], [input], [row], [column], [spinner], p, button, input, div, body, html {
+    transition-duration: 0.5s;
+}
+
+[spinner] {
+    animation: spin 2s ease infinite;
+    animation-name: spinner;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 /* Additional */
+
+[text], [button], [input], [row], [column], [spinner], p, button, input, div, body, html {
+    outline: none;
+}
 
 [hidden] {
     display: none !important;
