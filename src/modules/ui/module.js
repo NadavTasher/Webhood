@@ -6,39 +6,46 @@
 // Register a popstate listener to restore states.
 window.addEventListener("popstate", (event) => {
     // Change contents
-    window.restore(event.state);
+    History.restore(event.state);
 });
 
-// Register a preservation function to preserve states.
-window.preserve = (() => {
-    // Initialize map
-    let state = [];
-    // Find all elements
-    let elements = document.getElementsByTagName("*");
-    // Loop over all elements
-    for (let element of elements) {
-        // Make sure the element has an ID
-        if (element.id.length === 0) {
-            element.id = Math.floor(Math.random() * 1000000).toString();
+class History {
+    /**
+     * Creates a preservable state for all elements in the page.
+     */
+    static preserve() {
+        // Initialize map
+        let state = [];
+        // Find all elements
+        let elements = document.getElementsByTagName("*");
+        // Loop over all elements
+        for (let element of elements) {
+            // Make sure the element has an ID
+            if (element.id.length === 0) {
+                element.id = Math.floor(Math.random() * 1000000).toString();
+            }
+            // Add to object
+            state.push([element.id, element.hasAttribute("hidden")]);
         }
-        // Add to object
-        state.push([element.id, element.hasAttribute("hidden")]);
+        // Return map
+        return state;
     }
-    // Return map
-    return state;
-});
 
-// Register a restoration function to restore states.
-window.restore = ((state) => {
-    // Loop over map
-    for (let [id, value] of state) {
-        if (value) {
-            UI.hide(id);
-        } else {
-            UI.show(id);
+    /**
+     * Restores a preserved state for elements in the page.
+     * @param state State
+     */
+    static restore(state = []){
+        // Loop over map
+        for (let [id, value] of state) {
+            if (value) {
+                UI.hide(id);
+            } else {
+                UI.show(id);
+            }
         }
     }
-});
+}
 
 class UI {
     /**
@@ -124,9 +131,7 @@ class UI {
         // Add history
         window.history.pushState(window.preserve(), document.title);
     }
-}
 
-class Template {
     /**
      * Populates a template.
      * @param template Template
@@ -164,91 +169,5 @@ class Template {
         created.innerHTML = html;
         // Return created element
         return created.content;
-    }
-}
-
-class Popup {
-    /**
-     * Pops up a simple information popup.
-     * @param title Title
-     * @param message Message
-     * @return Promise
-     */
-    static alert(title, message) {
-        return new Promise(function (resolve, reject) {
-            // Fetch the resource
-            Module.resource(UI.name, "alert.html").then((html) => {
-                // Populate template
-                document.body.appendChild(Template.populate(html, {
-                    title: title,
-                    message: message
-                }));
-                // Set click listener
-                UI.find("popup-alert-close").addEventListener("click", function () {
-                    // Close popup
-                    UI.remove("popup-alert");
-                    // Resolve promise
-                    resolve();
-                });
-            });
-        });
-    }
-
-    /**
-     * Pops up a simple input popup.
-     * @param title Title
-     * @param message Message
-     * @return Promise
-     */
-    static prompt(title, message) {
-        return new Promise(function (resolve, reject) {
-            // Fetch the resource
-            Module.resource(UI.name, "prompt.html").then((html) => {
-                // Populate template
-                document.body.appendChild(Template.populate(html, {
-                    title: title,
-                    message: message
-                }));
-                // Set click listeners
-                UI.find("popup-prompt-cancel").addEventListener("click", function () {
-                    // Close popup
-                    UI.remove("popup-prompt");
-                    // Reject promise
-                    reject();
-                });
-                UI.find("popup-prompt-finish").addEventListener("click", function () {
-                    // Read value
-                    let value = UI.find("popup-prompt-input").value;
-                    // Close popup
-                    UI.remove("popup-prompt");
-                    // Resolve promise
-                    resolve(value);
-                });
-            });
-        });
-    }
-
-    /**
-     * Pops up a simple toast popup.
-     * @param message Message
-     * @return Promise
-     */
-    static toast(message) {
-        return new Promise(function (resolve, reject) {
-            // Fetch the resource
-            Module.resource(UI.name, "toast.html").then((html) => {
-                // Populate template
-                document.body.appendChild(Template.populate(html, {
-                    message: message
-                }));
-                // Set timeout
-                setTimeout(function () {
-                    // Close popup
-                    UI.remove("popup-toast");
-                    // Resolve the promise
-                    resolve();
-                }, 3000);
-            });
-        });
     }
 }
