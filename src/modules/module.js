@@ -3,16 +3,29 @@
  * https://github.com/NadavTasher/Template/
  **/
 
-const MODULE_PREFIX_TAG = "module:";
-const MODULE_PREFIX_GLOBAL = "global:";
-
+// Initialize attributes
 const MODULE_ATTRIBUTE_ID = "id";
 const MODULE_ATTRIBUTE_TYPE = "type";
 const MODULE_ATTRIBUTE_SOURCE = "src";
 const MODULE_ATTRIBUTE_RESOURCES = "resources";
 
-const MODULE_URL_LOCAL = "modules";
-const MODULE_URL_GLOBAL = "https://nadavtasher.github.io/Modules";
+// Initialize tag prefix
+const MODULE_PREFIX_TAG = "module:";
+
+// Initialize sources
+const MODULE_SOURCES_LOCAL = "local";
+const MODULE_SOURCES_GLOBAL = "global";
+const MODULE_SOURCES_TEMPLATE = "template";
+
+// Initialize sources object
+const MODULE_SOURCES = {
+    [MODULE_SOURCES_LOCAL]: "modules",
+    [MODULE_SOURCES_GLOBAL]: "https://nadavtasher.github.io/Modules/src/modules",
+    [MODULE_SOURCES_TEMPLATE]: "https://nadavtasher.github.io/Template/src/modules"
+};
+
+// Initialize default sources
+const MODULE_SOURCES_DEFAULT = MODULE_SOURCES_LOCAL;
 
 class Module {
     /**
@@ -28,20 +41,27 @@ class Module {
                 let scriptElement = document.createElement("script");
                 // Transform name
                 let moduleName = module.toLowerCase();
-                // Initialize URL
-                let baseURL = MODULE_URL_LOCAL;
-                // Decide sources
-                if (moduleName.startsWith(MODULE_PREFIX_GLOBAL)) {
-                    // Shift name
-                    moduleName = moduleName.slice(MODULE_PREFIX_GLOBAL.length);
-                    // Change baseURL
-                    baseURL = MODULE_URL_GLOBAL;
+                // Initialize default sources
+                let moduleSources = MODULE_SOURCES_DEFAULT;
+                // Switch sources
+                for (let sources in MODULE_SOURCES) {
+                    // Append to prefix
+                    let prefix = sources + ":";
+                    // Check prefix existence
+                    if (moduleName.startsWith(prefix)) {
+                        // Update module name
+                        moduleName = moduleName.slice(prefix.length);
+                        // Update module sources
+                        moduleSources = sources;
+                        // Break loop
+                        break;
+                    }
                 }
                 // Prepare the script tag
                 scriptElement.setAttribute(MODULE_ATTRIBUTE_TYPE, "text/javascript");
                 scriptElement.setAttribute(MODULE_ATTRIBUTE_ID, MODULE_PREFIX_TAG + moduleName);
-                scriptElement.setAttribute(MODULE_ATTRIBUTE_SOURCE, baseURL + "/" + moduleName + "/module.js");
-                scriptElement.setAttribute(MODULE_ATTRIBUTE_RESOURCES, baseURL + "/" + moduleName + "/resources");
+                scriptElement.setAttribute(MODULE_ATTRIBUTE_SOURCE, MODULE_SOURCES[moduleSources] + "/" + moduleName + "/module.js");
+                scriptElement.setAttribute(MODULE_ATTRIBUTE_RESOURCES, MODULE_SOURCES[moduleSources] + "/" + moduleName + "/resources");
                 // Hook to state handlers
                 scriptElement.onload = () => resolve("Module was loaded");
                 scriptElement.onerror = () => reject("Module was not loaded");
