@@ -40,7 +40,7 @@ class Authority
      * Creates a token.
      * @param string | stdClass | array $data Data
      * @param float | int $validity Validity time
-     * @return array Result
+     * @return string Token
      */
     public function issue($data, $validity = self::VALIDITY)
     {
@@ -57,45 +57,36 @@ class Authority
         // Combine all into token
         $token = implode(self::SEPARATOR, $tokenSlices);
         // Return combined message
-        return [true, $token];
+        return $token;
     }
 
     /**
      * Validates a token.
      * @param string $token Token
-     * @return array Validation result
+     * @return string | stdClass | array Data
      */
     public function validate($token)
     {
         // Separate string
         $tokenSlices = explode(self::SEPARATOR, $token);
         // Validate content count
-        if (count($tokenSlices) === 2) {
-            // Store parts
-            $tokenString = $tokenSlices[0];
-            $tokenSignature = $tokenSlices[1];
-            // Validate signature
-            if (hash_hmac("sha256", $tokenString, file_get_contents(Base::file($this->API, self::API))) === $tokenSignature) {
-                // Parse token object
-                $tokenObject = json_decode(hex2bin($tokenString));
-                // Validate existence
-                if (isset($tokenObject->data) &&
-                    isset($tokenObject->expiry)) {
-                    // Validate expiry
-                    if (time() < $tokenObject->expiry) {
-                        // Return token
-                        return [true, $tokenObject->data];
-                    }
-                    // Fallback error
-                    return [false, "Invalid token expiry"];
-                }
-                // Fallback error
-                return [false, "Invalid token structure"];
-            }
-            // Fallback error
-            return [false, "Invalid token signature"];
-        }
-        // Fallback error
-        return [false, "Invalid token format"];
+        if (count($tokenSlices) !== 2)
+            throw new Error("Invalid token format");
+        // Store parts
+        $tokenString = $tokenSlices[0];
+        $tokenSignature = $tokenSlices[1];
+        // Validate signature
+        if (hash_hmac("sha256", $tokenString, file_get_contents(Base::file($this->API, self::API))) !== $tokenSignature)
+            throw new Error("Invalid token signature");
+        // Parse token object
+        $tokenObject = json_decode(hex2bin($tokenString));
+        // Validate structure
+        if (!isset($tokenObject->data) || !isset($tokenObject->expiry))
+            throw new Error("Invalid token structure");
+        // Validate expiry
+        if (time() > $tokenObject->expiry)
+            throw new Error("Invalid token expiry");
+        // Return token
+        return $tokenObject->data;
     }
 }

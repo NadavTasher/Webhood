@@ -49,21 +49,30 @@ class Base
             }
             // Unset the action
             unset($requestParameters->$requestAction);
+            // Initialize the result
+            $requestStatus = null;
+            $requestResult = null;
             // Execute the call
-            $requestResult = $callback($requestAction, $requestParameters);
+            try {
+                $requestResult = $callback($requestAction, $requestParameters);
+                $requestStatus = true;
+            } catch (Error $error) {
+                $requestResult = $error->getMessage();
+                $requestStatus = false;
+            }
             // Parse the results
             if (is_array($requestResult)) {
                 if (count($requestResult) === 2) {
                     if (is_bool($requestResult[0])) {
                         // Set status
-                        $result->status = $requestResult[0];
+                        $result->status = $requestStatus;
                         // Set result
-                        $result->result = $requestResult[1];
+                        $result->result = $requestResult;
                     }
                 }
             }
         }
-        // Change the response type
+        // Change the content type
         header("Content-Type: application/json");
         // Echo response
         echo json_encode($result);
