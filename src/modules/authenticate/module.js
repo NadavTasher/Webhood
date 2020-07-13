@@ -32,7 +32,7 @@ class Authenticate {
                         // Change the page's contents
                         document.body.innerHTML = contents;
                         // Resolve
-                        resolve();
+                        resolve(result);
                     }).catch(result => {
                         // Show the inputs
                         UI.show("inputs");

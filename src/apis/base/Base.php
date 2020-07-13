@@ -50,27 +50,13 @@ class Base
             }
             // Unset the action
             unset($requestParameters->$requestAction);
-            // Initialize the result
-            $requestStatus = null;
-            $requestResult = null;
             // Execute the call
             try {
-                $requestResult = $callback($requestAction, $requestParameters);
-                $requestStatus = true;
+                $result->result = $callback($requestAction, $requestParameters);
+                $result->status = true;
             } catch (Error $error) {
-                $requestResult = $error->getMessage();
-                $requestStatus = false;
-            }
-            // Parse the results
-            if (is_array($requestResult)) {
-                if (count($requestResult) === 2) {
-                    if (is_bool($requestResult[0])) {
-                        // Set status
-                        $result->status = $requestStatus;
-                        // Set result
-                        $result->result = $requestResult;
-                    }
-                }
+                $result->result = $error->getMessage();
+                $result->status = false;
             }
         }
         // Change the content type

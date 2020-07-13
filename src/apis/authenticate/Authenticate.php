@@ -88,8 +88,8 @@ class Authenticate
 
     /**
      * Authenticates using a bearer token.
-     * @param string $token token
-     * @return array Results
+     * @param string $token Token
+     * @return string User ID
      */
     public static function validate($token)
     {
@@ -148,10 +148,10 @@ class Authenticate
         $salt = self::$keystore->get($userID, self::COLUMN_SALT);
         $hash = self::$keystore->get($userID, self::COLUMN_HASH);
         // Make sure the user is not locked
-        if (intval($lock[1]) > time())
+        if (intval($lock) > time())
             throw new Error("User is locked");
         // Check password match
-        if (hash("sha256", $password . $salt[1]) === $hash[1]) {
+        if (hash("sha256", $password . $salt) === $hash) {
             // Issue a new token
             return self::$authority->issue($userID);
         } else {
