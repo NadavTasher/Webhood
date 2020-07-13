@@ -126,9 +126,9 @@ class Keystore
         if (file_exists($path) && is_file($path)) {
             // Read and return value
             return json_decode(file_get_contents($path));
+        } else {
+            return null;
         }
-        // Return fallback (null)
-        return null;
     }
 
     /**
