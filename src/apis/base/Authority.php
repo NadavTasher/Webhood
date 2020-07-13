@@ -13,6 +13,7 @@ class Authority
     // Constants
     public const API = "authority";
 
+    // Constants
     private const LENGTH = 512;
     private const VALIDITY = 31 * 24 * 60 * 60;
     private const SEPARATOR = ":";

@@ -25,12 +25,12 @@ class Authenticate
     private const LENGTH_NAME = 2;
     private const LENGTH_PASSWORD = 8;
 
-    // Configurations
+    // Preferences
     private static Preference $validate, $signUp, $signIn;
 
     // Authority & Keystore
     private static Authority $authority;
-    private static Keystore $database;
+    private static Keystore $keystore;
 
     /**
      * API initializer.
@@ -41,8 +41,8 @@ class Authenticate
         self::$validate = new Preference("validate", true, self::API);
         self::$signUp = new Preference("signUp", true, self::API);
         self::$signIn = new Preference("signIn", true, self::API);
-        // Make sure the database is initiated.
-        self::$database = new Keystore(self::API);
+        // Make sure the keystore is initiated.
+        self::$keystore = new Keystore(self::API);
         // Make sure the authority is initiated.
         self::$authority = new Authority(self::API);
     }
@@ -87,7 +87,7 @@ class Authenticate
     }
 
     /**
-     * Authenticate a user.
+     * Authenticates using a bearer token.
      * @param string $token token
      * @return array Results
      */
@@ -98,81 +98,69 @@ class Authenticate
     }
 
     /**
-     * Creates a new user.
-     * @param string $name User Name
-     * @param string $password User Password
-     * @return array Results
+     * Signs up a new user.
+     * @param string $name Name
+     * @param string $password Password
+     * @return string User ID
      */
     public static function signUp($name, $password)
     {
-        // Validate inputs
-        if (strlen($name) >= self::$configuration->lengths->name) {
-            if (strlen($password) >= self::$configuration->lengths->password) {
-                // Create user ID
-                $userID = bin2hex($name);
-                // Try inserting a row
-                if (self::$database->insertEntry($userID)[0]) {
-                    // Generate salt and hash
-                    $salt = Base::random(self::$configuration->lengths->salt);
-                    $hash = hash("sha256", $password . $salt);
-                    $time = strval(0);
-                    // Set user information
-                    self::$database->insertValue($userID, self::COLUMN_SALT, $salt);
-                    self::$database->insertValue($userID, self::COLUMN_HASH, $hash);
-                    self::$database->insertValue($userID, self::COLUMN_LOCK, $time);
-                    // Return a success result
-                    return [true, $userID];
-                }
-                // Fallback result
-                return [false, "User already exists"];
-            }
-            // Fallback result
-            return [false, "Password too short"];
-        }
-        // Fallback result
-        return [false, "Name too short"];
+        // Validate name
+        if (strlen($name) < self::LENGTH_NAME)
+            throw new Error("Name too short");
+        // Validate password
+        if (strlen($password) < self::LENGTH_PASSWORD)
+            throw new Error("Password too short");
+        // Create user ID
+        $userID = bin2hex($name);
+        // Make sure the user does not exist
+        if (self::$keystore->exists($userID))
+            throw new Error("User already exists");
+        // Insert a new entry
+        self::$keystore->insert($userID);
+        // Generate salt and hash
+        $salt = Base::random(self::LENGTH_SALT);
+        $hash = hash("sha256", $password . $salt);
+        $time = strval(0);
+        // Set user information
+        self::$keystore->set($userID, self::COLUMN_SALT, $salt);
+        self::$keystore->set($userID, self::COLUMN_HASH, $hash);
+        self::$keystore->set($userID, self::COLUMN_LOCK, $time);
+        // Return a success result
+        return $userID;
     }
 
     /**
-     * Create a new user token.
-     * @param string $name User Name
-     * @param string $password User Password
-     * @return array Result
+     * Signs in an existing user.
+     * @param string $name Name
+     * @param string $password Password
+     * @return string Token
      */
     public static function signIn($name, $password)
     {
         // Create user ID
         $userID = bin2hex($name);
-        // Check if the user exists
-        if (self::$database->checkEntry($userID)[0]) {
-            // Fetch database values
-            $lock = self::$database->fetchValue($userID, self::COLUMN_LOCK);
-            $salt = self::$database->fetchValue($userID, self::COLUMN_SALT);
-            $hash = self::$database->fetchValue($userID, self::COLUMN_HASH);
-            // Validate answers
-            if ($lock[0] && $salt[0] && $hash[0]) {
-                // Verify that the user isn't locked
-                if (intval($lock[1]) < time()) {
-                    // Check password match
-                    if (hash("sha256", $password . $salt[1]) === $hash[1]) {
-                        // Issue a new token
-                        return self::$authority->issue($userID);
-                    } else {
-                        // Calculate new lock time
-                        $time = strval(time() + 10);
-                        // Lock the user
-                        self::$database->insertValue($userID, self::COLUMN_LOCK, $time);
-                        // Return a failure result
-                        return [false, "Wrong password"];
-                    }
-                }
-                // Fallback result
-                return [false, "User is locked"];
-            }
-            // Fallback result
-            return [false, "User is invalid"];
+        // Make sure the user exists
+        if (!self::$keystore->exists($userID))
+            throw new Error("User does not exist");
+        // Get keystore values
+        $lock = self::$keystore->get($userID, self::COLUMN_LOCK);
+        $salt = self::$keystore->get($userID, self::COLUMN_SALT);
+        $hash = self::$keystore->get($userID, self::COLUMN_HASH);
+        // Make sure the user is not locked
+        if (intval($lock[1]) > time())
+            throw new Error("User is locked");
+        // Check password match
+        if (hash("sha256", $password . $salt[1]) === $hash[1]) {
+            // Issue a new token
+            return self::$authority->issue($userID);
+        } else {
+            // Calculate new lock time
+            $time = strval(time() + 10);
+            // Lock the user
+            self::$keystore->set($userID, self::COLUMN_LOCK, $time);
+            // Throw an error
+            throw new Error("Wrong password");
         }
-        // Fallback result
-        return [false, "User does not exist"];
     }
 }
