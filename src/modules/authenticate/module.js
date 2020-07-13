@@ -16,7 +16,7 @@ class Authenticate {
                 // Clear the body
                 UI.clear(document.body);
                 // Append a populated template
-                document.body.appendChild(Template.populate(Template.create(html), {
+                document.body.appendChild(UI.populate(html, {
                     title: document.title
                 }));
                 // Check token initialization
