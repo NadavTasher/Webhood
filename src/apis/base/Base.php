@@ -6,7 +6,7 @@
  **/
 
 include_once __DIR__ . DIRECTORY_SEPARATOR . "Authority.php";
-include_once __DIR__ . DIRECTORY_SEPARATOR . "Database.php";
+include_once __DIR__ . DIRECTORY_SEPARATOR . "Keystore.php";
 
 /**
  * Base API for general utilities.
@@ -79,7 +79,7 @@ class Base
     }
 
     /**
-     * Returns a writable path for a name.
+     * Creates writable paths.
      * @param string $name Path name
      * @param string $base Base directory
      * @return string Path
@@ -104,40 +104,39 @@ class Base
     }
 
     /**
-     * Returns a writable file path for a name.
+     * Creates API writable file paths.
      * @param string $name File name
-     * @param string $hostAPI Host API
-     * @param string $guestAPI Guest API
+     * @param string $API API
      * @return string File path
      */
-    public static function file($name = "", $hostAPI = self::API, $guestAPI = null)
+    public static function file($name = "", $API = self::API)
     {
-        // Add APIs
-        $name = implode(self::DIRECTORY_DELIMITER, [$hostAPI, $guestAPI, $name]);
+        // Glue API and file name
+        $name = implode(self::DIRECTORY_DELIMITER, [$API, $name]);
         // Return the path
         return self::path($name);
     }
 
     /**
-     * Returns a writable directory path for a name.
+     * Creates API writable directory paths.
      * @param string $name Directory name
-     * @param string $hostAPI Host API
-     * @param string $guestAPI Guest API
+     * @param string $API API
      * @return string Directory path
      */
-    public static function directory($name = "", $hostAPI = self::API, $guestAPI = null)
+    public static function directory($name = "", $API = self::API)
     {
         // Find parent directory
-        $directory = self::file($name, $hostAPI, $guestAPI);
+        $directory = self::file($name, $API);
         // Make sure the subdirectory exists
-        if (!file_exists($directory)) mkdir($directory);
+        if (!file_exists($directory))
+            mkdir($directory);
         // Return the directory path
         return $directory;
     }
 
     /**
-     * Creates a random string.
-     * @param int $length String length
+     * Creates random strings.
+     * @param int $length Length
      * @return string String
      */
     public static function random($length = 0)
