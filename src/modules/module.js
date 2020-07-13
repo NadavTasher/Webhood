@@ -63,8 +63,16 @@ class Module {
                 scriptElement.setAttribute(MODULE_ATTRIBUTE_SOURCE, MODULE_SOURCES[moduleSources] + "/" + moduleName + "/module.js");
                 scriptElement.setAttribute(MODULE_ATTRIBUTE_RESOURCES, MODULE_SOURCES[moduleSources] + "/" + moduleName + "/resources");
                 // Hook to state handlers
-                scriptElement.onload = () => resolve("Module was loaded");
-                scriptElement.onerror = () => reject("Module was not loaded");
+                scriptElement.addEventListener("load", function () {
+                    // Resolve promise
+                    resolve("Module was loaded");
+                });
+                scriptElement.addEventListener("error", function () {
+                    // Remove element
+                    document.head.removeChild(scriptElement);
+                    // Reject promise
+                    reject("Module was not loaded");
+                });
                 // Make sure the module isn't loaded
                 for (let i = 0; i < document.scripts.length; i++) {
                     if (document.getElementById(MODULE_PREFIX_TAG + moduleName) !== null) {
