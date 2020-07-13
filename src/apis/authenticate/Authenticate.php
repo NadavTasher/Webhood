@@ -20,23 +20,30 @@ class Authenticate
     private const COLUMN_HASH = "hash";
     private const COLUMN_LOCK = "lock";
 
-    // Configuration
-    private static stdClass $configuration;
+    // Constant lengths
+    private const LENGTH_SALT = 512;
+    private const LENGTH_NAME = 2;
+    private const LENGTH_PASSWORD = 8;
 
-    // Base APIs
-    private static Database $database;
+    // Configurations
+    private static Preference $validate, $signUp, $signIn;
+
+    // Authority & Keystore
     private static Authority $authority;
+    private static Keystore $database;
 
     /**
      * API initializer.
      */
     public static function initialize()
     {
-        // Load configuration
-        self::$configuration = json_decode(file_get_contents(Base::file("configuration.json", self::API)));
+        // Load preferences
+        self::$validate = new Preference("validate", true, self::API);
+        self::$signUp = new Preference("signUp", true, self::API);
+        self::$signIn = new Preference("signIn", true, self::API);
         // Make sure the database is initiated.
-        self::$database = new Database(self::API);
-        // Make sure the authority is set-up
+        self::$database = new Keystore(self::API);
+        // Make sure the authority is initiated.
         self::$authority = new Authority(self::API);
     }
 
@@ -47,35 +54,35 @@ class Authenticate
     {
         // Handle the request
         Base::handle(function ($action, $parameters) {
-            if (isset(self::$configuration->hooks->$action)) {
-                if (self::$configuration->hooks->$action === true) {
-                    if ($action === "validate") {
-                        if (isset($parameters->token) &&
-                            is_string($parameters->token)) {
-                            return self::validate($parameters->token);
-                        }
-                        return [false, "Parameter error"];
-                    } else if ($action === "signIn") {
-                        // Authenticate the user using the password, return the new session
-                        if (isset($parameters->name) &&
-                            isset($parameters->password) &&
-                            is_string($parameters->name) &&
-                            is_string($parameters->password)) {
-                            return self::signIn($parameters->name, $parameters->password);
-                        }
-                        return [false, "Parameter error"];
-                    } else if ($action === "signUp") {
-                        // Create a new user
-                        if (isset($parameters->name) && isset($parameters->password) && is_string($parameters->name) && is_string($parameters->password)) {
-                            return self::signUp($parameters->name, $parameters->password);
-                        }
-                        return [false, "Parameter error"];
-                    }
-                    return [false, "Unhandled hook"];
-                }
-                return [false, "Locked hook"];
+            if ($action === "validate") {
+                // Validate locks
+                if (!self::$validate->get())
+                    throw new Error("Validation not allowed");
+                // Validate parameters
+                if (!isset($parameters->token) || !is_string($parameters->token))
+                    throw new Error("Parameter error");
+                // Validate token
+                return self::validate($parameters->token);
+            } else if ($action === "signIn") {
+                // Validate locks
+                if (!self::$signIn->get())
+                    throw new Error("Sign-In not allowed");
+                // Validate parameters
+                if (!isset($parameters->name) || !isset($parameters->password) || !is_string($parameters->name) || !is_string($parameters->password))
+                    throw new Error("Parameter error");
+                // Sign the user in
+                return self::signIn($parameters->name, $parameters->password);
+            } else if ($action === "signUp") {
+                // Validate locks
+                if (!self::$signUp->get())
+                    throw new Error("Sign-Up not allowed");
+                // Validate parameters
+                if (!isset($parameters->name) || !isset($parameters->password) || !is_string($parameters->name) || !is_string($parameters->password))
+                    throw new Error("Parameter error");
+                // Sign the user up
+                return self::signUp($parameters->name, $parameters->password);
             }
-            return [false, "Undefined hook"];
+            return [false, "Unhandled hook"];
         });
     }
 

@@ -17,22 +17,22 @@ class Authority
     private const VALIDITY = 31 * 24 * 60 * 60;
     private const SEPARATOR = ":";
 
-    // Guest API
+    // API name
     private string $API;
 
     /**
      * Authority constructor.
-     * @param string $API API name
+     * @param string $API API
      */
     public function __construct($API = Base::API)
     {
         $this->API = $API;
         // Create secret
-        $keyPath = Base::file($this->API, self::API);
+        $path = Base::file($this->API, self::API);
         // Check existence
-        if (!(file_exists($keyPath) && is_file($keyPath))) {
+        if (!(file_exists($path) && is_file($path))) {
             // Create the secret file
-            file_put_contents($keyPath, Base::random(self::LENGTH));
+            file_put_contents($path, Base::random(self::LENGTH));
         }
     }
 
@@ -54,10 +54,8 @@ class Authority
         $tokenSignature = hash_hmac("sha256", $tokenString, file_get_contents(Base::file($this->API, self::API)));
         // Create parts
         $tokenSlices = [$tokenString, $tokenSignature];
-        // Combine all into token
-        $token = implode(self::SEPARATOR, $tokenSlices);
-        // Return combined message
-        return $token;
+        // Return compiled token
+        return implode(self::SEPARATOR, $tokenSlices);
     }
 
     /**

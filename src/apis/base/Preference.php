@@ -13,16 +13,23 @@ class Preference
     // Constants
     public const API = "preference";
 
-    // Preference name
-    private string $name;
+    // API & Preference names
+    private string $API, $name;
+
+    // Default value
+    private $default;
 
     /**
      * Preference constructor.
-     * @param string $name Preference name
+     * @param string $name Name
+     * @param mixed $default Default
+     * @param string $API API
      */
-    public function __construct($name)
+    public function __construct($name, $default = null, $API = Base::API)
     {
         $this->name = $name;
+        $this->default = $default;
+        $this->API = $API;
     }
 
     /**
@@ -32,7 +39,7 @@ class Preference
     public function set($value = null)
     {
         // Create the path
-        $path = Base::file($this->name, self::API);
+        $path = Base::file("$this->API:$this->name", self::API);
         // Check if the value is null
         if ($value === null) {
             // Remove the value
@@ -45,19 +52,18 @@ class Preference
 
     /**
      * Gets the preference value.
-     * @param mixed $default Default value
      * @return mixed Value
      */
-    public function get($default = null)
+    public function get()
     {
         // Create the path
-        $path = Base::file($this->name, self::API);
+        $path = Base::file("$this->API:$this->name", self::API);
         // Check if the value exists
         if (file_exists($path) && is_file($path)) {
             // Read and return value
             return json_decode(file_get_contents($path));
         } else {
-            return $default;
+            return $this->default;
         }
     }
 }

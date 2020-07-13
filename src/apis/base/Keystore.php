@@ -18,7 +18,7 @@ class Keystore
 
     /**
      * Keystore constructor.
-     * @param string $name Keystore name
+     * @param string $name Name
      */
     public function __construct($name)
     {

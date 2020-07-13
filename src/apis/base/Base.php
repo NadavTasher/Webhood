@@ -7,6 +7,7 @@
 
 include_once __DIR__ . DIRECTORY_SEPARATOR . "Authority.php";
 include_once __DIR__ . DIRECTORY_SEPARATOR . "Keystore.php";
+include_once __DIR__ . DIRECTORY_SEPARATOR . "Preference.php";
 
 /**
  * Base API for general utilities.
