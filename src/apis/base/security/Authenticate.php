@@ -33,22 +33,7 @@ class Authenticate
     private static Keystore $keystore;
 
     /**
-     * API initializer.
-     */
-    public static function initialize()
-    {
-        // Load preferences
-        self::$validate = new Preference("validate", true, self::API);
-        self::$signUp = new Preference("signUp", true, self::API);
-        self::$signIn = new Preference("signIn", true, self::API);
-        // Make sure the keystore is initiated.
-        self::$keystore = new Keystore(self::API);
-        // Make sure the authority is initiated.
-        self::$authority = new Authority(self::API);
-    }
-
-    /**
-     * Main API hook.
+     * API hook.
      */
     public static function handle()
     {
@@ -84,6 +69,21 @@ class Authenticate
             }
             return [false, "Unhandled hook"];
         });
+    }
+
+    /**
+     * API initializer.
+     */
+    public static function initialize()
+    {
+        // Load preferences
+        self::$validate = new Preference("validate", true, self::API);
+        self::$signUp = new Preference("signUp", true, self::API);
+        self::$signIn = new Preference("signIn", true, self::API);
+        // Make sure the keystore is initiated.
+        self::$keystore = new Keystore(self::API);
+        // Make sure the authority is initiated.
+        self::$authority = new Authority(self::API);
     }
 
     /**

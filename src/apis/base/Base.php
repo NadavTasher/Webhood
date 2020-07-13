@@ -5,9 +5,10 @@
  * https://github.com/NadavTasher/Template/
  **/
 
-include_once __DIR__ . DIRECTORY_SEPARATOR . "Authority.php";
-include_once __DIR__ . DIRECTORY_SEPARATOR . "Keystore.php";
-include_once __DIR__ . DIRECTORY_SEPARATOR . "Preference.php";
+include_once __DIR__ . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "Keystore.php";
+include_once __DIR__ . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "Preference.php";
+include_once __DIR__ . DIRECTORY_SEPARATOR . "security" . DIRECTORY_SEPARATOR . "Authority.php";
+include_once __DIR__ . DIRECTORY_SEPARATOR . "security" . DIRECTORY_SEPARATOR . "Authenticate.php";
 
 /**
  * Base API for general utilities.
