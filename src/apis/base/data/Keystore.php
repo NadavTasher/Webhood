@@ -99,8 +99,11 @@ class Keystore
         $path = Base::file("$this->name:$id:$key", self::API);
         // Check if value is null
         if ($value === null) {
-            // Remove the value
-            unlink($path);
+            // Make sure the path exists
+            if ($this->get($id, $key) !== null) {
+                // Remove the value
+                unlink($path);
+            }
         } else {
             // Update the value
             file_put_contents($path, json_encode($value));
