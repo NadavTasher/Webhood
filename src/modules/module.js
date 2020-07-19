@@ -25,7 +25,7 @@ const MODULE_SOURCES = {
 };
 
 // Initialize default sources
-const MODULE_SOURCES_DEFAULT = MODULE_SOURCES_LOCAL;
+let MODULE_SOURCES_DEFAULT = MODULE_SOURCES_LOCAL;
 
 class Module {
     /**
