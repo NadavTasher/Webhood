@@ -1,1 +1,2 @@
-function load() {}
+function load() {
+}
