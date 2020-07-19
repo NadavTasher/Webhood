@@ -7,140 +7,115 @@ class Authenticate {
     /**
      * Authenticates the user by requiring sign-up, sign-in and token validation.
      */
-    static initialize() {
+    static initialize(title = document.title) {
         return new Promise((resolve, reject) => {
-            // Load the page's contents
+            // Preserve the HTML
             let contents = document.body.innerHTML;
-            // Load the template
+            // Load the new HTML
             Module.resource(Authenticate.name, "authenticate.html").then((html) => {
-                // Clear the body
-                UI.clear(document.body);
-                // Append a populated template
-                document.body.appendChild(UI.populate(html, {
-                    title: document.title
-                }));
-                // Check token initialization
-                if (Authenticate.getToken() !== null) {
-                    // Hide the inputs
-                    UI.hide("inputs");
-                    // Change the output message
-                    Authenticate.output("Hold on - Authenticating...");
-                    // Send the API call
+                // Set the new HTML
+                document.body.innerHTML = html;
+                // Store elements
+                let titleElement = UI.find("title");
+                let outputElement = UI.find("output");
+                // Update the title
+                titleElement.innerText = "Welcome to " + title;
+                // Register event listeners
+                UI.find("signUp").addEventListener("click", (event) => {
+                    // Hide the UI
+                    UI.hide("interface");
+                    // Display progress
+                    outputElement.innerText = "Hold on - Signing up...";
+                    outputElement.style.setProperty("color", null);
+                    // Try to sign up
+                    API.call(Authenticate.name.toLowerCase(), "signUp", {
+                        name: UI.find("name").value,
+                        password: UI.find("password").value
+                    }).then((value) => {
+                        // Click the signIn button
+                        UI.find("signIn").click();
+                    }).catch((reason) => {
+                        // Display reason
+                        outputElement.innerText = reason;
+                        outputElement.style.setProperty("color", "red");
+                        // Show the UI
+                        UI.show("interface");
+                    });
+                });
+                UI.find("signIn").addEventListener("click", (event) => {
+                    // Hide the UI
+                    UI.hide("interface");
+                    // Display progress
+                    outputElement.innerText = "Hold on - Signing in...";
+                    outputElement.style.setProperty("color", null);
+                    // Try to sign in
+                    API.call(Authenticate.name.toLowerCase(), "signIn", {
+                        name: UI.find("name").value,
+                        password: UI.find("password").value
+                    }).then((token) => {
+                        // Store the token
+                        Authenticate.token(token);
+                        // Click the validate button
+                        UI.find("validate").click();
+                    }).catch((reason) => {
+                        // Display reason
+                        outputElement.innerText = reason;
+                        outputElement.style.setProperty("color", "red");
+                        // Show the UI
+                        UI.show("interface");
+                    });
+                });
+                UI.find("validate").addEventListener("click", (event) => {
+                    // Hide the UI
+                    UI.hide("interface");
+                    // Display progress
+                    outputElement.innerText = "Hold on - Validating...";
+                    outputElement.style.setProperty("color", null);
+                    // Try to validate
                     API.call(Authenticate.name.toLowerCase(), "validate", {
-                        token: Authenticate.getToken()
-                    }).then(result => {
-                        // Change the page's contents
+                        token: Authenticate.token()
+                    }).then((user) => {
+                        // Restore the HTML
                         document.body.innerHTML = contents;
                         // Resolve
-                        resolve(result);
-                    }).catch(result => {
-                        // Show the inputs
-                        UI.show("inputs");
-                        // Change the output message
-                        Authenticate.output(result, true);
-                        // Reject
-                        reject(result);
+                        resolve(user);
+                    }).catch((reason) => {
+                        // Display reason
+                        outputElement.innerText = reason;
+                        outputElement.style.setProperty("color", "red");
+                        // Show the UI
+                        UI.show("interface");
                     });
+                });
+                // Automatic validation
+                if (Authenticate.token() !== null) {
+                    // Click the validate button
+                    UI.find("validate").click();
+                } else {
+                    // Show the UI
+                    UI.show("interface");
                 }
             });
         });
     }
 
     /**
-     * Sends a signUp API call and handles the results.
+     * Returns the authentication token.
      */
-    static signUp() {
-        return new Promise((resolve, reject) => {
-            // Hide the inputs
-            UI.hide("inputs");
-            // Change the output message
-            Authenticate.output("Hold on - Signing you up...");
-            // Send the API call
-            API.call(Authenticate.name.toLowerCase(), "signUp", {
-                name: UI.find("name").value,
-                password: UI.find("password").value
-            }).then(result => {
-                // Call the signIn function
-                Authenticate.signIn().then(resolve).catch(reject);
-            }).catch(result => {
-                // Show the inputs
-                UI.show("inputs");
-                // Change the output message
-                Authenticate.output(result, true);
-                // Reject
-                reject(result);
-            });
-        });
-    }
-
-    /**
-     * Sends a signIn API call and handles the results.
-     */
-    static signIn() {
-        return new Promise((resolve, reject) => {
-            // Hide the inputs
-            UI.hide("inputs");
-            // Change the output message
-            Authenticate.output("Hold on - Signing you in...");
-            // Send the API call
-            API.call(Authenticate.name.toLowerCase(), "signIn", {
-                name: UI.find("name").value,
-                password: UI.find("password").value
-            }).then(result => {
-                // Push the token
-                Authenticate.setToken(result);
-                // Resolve
-                resolve();
-            }).catch(result => {
-                // Show the inputs
-                UI.show("inputs");
-                // Change the output message
-                Authenticate.output(result, true);
-                // Reject
-                reject(result);
-            });
-        });
+    static token(token = null) {
+        // Check the token
+        if (token !== null)
+            // Set the token
+            localStorage.setItem(Authenticate.name.toLowerCase(), token);
+        // Return the token
+        return localStorage.getItem(Authenticate.name.toLowerCase());
     }
 
     /**
      * Signs the user out.
      */
-    static signOut() {
+    static finalize() {
         // Remove from localStorage
         localStorage.removeItem(Authenticate.name.toLowerCase());
-    }
-
-    /**
-     * Gets the authentication token.
-     */
-    static getToken() {
-        return localStorage.getItem(Authenticate.name.toLowerCase());
-    }
-
-    /**
-     * Sets the authentication token.
-     */
-    static setToken(token) {
-        localStorage.setItem(Authenticate.name.toLowerCase(), token);
-    }
-
-    /**
-     * Changes the output message.
-     * @param text Output message
-     * @param error Is the message an error?
-     */
-    static output(text, error = false) {
-        // Store the output view
-        let output = UI.find("output");
-        // Set the output message
-        output.innerText = text;
-        // Check if the message is an error
-        if (error) {
-            // Set the text color to red
-            output.style.setProperty("color", "red");
-        } else {
-            // Clear the text color
-            output.style.removeProperty("color");
-        }
     }
 }
