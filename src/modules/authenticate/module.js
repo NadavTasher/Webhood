@@ -12,7 +12,7 @@ class Authenticate {
             // Preserve the HTML
             let contents = document.body.innerHTML;
             // Load the new HTML
-            Module.resource(Authenticate.name, "authenticate.html").then((html) => {
+            Helper.resource(this, "authenticate.html").then((html) => {
                 // Set the new HTML
                 document.body.innerHTML = html;
                 // Store elements

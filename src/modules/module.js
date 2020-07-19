@@ -86,6 +86,18 @@ class Module {
             });
         }
     }
+}
+
+class Helper {
+    /**
+     * Creates a resource URL.
+     * @param module Module
+     * @param name Name
+     * @returns {string} URL
+     */
+    static URL(module, name) {
+        return document.getElementById(MODULE_PREFIX_TAG + module.name.toLowerCase()).getAttribute(MODULE_ATTRIBUTE_RESOURCES) + "/" + name;
+    }
 
     /**
      * Loads a resource.
@@ -94,10 +106,8 @@ class Module {
      */
     static resource(module, name) {
         return new Promise((resolve, reject) => {
-            // Fetch resource directory
-            let resourcesURL = document.getElementById(MODULE_PREFIX_TAG + module.toLowerCase()).getAttribute(MODULE_ATTRIBUTE_RESOURCES);
             // Fetch resource
-            fetch(resourcesURL + "/" + name).then(response => {
+            fetch(Helper.URL(module, name)).then(response => {
                 response.text().then(contents => {
                     // Resolve
                     resolve(contents);
