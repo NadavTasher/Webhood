@@ -87,18 +87,12 @@ class Authenticate
     /**
      * Authenticates using a bearer token.
      * @param string $token Token
-     * @return stdClass User
+     * @return string User ID
      */
     public static function validate($token)
     {
-        // Parse the token
-        $userID = self::$authority->validate($token);
-        // Create a user object
-        $user = new stdClass();
-        $user->id = $userID;
-        $user->name = hex2bin($userID);
-        // Return the user object
-        return $user;
+        // Validate using authority
+        return self::$authority->validate($token);
     }
 
     /**

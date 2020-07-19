@@ -74,11 +74,11 @@ class Authenticate {
                     // Try to validate
                     API.call(Authenticate.name.toLowerCase(), "validate", {
                         token: Authenticate.token()
-                    }).then((user) => {
+                    }).then((userID) => {
                         // Restore the HTML
                         document.body.innerHTML = contents;
                         // Resolve
-                        resolve(user);
+                        resolve(userID);
                     }).catch((reason) => {
                         // Display reason
                         outputElement.innerText = reason;
