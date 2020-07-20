@@ -5,7 +5,7 @@
         <option name="imageTag" value="test" />
         <option name="buildCliOptions" value="" />
         <option name="command" value="" />
-        <option name="containerName" value="" />
+        <option name="containerName" value="test" />
         <option name="entrypoint" value="" />
         <option name="portBindings">
           <list>
