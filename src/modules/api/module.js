@@ -24,27 +24,25 @@ class API {
             fetch("apis/" + endpoint + "/" + "?" + action, {
                 method: "post",
                 body: form
-            }).then(response => response.text().then((result) => {
-                // Try to parse the result as JSON
-                try {
-                    let API = JSON.parse(result);
+            }).then((response) => {
+                response.json().then((result) => {
                     // Check the result's integrity
-                    if (API.hasOwnProperty("status") && API.hasOwnProperty("result")) {
+                    if (result.hasOwnProperty("status") && result.hasOwnProperty("result")) {
                         // Call the callback with the result
-                        if (API["status"] === true) {
-                            resolve(API["result"]);
+                        if (result["status"] === true) {
+                            resolve(result["result"]);
                         } else {
-                            reject(API["result"]);
+                            reject(result["result"]);
                         }
                     } else {
-                        // Call the callback with an error
+                        // Reject with an error
                         reject("API response malformed");
                     }
-                } catch (ignored) {
-                    // Call the callback with an error
+                }).catch((reason) => {
+                    // Reject with an error
                     reject("API response malformed");
-                }
-            }));
+                });
+            });
         });
     }
 }
