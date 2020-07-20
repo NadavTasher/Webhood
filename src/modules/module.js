@@ -24,9 +24,6 @@ const MODULE_SOURCES = {
     [MODULE_SOURCES_TEMPLATE]: "https://nadavtasher.github.io/Template/src/modules"
 };
 
-// Initialize default sources
-const MODULE_SOURCES_DEFAULT = MODULE_SOURCES_LOCAL;
-
 class Module {
     /**
      * Loads modules.
@@ -42,7 +39,7 @@ class Module {
                 // Transform name
                 let moduleName = module.toLowerCase();
                 // Initialize default sources
-                let moduleSources = MODULE_SOURCES_DEFAULT;
+                let moduleSources = MODULE_SOURCES_LOCAL;
                 // Switch sources
                 for (let sources in MODULE_SOURCES) {
                     // Append to prefix
