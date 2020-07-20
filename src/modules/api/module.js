@@ -21,7 +21,7 @@ class API {
                     form.append(key, parameters[key]);
             }
             // Perform the request
-            fetch("apis/" + endpoint + "/" + "?" + action, {
+            fetch("apis/" + endpoint + "/" + "?" + encodeURIComponent(action), {
                 method: "post",
                 body: form
             }).then((response) => {
