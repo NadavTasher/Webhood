@@ -144,15 +144,21 @@ class View {
         host.innerHTML = html;
         // Find the template element
         let template = host.getElementsByTagName("template")[0];
-        // Populate the element
-        this.element.innerHTML = template.innerHTML;
-        // Find the style element
-        let stylesheet = host.getElementsByTagName("style")[0];
-        // Set element ID
-        stylesheet.setAttribute("id", "style:" + type);
-        // Make sure style is not loaded
-        if (document.getElementById(stylesheet.getAttribute("id")) === null)
-            document.head.appendChild(stylesheet);
+        // Make sure the template element exists
+        if (template !== undefined) {
+            // Populate the element
+            this.element.innerHTML = template.innerHTML;
+            // Find the style element
+            let stylesheet = host.getElementsByTagName("style")[0];
+            // Make sure the style element exists
+            if (stylesheet !== undefined) {
+                // Set element ID
+                stylesheet.setAttribute("id", "style:" + type);
+                // Make sure style is not loaded
+                if (document.getElementById(stylesheet.getAttribute("id")) === null)
+                    document.head.appendChild(stylesheet);
+            }
+        }
     }
 
     /**
