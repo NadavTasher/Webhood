@@ -3,50 +3,6 @@
  * https://github.com/NadavTasher/Template/
  **/
 
-// Register a popstate listener to restore states.
-window.addEventListener("popstate", (event) => {
-    // Change contents
-    History.restore(event.state);
-});
-
-class History {
-    /**
-     * Creates a preservable state for all elements in the page.
-     */
-    static preserve() {
-        // Initialize map
-        let state = [];
-        // Find all elements
-        let elements = document.getElementsByTagName("*");
-        // Loop over all elements
-        for (let element of elements) {
-            // Make sure the element has an ID
-            if (element.id.length === 0) {
-                element.id = Math.floor(Math.random() * 1000000).toString();
-            }
-            // Add to object
-            state.push([element.id, element.hasAttribute("hidden")]);
-        }
-        // Return map
-        return state;
-    }
-
-    /**
-     * Restores a preserved state for elements in the page.
-     * @param state State
-     */
-    static restore(state = []){
-        // Loop over map
-        for (let [id, value] of state) {
-            if (value) {
-                UI.hide(id);
-            } else {
-                UI.show(id);
-            }
-        }
-    }
-}
-
 class UI {
     /**
      * Returns a view by its ID or by it's own value.
@@ -171,3 +127,97 @@ class UI {
         return created.content;
     }
 }
+
+class View {
+
+    /**
+     * View constructor.
+     * @param type View type
+     * @param html View HTML
+     */
+    constructor(type, html) {
+        // Create an empty container element
+        this.element = document.createElement("div");
+        // Create the host element
+        let host = document.createElement("div");
+        // Populate the host element
+        host.innerHTML = html;
+        // Find the template element
+        let template = host.getElementsByTagName("template")[0];
+        // Populate the element
+        this.element.innerHTML = template.innerHTML;
+        // Find the style element
+        let stylesheet = host.getElementsByTagName("style")[0];
+        // Set element ID
+        stylesheet.setAttribute("id", "style:" + type);
+        // Make sure style is not loaded
+        if (document.getElementById(stylesheet.getAttribute("id")) === null)
+            document.head.appendChild(stylesheet);
+    }
+
+    /**
+     * Finds an element.
+     * @param name Name
+     * @returns {HTMLElement} Element
+     */
+    find(name) {
+        // Search through elements
+        for (let element of this.element.getElementsByTagName("*")) {
+            // Check name match
+            if (element.getAttribute("name") === name)
+                return element;
+        }
+    }
+
+    /**
+     * Returns the wrapper element.
+     * @returns {HTMLDivElement}
+     */
+    view() {
+        return this.element;
+    }
+}
+
+class History {
+    /**
+     * Creates a preservable state for all elements in the page.
+     */
+    static preserve() {
+        // Initialize map
+        let state = [];
+        // Find all elements
+        let elements = document.getElementsByTagName("*");
+        // Loop over all elements
+        for (let element of elements) {
+            // Make sure the element has an ID
+            if (element.id.length === 0) {
+                element.id = Math.floor(Math.random() * 1000000).toString();
+            }
+            // Add to object
+            state.push([element.id, element.hasAttribute("hidden")]);
+        }
+        // Return map
+        return state;
+    }
+
+    /**
+     * Restores a preserved state for elements in the page.
+     * @param state State
+     */
+    static restore(state = []) {
+        // Loop over map
+        for (let [id, value] of state) {
+            if (value) {
+                UI.hide(id);
+            } else {
+                UI.show(id);
+            }
+        }
+    }
+}
+
+// Register a popstate listener to restore states.
+window.addEventListener("popstate", (event) => {
+    // Change contents
+    History.restore(event.state);
+});

@@ -71,12 +71,10 @@ class Module {
                     reject("Module was not loaded");
                 });
                 // Make sure the module isn't loaded
-                for (let i = 0; i < document.scripts.length; i++) {
-                    if (document.getElementById(MODULE_PREFIX_TAG + moduleName) !== null) {
-                        resolve("Module was already loaded");
-                        // Return
-                        return;
-                    }
+                if (document.getElementById(MODULE_PREFIX_TAG + moduleName) !== null) {
+                    resolve("Module was already loaded");
+                    // Return
+                    return;
                 }
                 // Append to head
                 document.head.appendChild(scriptElement);
