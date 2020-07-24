@@ -55,10 +55,10 @@ class Module {
                     }
                 }
                 // Prepare the script tag
-                scriptElement.setAttribute(MODULE_ATTRIBUTE_TYPE, "text/javascript");
-                scriptElement.setAttribute(MODULE_ATTRIBUTE_ID, MODULE_PREFIX_TAG + moduleName);
-                scriptElement.setAttribute(MODULE_ATTRIBUTE_SOURCE, MODULE_SOURCES[moduleSources] + "/" + moduleName + "/module.js");
-                scriptElement.setAttribute(MODULE_ATTRIBUTE_RESOURCES, MODULE_SOURCES[moduleSources] + "/" + moduleName + "/resources");
+                scriptElement[MODULE_ATTRIBUTE_ID] = MODULE_PREFIX_TAG + moduleName;
+                scriptElement[MODULE_ATTRIBUTE_TYPE] = "text/javascript";
+                scriptElement[MODULE_ATTRIBUTE_SOURCE] = MODULE_SOURCES[moduleSources] + "/" + moduleName + "/module.js";
+                scriptElement[MODULE_ATTRIBUTE_RESOURCES] = MODULE_SOURCES[moduleSources] + "/" + moduleName + "/resources";
                 // Hook to state handlers
                 scriptElement.addEventListener("load", function () {
                     // Resolve promise
@@ -91,7 +91,7 @@ class Helper {
      * @returns {string} URL
      */
     static URL(module, name) {
-        return document.getElementById(MODULE_PREFIX_TAG + module.name.toLowerCase()).getAttribute(MODULE_ATTRIBUTE_RESOURCES) + "/" + name;
+        return document.getElementById(MODULE_PREFIX_TAG + module.name.toLowerCase())[MODULE_ATTRIBUTE_RESOURCES] + "/" + name;
     }
 
     /**
