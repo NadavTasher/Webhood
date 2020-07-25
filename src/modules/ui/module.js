@@ -198,7 +198,7 @@ class View {
         if (stylesheet === undefined)
             return;
         // Set element ID
-        stylesheet.id = "style:" + type;
+        stylesheet.id = `style:${type}`;
         // Make sure style is not loaded
         if (document.getElementById(stylesheet.id) !== null)
             return;

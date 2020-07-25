@@ -55,9 +55,9 @@ class Module {
                     }
                 }
                 // Prepare the script tag
-                scriptElement[MODULE_ATTRIBUTE_ID] = MODULE_PREFIX_TAG + moduleName;
-                scriptElement[MODULE_ATTRIBUTE_URL] = MODULE_SOURCES[moduleSources] + "/" + moduleName + "/";
-                scriptElement[MODULE_ATTRIBUTE_SOURCE] = scriptElement[MODULE_ATTRIBUTE_URL] + "module.js";
+                scriptElement[MODULE_ATTRIBUTE_ID] = `${MODULE_PREFIX_TAG}${moduleName}`;
+                scriptElement[MODULE_ATTRIBUTE_URL] = `${MODULE_SOURCES[moduleSources]}/${moduleName}`;
+                scriptElement[MODULE_ATTRIBUTE_SOURCE] = `${scriptElement[MODULE_ATTRIBUTE_URL]}/module.js`;
                 // Hook to state handlers
                 scriptElement.addEventListener("load", () => {
                     // Resolve promise
@@ -70,7 +70,7 @@ class Module {
                     reject("Module was not loaded");
                 });
                 // Make sure the module isn't loaded
-                if (document.getElementById(MODULE_PREFIX_TAG + moduleName) !== null) {
+                if (document.getElementById(scriptElement[MODULE_ATTRIBUTE_ID]) !== null) {
                     // Resolve promise
                     resolve("Module was already loaded");
                     // Return
@@ -89,6 +89,6 @@ class Module {
      * @returns string URL
      */
     static location(module, path = "") {
-        return document.getElementById(MODULE_PREFIX_TAG + module.name.toLowerCase())[MODULE_ATTRIBUTE_URL] + path;
+        return `${document.getElementById(MODULE_PREFIX_TAG + module.name.toLowerCase())[MODULE_ATTRIBUTE_URL]}/${path}`;
     }
 }
