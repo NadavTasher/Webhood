@@ -5,9 +5,8 @@
 
 // Initialize attributes
 const MODULE_ATTRIBUTE_ID = "id";
-const MODULE_ATTRIBUTE_TYPE = "type";
+const MODULE_ATTRIBUTE_URL = "url";
 const MODULE_ATTRIBUTE_SOURCE = "src";
-const MODULE_ATTRIBUTE_RESOURCES = "resources";
 
 // Initialize tag prefix
 const MODULE_PREFIX_TAG = "module:";
@@ -31,6 +30,7 @@ class Module {
      */
     static load(module) {
         if (arguments.length > 1) {
+            // Load all modules
             return Promise.all(Array.from(arguments).map((module) => Module.load(module)));
         } else {
             return new Promise((resolve, reject) => {
@@ -56,15 +56,14 @@ class Module {
                 }
                 // Prepare the script tag
                 scriptElement[MODULE_ATTRIBUTE_ID] = MODULE_PREFIX_TAG + moduleName;
-                scriptElement[MODULE_ATTRIBUTE_TYPE] = "text/javascript";
-                scriptElement[MODULE_ATTRIBUTE_SOURCE] = MODULE_SOURCES[moduleSources] + "/" + moduleName + "/module.js";
-                scriptElement[MODULE_ATTRIBUTE_RESOURCES] = MODULE_SOURCES[moduleSources] + "/" + moduleName + "/resources";
+                scriptElement[MODULE_ATTRIBUTE_URL] = MODULE_SOURCES[moduleSources] + "/" + moduleName + "/";
+                scriptElement[MODULE_ATTRIBUTE_SOURCE] = scriptElement[MODULE_ATTRIBUTE_URL] + "module.js";
                 // Hook to state handlers
-                scriptElement.addEventListener("load", function () {
+                scriptElement.addEventListener("load", () => {
                     // Resolve promise
                     resolve("Module was loaded");
                 });
-                scriptElement.addEventListener("error", function () {
+                scriptElement.addEventListener("error", () => {
                     // Remove element
                     document.head.removeChild(scriptElement);
                     // Reject promise
@@ -72,6 +71,7 @@ class Module {
                 });
                 // Make sure the module isn't loaded
                 if (document.getElementById(MODULE_PREFIX_TAG + moduleName) !== null) {
+                    // Resolve promise
                     resolve("Module was already loaded");
                     // Return
                     return;
@@ -81,33 +81,14 @@ class Module {
             });
         }
     }
-}
-
-class Helper {
-    /**
-     * Creates a resource URL.
-     * @param module Module
-     * @param name Name
-     * @returns {string} URL
-     */
-    static URL(module, name) {
-        return document.getElementById(MODULE_PREFIX_TAG + module.name.toLowerCase())[MODULE_ATTRIBUTE_RESOURCES] + "/" + name;
-    }
 
     /**
-     * Loads a resource.
+     * Returns a path location for a module.
      * @param module Module
-     * @param name Name
+     * @param path Path
+     * @returns string URL
      */
-    static resource(module, name) {
-        return new Promise((resolve, reject) => {
-            // Fetch resource
-            fetch(Helper.URL(module, name)).then(response => {
-                response.text().then(contents => {
-                    // Resolve
-                    resolve(contents);
-                }).catch(reject);
-            }).catch(reject);
-        });
+    static location(module, path = "") {
+        return document.getElementById(MODULE_PREFIX_TAG + module.name.toLowerCase())[MODULE_ATTRIBUTE_URL] + path;
     }
 }

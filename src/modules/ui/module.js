@@ -3,6 +3,50 @@
  * https://github.com/NadavTasher/Template/
  **/
 
+// Register a popstate listener to restore states.
+window.addEventListener("popstate", (event) => {
+    // Change contents
+    History.restore(event.state);
+});
+
+class History {
+    /**
+     * Creates a preservable state for all elements in the page.
+     */
+    static preserve() {
+        // Initialize map
+        let state = [];
+        // Find all elements
+        let elements = document.getElementsByTagName("*");
+        // Loop over all elements
+        for (let element of elements) {
+            // Make sure the element has an ID
+            if (element.id.length === 0) {
+                element.id = Math.floor(Math.random() * 1000000).toString();
+            }
+            // Add to object
+            state.push([element.id, element.hasAttribute("hidden")]);
+        }
+        // Return map
+        return state;
+    }
+
+    /**
+     * Restores a preserved state for elements in the page.
+     * @param state State
+     */
+    static restore(state = []) {
+        // Loop over map
+        for (let [id, value] of state) {
+            if (value) {
+                UI.hide(id);
+            } else {
+                UI.show(id);
+            }
+        }
+    }
+}
+
 class UI {
     /**
      * Returns a view by its ID or by it's own value.
@@ -129,101 +173,67 @@ class UI {
 }
 
 class View {
-
     /**
      * View constructor.
-     * @param type View type
-     * @param html View HTML
+     * @param type Type
+     * @param html HTML
      */
     constructor(type, html) {
-        // Create an empty container element
-        this.element = document.createElement("div");
+        // Create the wrapper element
+        this.wrapper = document.createElement("div");
         // Create the host element
         let host = document.createElement("div");
         // Populate the host element
         host.innerHTML = html;
         // Find the template element
-        let template = host.getElementsByTagName("template")[0];
+        let template = host.querySelector("template");
+        // Find the style element
+        let stylesheet = host.querySelector("style");
         // Make sure the template element exists
-        if (template !== undefined) {
-            // Populate the element
-            this.element.innerHTML = template.innerHTML;
-            // Find the style element
-            let stylesheet = host.getElementsByTagName("style")[0];
-            // Make sure the style element exists
-            if (stylesheet !== undefined) {
-                // Set element ID
-                stylesheet.setAttribute("id", "style:" + type);
-                // Make sure style is not loaded
-                if (document.getElementById(stylesheet.getAttribute("id")) === null)
-                    document.head.appendChild(stylesheet);
-            }
-        }
+        if (template === undefined)
+            return;
+        // Populate the element
+        this.wrapper.innerHTML = template.innerHTML;
+        // Make sure the style element exists
+        if (stylesheet === undefined)
+            return;
+        // Set element ID
+        stylesheet.id = "style:" + type;
+        // Make sure style is not loaded
+        if (document.getElementById(stylesheet.id) !== null)
+            return;
+        // Load the style
+        document.head.appendChild(stylesheet);
     }
 
     /**
-     * Finds an element.
-     * @param name Name
-     * @returns {HTMLElement} Element
+     * Returns the first element that is a descendant of node that matches selectors.
      */
-    find(name) {
-        // Search through elements
-        for (let element of this.element.getElementsByTagName("*")) {
-            // Check name match
-            if (element.getAttribute("name") === name)
-                return element;
-        }
+    querySelector(selectors) {
+        return this.wrapper.querySelector(selectors);
     }
 
     /**
-     * Returns the wrapper element.
-     * @returns {HTMLDivElement}
+     * Returns the first element that is a descendant of node that matches selectors.
      */
-    view() {
-        return this.element;
+    querySelectorAll(selectors) {
+        return this.wrapper.querySelectorAll(selectors);
+    }
+
+    /**
+     * Returns a reference to the first object with the specified value of the NAME attribute.
+     * @param elementName String that specifies the name value.
+     */
+    getElementByName(elementName) {
+        // Return element
+        return this.wrapper.querySelector(`[name=${elementName}]`);
+    }
+
+    /**
+     * Returns a reference to the view wrapper, which can be added to the DOM.
+     * @returns {HTMLDivElement} Wrapper
+     */
+    getElement() {
+        return this.wrapper;
     }
 }
-
-class History {
-    /**
-     * Creates a preservable state for all elements in the page.
-     */
-    static preserve() {
-        // Initialize map
-        let state = [];
-        // Find all elements
-        let elements = document.getElementsByTagName("*");
-        // Loop over all elements
-        for (let element of elements) {
-            // Make sure the element has an ID
-            if (element.id.length === 0) {
-                element.id = Math.floor(Math.random() * 1000000).toString();
-            }
-            // Add to object
-            state.push([element.id, element.hasAttribute("hidden")]);
-        }
-        // Return map
-        return state;
-    }
-
-    /**
-     * Restores a preserved state for elements in the page.
-     * @param state State
-     */
-    static restore(state = []) {
-        // Loop over map
-        for (let [id, value] of state) {
-            if (value) {
-                UI.hide(id);
-            } else {
-                UI.show(id);
-            }
-        }
-    }
-}
-
-// Register a popstate listener to restore states.
-window.addEventListener("popstate", (event) => {
-    // Change contents
-    History.restore(event.state);
-});
