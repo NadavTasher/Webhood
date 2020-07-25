@@ -207,24 +207,10 @@ class View {
     }
 
     /**
-     * Returns the first element that is a descendant of node that matches selectors.
-     */
-    querySelector(selectors) {
-        return this.wrapper.querySelector(selectors);
-    }
-
-    /**
-     * Returns the first element that is a descendant of node that matches selectors.
-     */
-    querySelectorAll(selectors) {
-        return this.wrapper.querySelectorAll(selectors);
-    }
-
-    /**
      * Returns a reference to the first object with the specified value of the NAME attribute.
      * @param elementName String that specifies the name value.
      */
-    getElementByName(elementName) {
+    find(elementName) {
         // Return element
         return this.wrapper.querySelector(`[name=${elementName}]`);
     }
@@ -233,7 +219,7 @@ class View {
      * Returns a reference to the view wrapper, which can be added to the DOM.
      * @returns {HTMLDivElement} Wrapper
      */
-    getElement() {
+    element() {
         return this.wrapper;
     }
 }
