@@ -34,13 +34,13 @@ class Keystore
     {
         // Generate a row ID
         if ($id === null) {
-            $id = Base::random(32);
+            $id = Base::random(10);
         }
         // Make sure the entry does not exist
         if ($this->exists($id))
             throw new Error("Entry already exists");
         // Create entry path
-        $path = Base::file("$this->name:$id", self::API);
+        $path = self::path($id);
         // Create the directory
         mkdir($path);
         // Return the ID
@@ -57,7 +57,7 @@ class Keystore
         if (!$this->exists($id))
             throw new Error("Entry does not exist");
         // Create entry path
-        $path = Base::file("$this->name:$id", self::API);
+        $path = self::path($id);
         // Scan entry directory
         $values = scandir($path);
         $values = array_slice($values, 2);
@@ -77,7 +77,7 @@ class Keystore
     public function exists($id)
     {
         // Create entry path
-        $path = Base::file("$this->name:$id", self::API);
+        $path = self::path($id);
         // Check existence
         return file_exists($path) && is_dir($path);
     }
@@ -93,10 +93,8 @@ class Keystore
         // Make sure the entry exists
         if (!$this->exists($id))
             throw new Error("Entry does not exist");
-        // Convert key to hexadecimal
-        $key = bin2hex($key);
         // Create path
-        $path = Base::file("$this->name:$id:$key", self::API);
+        $path = self::path($id, $key);
         // Check if value is null
         if ($value === null) {
             // Make sure the path exists
@@ -121,10 +119,8 @@ class Keystore
         // Make sure the entry exists
         if (!$this->exists($id))
             throw new Error("Entry does not exist");
-        // Convert key to hexadecimal
-        $key = bin2hex($key);
         // Create path
-        $path = Base::file("$this->name:$id:$key", self::API);
+        $path = self::path($id, $key);
         // Make sure the value path exists
         if (file_exists($path) && is_file($path)) {
             // Read and return value
@@ -145,7 +141,7 @@ class Keystore
         // Initialize the results array
         $array = array();
         // Create path
-        $path = Base::file("$this->name", self::API);
+        $path = self::path();
         // Scan entries
         $ids = scandir($path);
         $ids = array_slice($ids, 2);
@@ -158,5 +154,27 @@ class Keystore
         }
         // Return success
         return $array;
+    }
+
+    /**
+     * Creates a keystore path.
+     * @param string | null $id Entry ID
+     * @param string | null $key Key
+     * @return string Path
+     */
+    private function path($id = null, $key = null)
+    {
+        // Check if id is null
+        if ($id === null)
+            return Base::file("$this->name", self::API);;
+        // Hex encode id
+        $id = bin2hex($id);
+        // Check if key is null
+        if ($key === null)
+            return Base::file("$this->name:$id", self::API);;
+        // Hex encode key
+        $key = bin2hex($key);
+        // Create path with key
+        return Base::file("$this->name:$id:$key", self::API);
     }
 }
