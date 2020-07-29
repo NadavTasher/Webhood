@@ -133,6 +133,37 @@ class UI {
     }
 
     /**
+     * Reads a view's value.
+     * @param v View
+     */
+    static read(v) {
+        // Find view
+        let element = UI.find(v);
+        // Check type
+        if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+            return element.value;
+        } else {
+            return element.innerText;
+        }
+    }
+
+    /**
+     * Writes a view's value.
+     * @param v View
+     * @param value Value
+     */
+    static write(v, value) {
+        // Find view
+        let element = UI.find(v);
+        // Check type
+        if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+            element.value = value;
+        } else {
+            element.innerText = value;
+        }
+    }
+
+    /**
      * Populates a template.
      * @param template Template
      * @param parameters Parameters
