@@ -102,11 +102,11 @@ body {
 }
 
 [input], input {
-    border-width: 0 0 0.5vh 0;
+    border-width: 0 0 0.25vh 0;
 }
 
 [button], button {
-    border-width: 0.5vh;
+    border-width: 0.25vh;
 }
 
 /* Colors */
