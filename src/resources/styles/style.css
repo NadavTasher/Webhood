@@ -163,7 +163,7 @@ body {
     text-align-last: start;
 }
 
-[align = "right"], [left] {
+[align = "right"], [right] {
     text-align: end;
     text-align-last: end;
 }
