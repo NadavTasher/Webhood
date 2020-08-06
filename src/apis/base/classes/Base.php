@@ -24,10 +24,15 @@ class Base
         $query = http_build_query($parameters);
 
         // Create the URL
-        $url = "$url/?$action&$query";
+        $url = "$url/?$action";
 
         // Execute the request
-        $contents = file_get_contents($url);
+        $contents = file_get_contents($url, false, stream_context_create([
+            "http" => [
+                "method" => "POST",
+                "content" => $query
+            ]
+        ]));
 
         // Parse the contents as JSON
         $contents = json_decode($contents);
