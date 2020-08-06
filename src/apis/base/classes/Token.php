@@ -7,7 +7,6 @@
 
 class Token
 {
-
     // Token delimiter
     private const DELIMITER = ":";
 
