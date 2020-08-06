@@ -22,9 +22,11 @@ class Database
         $host = getenv("DATABASE_HOST");
         $port = getenv("DATABASE_PORT");
         $scope = getenv("DATABASE_SCOPE");
+        $password = getenv("DATABASE_PASSWORD");
 
-        // Append the scope parameter to the parameter array
+        // Append the scope and password parameters
         $parameters["scope"] = $scope;
+        $parameters["password"] = $password;
 
         // Call the API
         return Base::call("http://$host:$port", $action, $parameters);
