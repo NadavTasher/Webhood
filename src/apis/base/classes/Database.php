@@ -21,17 +21,31 @@ class Database
         // Fetch environment variables
         $url = getenv("DATABASE_URL");
         $scope = getenv("DATABASE_SCOPE");
-        $password = getenv("DATABASE_PASSWORD");
+        $token = getenv("DATABASE_TOKEN");
 
         // Append the scope parameter
         $parameters["scope"] = $scope;
 
-        // Append password parameter if needed
-        if ($password)
-            $parameters["password"] = $password;
+        // Append the token parameter
+        $parameters["token"] = $token;
 
         // Call the API
         return Base::call($url, $action, $parameters);
+    }
+
+    /**
+     * Check whether a database table entry exists.
+     * @param string $table Table
+     * @param string $entry Entry
+     * @return mixed Result
+     */
+    public static function check($table, $entry)
+    {
+        // Execute call
+        return self::call("check", [
+            "table" => $table,
+            "entry" => $entry
+        ]);
     }
 
     /**
@@ -40,10 +54,10 @@ class Database
      * @param string $entry Entry
      * @return mixed Result
      */
-    public static function insertEntry($table, $entry)
+    public static function insert($table, $entry)
     {
         // Execute call
-        return self::call("insertEntry", [
+        return self::call("insert", [
             "table" => $table,
             "entry" => $entry
         ]);
@@ -55,113 +69,49 @@ class Database
      * @param string $entry Entry
      * @return mixed Result
      */
-    public static function removeEntry($table, $entry)
+    public static function remove($table, $entry)
     {
         // Execute call
-        return self::call("removeEntry", [
+        return self::call("remove", [
             "table" => $table,
             "entry" => $entry
         ]);
     }
 
     /**
-     * Check whether a database table entry exists.
+     * Reads a database table value.
      * @param string $table Table
      * @param string $entry Entry
-     * @return mixed Result
-     */
-    public static function checkEntry($table, $entry)
-    {
-        // Execute call
-        return self::call("checkEntry", [
-            "table" => $table,
-            "entry" => $entry
-        ]);
-    }
-
-    /**
-     * Inserts a database table cell.
-     * @param string $table Table
-     * @param string $entry Entry
-     * @param string $cell Cell
-     * @return mixed Result
-     */
-    public static function insertCell($table, $entry, $cell)
-    {
-        // Execute call
-        return self::call("insertCell", [
-            "table" => $table,
-            "entry" => $entry,
-            "cell" => $cell
-        ]);
-    }
-
-    /**
-     * Removes a database table cell.
-     * @param string $table Table
-     * @param string $entry Entry
-     * @param string $cell Cell
-     * @return mixed Result
-     */
-    public static function removeCell($table, $entry, $cell)
-    {
-        // Execute call
-        return self::call("removeCell", [
-            "table" => $table,
-            "entry" => $entry,
-            "cell" => $cell
-        ]);
-    }
-
-    /**
-     * Check whether a database table cell exists.
-     * @param string $table Table
-     * @param string $entry Entry
-     * @param string $cell Cell
-     * @return mixed Result
-     */
-    public static function checkCell($table, $entry, $cell)
-    {
-        // Execute call
-        return self::call("checkCell", [
-            "table" => $table,
-            "entry" => $entry,
-            "cell" => $cell
-        ]);
-    }
-
-    /**
-     * Reads a database table cell.
-     * @param string $table Table
-     * @param string $entry Entry
-     * @param string $cell Cell
-     * @return mixed Result
-     */
-    public static function readCell($table, $entry, $cell)
-    {
-        // Execute call
-        return self::call("readCell", [
-            "table" => $table,
-            "entry" => $entry,
-            "cell" => $cell
-        ]);
-    }
-
-    /**
-     * Writes a database table cell.
-     * @param string $table Table
-     * @param string $entry Entry
-     * @param string $cell Cell
+     * @param string $key Key
      * @param string $value Value
      * @return mixed Result
      */
-    public static function writeCell($table, $entry, $cell, $value)
+    public static function read($table, $entry, $key, $value)
     {
         // Execute call
-        return self::call("writeCell", [
+        return self::call("read", [
             "table" => $table,
             "entry" => $entry,
-            "cell" => $cell,
+            "key" => $key,
+            "value" => $value
+        ]);
+    }
+
+    /**
+     * Writes a database table value.
+     * @param string $table Table
+     * @param string $entry Entry
+     * @param string $key Key
+     * @param string $value Value
+     * @return mixed Result
+     */
+    public static function write($table, $entry, $key, $value)
+    {
+        // Execute call
+        return self::call("write", [
+            "table" => $table,
+            "entry" => $entry,
+            "key" => $key,
             "value" => $value
         ]);
     }
