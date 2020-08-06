@@ -2,7 +2,7 @@
 
 // Include APIs
 include_once __DIR__ . DIRECTORY_SEPARATOR . "classes" . DIRECTORY_SEPARATOR . "Authenticate.php";
-include_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "apis" . DIRECTORY_SEPARATOR . "APIs.php";
+include_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "base" . DIRECTORY_SEPARATOR . "APIs.php";
 
 // Handle the API call
 Base::handle(function ($action, $parameters) {
