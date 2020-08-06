@@ -140,7 +140,7 @@ class UI {
         // Find view
         let element = UI.find(v);
         // Check type
-        if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+        if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
             return element.value;
         } else {
             return element.innerText;
@@ -156,7 +156,7 @@ class UI {
         // Find view
         let element = UI.find(v);
         // Check type
-        if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+        if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
             element.value = value;
         } else {
             element.innerText = value;
