@@ -15,7 +15,6 @@ class Authority
     public const ENTRY = "authority";
 
     // Constants
-    private const LENGTH = 512;
     private const VALIDITY = 31 * 24 * 60 * 60;
     private const SEPARATOR = ":";
 
@@ -59,12 +58,16 @@ class Authority
         $tokenObject = new stdClass();
         $tokenObject->data = $data;
         $tokenObject->expiry = time() + intval($validity);
+
         // Create token string
         $tokenString = bin2hex(json_encode($tokenObject));
+
         // Calculate signature
         $tokenSignature = hash_hmac("sha256", $tokenString, $this->secret);
+
         // Create parts
         $tokenSlices = [$tokenString, $tokenSignature];
+
         // Return compiled token
         return implode(self::SEPARATOR, $tokenSlices);
     }
@@ -78,23 +81,30 @@ class Authority
     {
         // Separate string
         $tokenSlices = explode(self::SEPARATOR, $token);
+
         // Validate content count
         if (count($tokenSlices) !== 2)
             throw new Error("Invalid token format");
+
         // Store parts
         $tokenString = $tokenSlices[0];
         $tokenSignature = $tokenSlices[1];
+
         // Validate signature
         if (hash_hmac("sha256", $tokenString, $this->secret) !== $tokenSignature)
             throw new Error("Invalid token signature");
+
         // Parse token object
         $tokenObject = json_decode(hex2bin($tokenString));
+
         // Validate structure
         if (!isset($tokenObject->data) || !isset($tokenObject->expiry))
             throw new Error("Invalid token structure");
+
         // Validate expiry
         if (time() > $tokenObject->expiry)
             throw new Error("Invalid token expiry");
+
         // Return token
         return $tokenObject->data;
     }

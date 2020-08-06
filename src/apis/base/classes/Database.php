@@ -19,8 +19,7 @@ class Database
     private static function call($action, $parameters)
     {
         // Fetch environment variables
-        $host = getenv("DATABASE_HOST");
-        $port = getenv("DATABASE_PORT");
+        $url = getenv("DATABASE_URL");
         $scope = getenv("DATABASE_SCOPE");
         $password = getenv("DATABASE_PASSWORD");
 
@@ -32,7 +31,7 @@ class Database
             $parameters["password"] = $password;
 
         // Call the API
-        return Base::call("http://$host:$port", $action, $parameters);
+        return Base::call($url, $action, $parameters);
     }
 
     /**
@@ -45,9 +44,9 @@ class Database
     {
         // Execute call
         return self::call("insertEntry", [
-                "table" => $table,
-                "entry" => $entry
-            ]);
+            "table" => $table,
+            "entry" => $entry
+        ]);
     }
 
     /**

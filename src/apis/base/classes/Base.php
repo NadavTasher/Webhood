@@ -22,18 +22,24 @@ class Base
     {
         // Create query
         $query = http_build_query($parameters);
+
         // Create the URL
         $url = "$url/?$action&$query";
+
         // Execute the request
         $contents = file_get_contents($url);
+
         // Parse the contents as JSON
         $contents = json_decode($contents);
+
         // Check contents structure
-        if (!isset($contents->status) || !isset($contents->result))
+        if (!property_exists($contents, "status") || !property_exists($contents, "result"))
             throw new Error("API response malformed");
+
         // Throw error
         if (!$contents->status)
             throw new Error($contents->result);
+
         // Return result
         return $contents->result;
     }
@@ -46,24 +52,30 @@ class Base
     {
         // Initialize the response
         $result = new stdClass();
+
         // Initialize the action
         if (count($_GET) > 0) {
             // Get the action
             $requestAction = array_key_first($_GET);
+
             // Parse the parameters
             $requestParameters = new stdClass();
+
             // Loop over GET parameters
             foreach ($_GET as $name => $value) {
                 if (is_string($value))
                     $requestParameters->$name = $value;
             }
+
             // Loop over POST parameters
             foreach ($_POST as $name => $value) {
                 if (is_string($value))
                     $requestParameters->$name = $value;
             }
+
             // Unset the action
             unset($requestParameters->$requestAction);
+
             // Execute the call
             try {
                 $result->result = $callback($requestAction, $requestParameters);
@@ -73,8 +85,10 @@ class Base
                 $result->status = false;
             }
         }
+
         // Change the content type
         header("Content-Type: application/json");
+
         // Echo response
         echo json_encode($result);
     }
@@ -86,9 +100,11 @@ class Base
      */
     public static function random($length = 0)
     {
-        if ($length > 0) {
-            return str_shuffle("0123456789abcdefghijklmnopqrstuvwxyz")[0] . self::random($length - 1);
-        }
-        return "";
+        // Check if generation is finished
+        if ($length === 0)
+            return "";
+
+        // Shuffle string
+        return str_shuffle("0123456789abcdefghijklmnopqrstuvwxyz")[0] . self::random($length - 1);
     }
 }
