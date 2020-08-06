@@ -32,57 +32,53 @@ class Authenticate
     private static Authority $authority;
 
     /**
-     * API hook.
+     * Handles authentication requests with action and parameters.
+     * @param string $action Action
+     * @param array $parameters Parameters
+     * @return mixed Result
      */
-    public static function handle()
-    {
-        // Handle the request
-        Base::handle(function ($action, $parameters) {
-            if ($action === "validate") {
-                // Validate locks
-                if (self::LOCK_VALIDATE)
-                    throw new Error("Validation not allowed");
-
-                // Validate parameters
-                if (!isset($parameters->token) || !is_string($parameters->token))
-                    throw new Error("Parameter error");
-
-                // Validate token
-                return self::validate($parameters->token);
-            } else if ($action === "signIn") {
-                // Validate locks
-                if (self::LOCK_SIGNIN)
-                    throw new Error("Sign-In not allowed");
-
-                // Validate parameters
-                if (!isset($parameters->name) || !isset($parameters->password) || !is_string($parameters->name) || !is_string($parameters->password))
-                    throw new Error("Parameter error");
-
-                // Sign the user in
-                return self::signIn($parameters->name, $parameters->password);
-            } else if ($action === "signUp") {
-                // Validate locks
-                if (self::LOCK_SIGNUP)
-                    throw new Error("Sign-Up not allowed");
-
-                // Validate parameters
-                if (!isset($parameters->name) || !isset($parameters->password) || !is_string($parameters->name) || !is_string($parameters->password))
-                    throw new Error("Parameter error");
-
-                // Sign the user up
-                return self::signUp($parameters->name, $parameters->password);
-            }
-            return [false, "Unhandled hook"];
-        });
-    }
-
-    /**
-     * API initializer.
-     */
-    public static function initialize()
+    public static function handle($action, $parameters)
     {
         // Make sure the authority is initiated.
         self::$authority = new Authority(self::API);
+
+        // Check action
+        if ($action === "validate") {
+            // Validate locks
+            if (self::LOCK_VALIDATE)
+                throw new Error("Validation not allowed");
+
+            // Validate parameters
+            if (!isset($parameters->token) || !is_string($parameters->token))
+                throw new Error("Parameter error");
+
+            // Validate token
+            return self::validate($parameters->token);
+        } else if ($action === "signIn") {
+            // Validate locks
+            if (self::LOCK_SIGNIN)
+                throw new Error("Sign-In not allowed");
+
+            // Validate parameters
+            if (!isset($parameters->name) || !isset($parameters->password) || !is_string($parameters->name) || !is_string($parameters->password))
+                throw new Error("Parameter error");
+
+            // Sign the user in
+            return self::signIn($parameters->name, $parameters->password);
+        } else if ($action === "signUp") {
+            // Validate locks
+            if (self::LOCK_SIGNUP)
+                throw new Error("Sign-Up not allowed");
+
+            // Validate parameters
+            if (!isset($parameters->name) || !isset($parameters->password) || !is_string($parameters->name) || !is_string($parameters->password))
+                throw new Error("Parameter error");
+
+            // Sign the user up
+            return self::signUp($parameters->name, $parameters->password);
+        }
+        // Throw error
+        throw new Error("Unhandled hook");
     }
 
     /**
