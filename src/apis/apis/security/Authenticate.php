@@ -10,25 +10,26 @@
  */
 class Authenticate
 {
-    // API string
+    // Constant names
     public const API = "authenticate";
 
-    // Column names
-    private const COLUMN_SALT = "salt";
-    private const COLUMN_HASH = "hash";
-    private const COLUMN_LOCK = "lock";
+    // Cell names
+    private const CELL_SALT = "salt";
+    private const CELL_HASH = "hash";
+    private const CELL_LOCK = "lock";
 
     // Constant lengths
-    private const LENGTH_SALT = 512;
+    private const LENGTH_SALT = 128;
     private const LENGTH_NAME = 2;
     private const LENGTH_PASSWORD = 8;
 
-    // Preferences
-    private static Preference $validate, $signUp, $signIn;
+    // Constant locks
+    private const LOCK_VALIDATE = false;
+    private const LOCK_SIGNIN = false;
+    private const LOCK_SIGNUP = false;
 
-    // Authority & Keystore
+    // Authority object
     private static Authority $authority;
-    private static Keystore $keystore;
 
     /**
      * API hook.
@@ -39,29 +40,35 @@ class Authenticate
         Base::handle(function ($action, $parameters) {
             if ($action === "validate") {
                 // Validate locks
-                if (!self::$validate->get())
+                if (self::LOCK_VALIDATE)
                     throw new Error("Validation not allowed");
+
                 // Validate parameters
                 if (!isset($parameters->token) || !is_string($parameters->token))
                     throw new Error("Parameter error");
+
                 // Validate token
                 return self::validate($parameters->token);
             } else if ($action === "signIn") {
                 // Validate locks
-                if (!self::$signIn->get())
+                if (self::LOCK_SIGNIN)
                     throw new Error("Sign-In not allowed");
+
                 // Validate parameters
                 if (!isset($parameters->name) || !isset($parameters->password) || !is_string($parameters->name) || !is_string($parameters->password))
                     throw new Error("Parameter error");
+
                 // Sign the user in
                 return self::signIn($parameters->name, $parameters->password);
             } else if ($action === "signUp") {
                 // Validate locks
-                if (!self::$signUp->get())
+                if (self::LOCK_SIGNUP)
                     throw new Error("Sign-Up not allowed");
+
                 // Validate parameters
                 if (!isset($parameters->name) || !isset($parameters->password) || !is_string($parameters->name) || !is_string($parameters->password))
                     throw new Error("Parameter error");
+
                 // Sign the user up
                 return self::signUp($parameters->name, $parameters->password);
             }
@@ -74,12 +81,6 @@ class Authenticate
      */
     public static function initialize()
     {
-        // Load preferences
-        self::$validate = new Preference("validate", true, self::API);
-        self::$signUp = new Preference("signUp", true, self::API);
-        self::$signIn = new Preference("signIn", true, self::API);
-        // Make sure the keystore is initiated.
-        self::$keystore = new Keystore(self::API);
         // Make sure the authority is initiated.
         self::$authority = new Authority(self::API);
     }
@@ -110,20 +111,24 @@ class Authenticate
         if (strlen($password) < self::LENGTH_PASSWORD)
             throw new Error("Password too short");
         // Create user ID
-        $userID = bin2hex($name);
+        $userID = $name;
         // Make sure the user does not exist
-        if (self::$keystore->exists($userID))
+        if (Database::checkEntry(self::API, $userID))
             throw new Error("User already exists");
         // Insert a new entry
-        self::$keystore->insert($userID);
+        Database::insertEntry(self::API, $userID);
         // Generate salt and hash
         $salt = Base::random(self::LENGTH_SALT);
         $hash = hash("sha256", $password . $salt);
         $time = strval(0);
+        // Create user cells
+        Database::insertCell(self::API, $userID, self::CELL_SALT);
+        Database::insertCell(self::API, $userID, self::CELL_HASH);
+        Database::insertCell(self::API, $userID, self::CELL_LOCK);
         // Set user information
-        self::$keystore->set($userID, self::COLUMN_SALT, $salt);
-        self::$keystore->set($userID, self::COLUMN_HASH, $hash);
-        self::$keystore->set($userID, self::COLUMN_LOCK, $time);
+        Database::writeCell(self::API, $userID, self::CELL_SALT, $salt);
+        Database::writeCell(self::API, $userID, self::CELL_HASH, $hash);
+        Database::writeCell(self::API, $userID, self::CELL_LOCK, $time);
         // Return a success result
         return $userID;
     }
@@ -137,14 +142,14 @@ class Authenticate
     public static function signIn($name, $password)
     {
         // Create user ID
-        $userID = bin2hex($name);
+        $userID = $name;
         // Make sure the user exists
-        if (!self::$keystore->exists($userID))
+        if (!Database::checkEntry(self::API, $userID))
             throw new Error("User does not exist");
         // Get keystore values
-        $lock = self::$keystore->get($userID, self::COLUMN_LOCK);
-        $salt = self::$keystore->get($userID, self::COLUMN_SALT);
-        $hash = self::$keystore->get($userID, self::COLUMN_HASH);
+        $lock = Database::readCell(self::API, $userID, self::CELL_LOCK);
+        $salt = Database::readCell(self::API, $userID, self::CELL_SALT);
+        $hash = Database::readCell(self::API, $userID, self::CELL_HASH);
         // Make sure the user is not locked
         if (intval($lock) > time())
             throw new Error("User is locked");
@@ -156,7 +161,7 @@ class Authenticate
             // Calculate new lock time
             $time = strval(time() + 10);
             // Lock the user
-            self::$keystore->set($userID, self::COLUMN_LOCK, $time);
+            Database::writeCell(self::API, $userID, self::CELL_LOCK, $time);
             // Throw an error
             throw new Error("Wrong password");
         }

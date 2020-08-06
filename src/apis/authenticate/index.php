@@ -1,6 +1,7 @@
 <?php
-// Include the authenticate API
-include_once __DIR__ . DIRECTORY_SEPARATOR;
+
+// Include APIs
+include_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "apis" . DIRECTORY_SEPARATOR . "APIs.php";
 
 // Initialize the API
 Authenticate::initialize();

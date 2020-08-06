@@ -41,18 +41,13 @@ class Database
      * @param string $entry Entry
      * @return mixed Result
      */
-    public static function insertEntry($table, $entry = null)
+    public static function insertEntry($table, $entry)
     {
-        // Check if the ID needs to be randomly generated
-        if ($entry === null) {
-            $entry = Base::random(10);
-        }
-
         // Execute call
         return self::call("insertEntry", [
                 "table" => $table,
                 "entry" => $entry
-            ]) | $entry;
+            ]);
     }
 
     /**

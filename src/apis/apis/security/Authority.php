@@ -11,30 +11,40 @@
 class Authority
 {
     // Constants
-    public const API = "authority";
+    public const TABLE = "configuration";
+    public const ENTRY = "authority";
 
     // Constants
     private const LENGTH = 512;
     private const VALIDITY = 31 * 24 * 60 * 60;
     private const SEPARATOR = ":";
 
-    // API name
-    private string $API;
+    // Authority secret
+    private string $secret;
 
     /**
      * Authority constructor.
-     * @param string $API API
+     * @param string $name Name
      */
-    public function __construct($API = Base::API)
+    public function __construct($name)
     {
-        $this->API = $API;
-        // Create secret
-        $path = Base::file($this->API, self::API);
-        // Check existence
-        if (!(file_exists($path) && is_file($path))) {
-            // Create the secret file
-            file_put_contents($path, Base::random(self::LENGTH));
+        // Make sure authority entry exists
+        if (!Database::checkEntry(self::TABLE, self::ENTRY)) {
+            // Create entry
+            Database::insertEntry(self::TABLE, self::ENTRY);
         }
+
+        // Make sure secret exists
+        if (!Database::checkCell(self::TABLE, self::ENTRY, $name)) {
+            // Create secret cell
+            Database::insertCell(self::TABLE, self::ENTRY, $name);
+
+            // Write secret
+            Database::writeCell(self::TABLE, self::ENTRY, $name, Base::random(64));
+        }
+
+        // Read secret
+        $this->secret = Database::readCell(self::TABLE, self::ENTRY, $name);
     }
 
     /**
@@ -52,7 +62,7 @@ class Authority
         // Create token string
         $tokenString = bin2hex(json_encode($tokenObject));
         // Calculate signature
-        $tokenSignature = hash_hmac("sha256", $tokenString, file_get_contents(Base::file($this->API, self::API)));
+        $tokenSignature = hash_hmac("sha256", $tokenString, $this->secret);
         // Create parts
         $tokenSlices = [$tokenString, $tokenSignature];
         // Return compiled token
@@ -75,7 +85,7 @@ class Authority
         $tokenString = $tokenSlices[0];
         $tokenSignature = $tokenSlices[1];
         // Validate signature
-        if (hash_hmac("sha256", $tokenString, file_get_contents(Base::file($this->API, self::API))) !== $tokenSignature)
+        if (hash_hmac("sha256", $tokenString, $this->secret) !== $tokenSignature)
             throw new Error("Invalid token signature");
         // Parse token object
         $tokenObject = json_decode(hex2bin($tokenString));
