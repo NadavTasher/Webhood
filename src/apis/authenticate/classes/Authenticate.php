@@ -148,7 +148,7 @@ class Authenticate
         // Check password match
         if (hash("sha256", $password . $salt) === $hash) {
             // Issue a new token
-            return Token::issue($name);
+            return Token::issue($name, 60 * 60 * 24 * 28);
         } else {
             // Calculate new lock time
             $time = strval(time() + 10);
