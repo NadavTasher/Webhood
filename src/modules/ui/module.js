@@ -178,79 +178,33 @@ class UI {
             // Fill the contents
             templateElement.innerHTML = template;
         }
-        // Create the cloned node
-        let created = templateElement.cloneNode(true);
-        // Modify the HTML
-        let html = created.innerHTML;
+        // Store the HTML in a temporary variable
+        let html = templateElement.innerHTML;
         // Replace parameters
         for (let key in parameters) {
             if (key in parameters) {
+                // Create the searching values
                 let search = "${" + key + "}";
                 let value = parameters[key];
-                // Sanitize value
+                // Sanitize value using the default HTML sanitiser of the target browser
                 let sanitizer = document.createElement("p");
                 sanitizer.innerText = value;
                 value = sanitizer.innerHTML;
-                // Replace
+                // Replace all instances
                 while (html.includes(search))
                     html = html.replace(search, value);
             }
         }
-        // Replace the HTML
-        created.innerHTML = html;
-        // Return created element
-        return created.content;
-    }
-}
-
-class View {
-    /**
-     * View constructor.
-     * @param type Type
-     * @param html HTML
-     */
-    constructor(type, html) {
-        // Create the wrapper element
-        this.wrapper = document.createElement("div");
-        // Create the host element
-        let host = document.createElement("div");
-        // Populate the host element
-        host.innerHTML = html;
-        // Find the template element
-        let template = host.querySelector("template");
-        // Find the style element
-        let stylesheet = host.querySelector("style");
-        // Make sure the template element exists
-        if (template === undefined)
-            return;
-        // Populate the element
-        this.wrapper.innerHTML = template.innerHTML;
-        // Make sure the style element exists
-        if (stylesheet === undefined)
-            return;
-        // Set element ID
-        stylesheet.id = `style:${type}`;
-        // Make sure style is not loaded
-        if (document.getElementById(stylesheet.id) !== null)
-            return;
-        // Load the style
-        document.head.appendChild(stylesheet);
-    }
-
-    /**
-     * Returns a reference to the first object with the specified value of the NAME attribute.
-     * @param elementName String that specifies the name value.
-     */
-    find(elementName) {
-        // Return element
-        return this.wrapper.querySelector(`[name=${elementName}]`);
-    }
-
-    /**
-     * Returns a reference to the view wrapper, which can be added to the DOM.
-     * @returns {HTMLDivElement} Wrapper
-     */
-    element() {
-        return this.wrapper;
+        // Create a wrapper element
+        let wrapperElement = document.createElement("div");
+        // Append HTML to wrapper element
+        wrapperElement.innerHTML = html;
+        // Add functions to the wrapper
+        wrapperElement.find = (elementName) => {
+            // Return element
+            return wrapperElement.querySelector(`[name=${elementName}]`);
+        };
+        // Return created wrapper
+        return wrapperElement;
     }
 }
