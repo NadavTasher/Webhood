@@ -1,2 +1,2 @@
-function load() {
+async function load() {
 }
