@@ -69,7 +69,7 @@ export function remove(v) {
  */
 export function view(v) {
     // Add history
-    window.history.replaceState(History.preserve(), document.title);
+    window.history.replaceState(preserve(), document.title);
     // Change views
     for (let view of Array.from(arguments)) {
         // Store view
@@ -84,7 +84,7 @@ export function view(v) {
         show(element);
     }
     // Add history
-    window.history.pushState(History.preserve(), document.title);
+    window.history.pushState(preserve(), document.title);
 }
 
 /**
@@ -202,5 +202,5 @@ function restore(state = []) {
 // Register a popstate listener to restore states.
 window.addEventListener("popstate", (event) => {
     // Change contents
-    History.restore(event.state);
+    restore(event.state);
 });
