@@ -5,14 +5,12 @@
 
 // Initialize sources
 const MODULE_SOURCES_CORE = "core";
-const MODULE_SOURCES_LOCAL = "local";
 const MODULE_SOURCES_GLOBAL = "global";
 
 // Initialize sources object
 const MODULE_SOURCES = {
-    [MODULE_SOURCES_LOCAL]: location.pathname.split("/").slice(0, -1).join("/") + "/modules",
-    [MODULE_SOURCES_CORE]: "https://nadavtasher.github.io/Template/src/modules",
-    [MODULE_SOURCES_GLOBAL]: "https://nadavtasher.github.io/Modules/src/modules",
+    [MODULE_SOURCES_CORE]: "https://nadavtasher.github.io/Template/modules/core",
+    [MODULE_SOURCES_GLOBAL]: "https://nadavtasher.github.io/Template/modules/global",
 };
 
 class Module {
@@ -25,7 +23,7 @@ class Module {
         // Transform name
         let moduleName = name.toLowerCase();
         // Initialize default sources
-        let moduleSources = MODULE_SOURCES_LOCAL;
+        let moduleSources = MODULE_SOURCES_CORE;
         // Switch sources
         for (let sources in MODULE_SOURCES) {
             // Append to prefix
