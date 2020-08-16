@@ -13,26 +13,33 @@ class Module {
         return new Promise((resolve, reject) => {
             // Transform module name
             module = module.toLowerCase();
+
             // Create a script tag
             let scriptElement = document.createElement("script");
+
             // Prepare the script tag
             scriptElement.id = "module:" + module;
             scriptElement.src = this.locate(module);
+
             // Hook to state handlers
             scriptElement.addEventListener("load", () => {
                 // Resolve promise
                 resolve("Module was loaded");
             });
+
             scriptElement.addEventListener("error", () => {
                 // Remove element
                 document.head.removeChild(scriptElement);
+
                 // Reject promise
                 reject("Module was not loaded");
             });
+
             // Make sure the script is not loaded already
             if (document.getElementById(scriptElement.id)) {
                 // Resolve promise
                 resolve("Module was loaded already");
+
                 // Finish execution
                 return;
             }
@@ -49,8 +56,10 @@ class Module {
         // Initialize name & default sources
         let name = module.toLowerCase();
         let repository = "internal";
+
         // Slice name and look for repository
         let slices = name.split(":");
+
         // Make sure there are exactly two slices
         if (slices.length === 2) {
             // Update name
@@ -58,11 +67,14 @@ class Module {
             // Update sources
             repository = slices.pop();
         }
+
         // Query repository element
         let element = document.querySelector(`meta[name="repository-${repository}"]`);
+
         // Make sure repository exists
         if (element !== null)
             return `${element.content}/${name}.js`;
+
         // Return null
         return null;
     }

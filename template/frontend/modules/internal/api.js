@@ -15,11 +15,13 @@ class API {
         return new Promise((resolve, reject) => {
             // Create a form
             let form = new FormData();
+
             // Append parameters to form
             for (let key in parameters) {
                 if (parameters.hasOwnProperty(key))
                     form.append(key, parameters[key]);
             }
+
             // Perform the request
             fetch(`apis/${endpoint}/?${encodeURIComponent(action)}`, {
                 method: "post",

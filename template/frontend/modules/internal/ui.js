@@ -15,11 +15,13 @@ class UI {
             if (document.getElementById(v) !== undefined) {
                 return document.getElementById(v);
             }
+
             // Query lookup
             if (document.querySelector(v) !== undefined) {
                 return document.querySelector(v);
             }
         }
+
         // Return the input
         return v;
     }
@@ -49,6 +51,7 @@ class UI {
     static clear(v) {
         // Store view
         let view = this.find(v);
+
         // Remove all views
         view.innerHTML = "";
     }
@@ -60,7 +63,8 @@ class UI {
     static remove(v) {
         // Find view
         let element = this.find(v);
-        // Remove
+
+        // Remove from parent
         element.parentNode.removeChild(element);
     }
 
@@ -71,19 +75,24 @@ class UI {
     static view(v) {
         // Add history
         window.history.replaceState(this._preserve(), document.title);
+
         // Change views
         for (let view of Array.from(arguments)) {
             // Store view
             let element = this.find(view);
+
             // Store parent
             let parent = element.parentNode;
+
             // Hide all
             for (let child of parent.children) {
                 this.hide(child);
             }
+
             // Show view
             this.show(element);
         }
+
         // Add history
         window.history.pushState(this._preserve(), document.title);
     }
@@ -95,6 +104,7 @@ class UI {
     static read(v) {
         // Find view
         let element = this.find(v);
+
         // Check type
         if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
             return element.value;
@@ -111,6 +121,7 @@ class UI {
     static write(v, value) {
         // Find view
         let element = this.find(v);
+
         // Check type
         if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
             element.value = value;
@@ -128,24 +139,29 @@ class UI {
     static populate(template, parameters = {}) {
         // Find the template
         let templateElement = this.find(template);
+
         // If the element is null, create one
         if (templateElement === null) {
             templateElement = document.createElement("template");
+
             // Fill the contents
             templateElement.innerHTML = template;
         }
         // Store the HTML in a temporary variable
         let html = templateElement.innerHTML;
+
         // Replace parameters
         for (let key in parameters) {
             if (key in parameters) {
                 // Create the searching values
                 let search = "${" + key + "}";
                 let value = parameters[key];
+
                 // Sanitize value using the default HTML sanitiser of the target browser
                 let sanitizer = document.createElement("p");
                 sanitizer.innerText = value;
                 value = sanitizer.innerHTML;
+
                 // Replace all instances
                 while (html.includes(search))
                     html = html.replace(search, value);
@@ -153,13 +169,16 @@ class UI {
         }
         // Create a wrapper element
         let wrapperElement = document.createElement("div");
+
         // Append HTML to wrapper element
         wrapperElement.innerHTML = html;
+
         // Add functions to the wrapper
         wrapperElement.find = (elementName) => {
             // Return element
             return wrapperElement.querySelector(`[name=${elementName}]`);
         };
+
         // Return created wrapper
         return wrapperElement;
     }
@@ -170,17 +189,21 @@ class UI {
     static _preserve() {
         // Initialize map
         let state = [];
+
         // Find all elements
         let elements = document.getElementsByTagName("*");
+
         // Loop over all elements
         for (let element of elements) {
             // Make sure the element has an ID
             if (element.id.length === 0) {
                 element.id = Math.floor(Math.random() * 1000000).toString();
             }
+
             // Add to object
             state.push([element.id, element.hasAttribute("hidden")]);
         }
+
         // Return map
         return state;
     }
