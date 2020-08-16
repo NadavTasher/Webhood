@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<!--
+ Copyright (c) 2020 Nadav Tasher
+ https://github.com/NadavTasher/Template/
+-->
+<html row lang="en">
+<head>
+    <!-- Charset -->
+    <meta charset="UTF-8"/>
+
+    <!-- App Description -->
+    <meta name="description" content="AppDescription">
+
+    <!-- Viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes, minimal-ui"/>
+
+    <!-- Mobile -->
+    <meta name="theme-color" content="#FFFFFF"/>
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Mobile Safari -->
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-title" content="AppName"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <!-- Icons -->
+    <link rel="icon"
+          href="data:image/png;base64,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"/>
+    <link rel="apple-touch-icon"
+          href="data:image/png;base64,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"/>
+
+    <!-- Template stylesheet -->
+    <style>
+        html {
+            /* Scrolling */
+            overflow-x: hidden;
+            overflow-y: scroll;
+            /* Sizing */
+            height: 100%;
+            width: 100%;
+            /* Background */
+            background-color: var(--theme);
+        }
+
+        body {
+            /* Alignment */
+            margin: auto !important;
+        }
+
+        /* Base */
+
+        [text], [button], [input], [row], [column], p, button, input, div, body, html {
+            /* Font */
+            font-family: sans-serif;
+            text-decoration: none;
+            /* Transition and Outline */
+            outline: none;
+            transition-duration: 0.5s;
+        }
+
+        /* Flex */
+
+        [text], [button], [input], [row], [column], p, button, input, div, body, html {
+            display: flex;
+            flex-direction: column;
+        }
+
+        [row] {
+            flex-direction: row;
+        }
+
+        [column] {
+            flex-direction: column;
+        }
+
+        /* Alignment */
+
+        [text], [button], [input], p, button, input {
+            justify-content: center;
+            justify-items: center;
+            align-content: center;
+            align-items: stretch;
+        }
+
+        [row], [column], div, body, html {
+            justify-content: center;
+            align-content: center;
+        }
+
+        [row] {
+            align-items: stretch;
+        }
+
+        [column] {
+            align-items: stretch;
+        }
+
+        /* Padding, Margins */
+
+        [text], [button], [input], p, button, input {
+            padding: 1.25vh;
+            margin: 1vh;
+        }
+
+        [row], [column], div, body, html {
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Sizing */
+
+        [text], [button], [input], [row], [column], p, button, input, div, body, html {
+            line-height: 100%;
+            min-height: fit-content;
+        }
+
+        [button], [input], button, input {
+            width: auto;
+        }
+
+        [row] > * {
+            width: 100%;
+        }
+
+        /* Border */
+
+        [button], [input], button, input {
+            border-style: solid;
+            border-radius: 0.5vh;
+        }
+
+        [input], input {
+            border-width: 0 0 0.25vh 0;
+        }
+
+        [button], button {
+            border-width: 0.25vh;
+        }
+
+        /* Colors */
+
+        [text], [button], [input], p, button, input {
+            background-color: transparent;
+        }
+
+        [button], [input], button, input {
+            color: var(--passive);
+            border-color: var(--passive);
+        }
+
+        [button]:hover, [input]:hover, button:hover, input:hover {
+            color: var(--active);
+            border-color: var(--active);
+        }
+
+        [text], p {
+            color: var(--passive);
+        }
+
+        /* Text alignment */
+
+        [center] {
+            text-align: center;
+            text-align-last: center;
+        }
+
+        [left] {
+            text-align: start;
+            text-align-last: start;
+        }
+
+        [right] {
+            text-align: end;
+            text-align-last: end;
+        }
+
+        /* Text size */
+
+        [tiny] {
+            font-size: 1.5vh;
+        }
+
+        [small] {
+            font-size: 2vh;
+        }
+
+        [medium] {
+            font-size: 2.5vh;
+        }
+
+        [large] {
+            font-size: 4vh;
+        }
+
+        [huge] {
+            font-size: 5.5vh;
+        }
+
+        /* Additional */
+
+        [hidden] {
+            display: none !important;
+        }
+
+        *::-webkit-scrollbar {
+            display: none !important;
+        }
+    </style>
+
+    <!-- Application stylesheet -->
+    <style>
+        :root {
+            --theme: #FFFFFF;
+            --passive: #333344;
+            --active: #777788;
+            --coaster: #DDDDEE;
+        }
+
+        body {
+            max-width: 500px;
+        }
+    </style>
+
+    <!-- Template script  -->
+    <script type="text/javascript">
+        class API {
+            /**
+             * Sends an API call.
+             * @param endpoint API to call
+             * @param action Action
+             * @param parameters Parameters
+             * @return Promise
+             */
+            static call(endpoint = null, action = null, parameters = null) {
+                return new Promise((resolve, reject) => {
+                    // Create a form
+                    let form = new FormData();
+                    // Append parameters to form
+                    for (let key in parameters) {
+                        if (parameters.hasOwnProperty(key))
+                            form.append(key, parameters[key]);
+                    }
+                    // Perform the request
+                    fetch(`apis/${endpoint}/?${encodeURIComponent(action)}`, {
+                        method: "post",
+                        body: form
+                    }).then((response) => {
+                        response.json().then((result) => {
+                            // Check the result's integrity
+                            if (result.hasOwnProperty("status") && result.hasOwnProperty("result")) {
+                                // Call the callback with the result
+                                if (result["status"] === true) {
+                                    resolve(result["result"]);
+                                } else {
+                                    reject(result["result"]);
+                                }
+                            } else {
+                                // Reject with an error
+                                reject("API response malformed");
+                            }
+                        }).catch((reason) => {
+                            // Reject with an error
+                            reject("API response malformed");
+                        });
+                    });
+                });
+            }
+        }
+
+        class UI {
+            /**
+             * Returns a view by its ID or by it's own value.
+             * @param v View
+             * @returns {HTMLElement} View
+             */
+            static find(v) {
+                if (typeof "" === typeof v || typeof '' === typeof v) {
+                    // ID lookup
+                    if (document.getElementById(v) !== undefined) {
+                        return document.getElementById(v);
+                    }
+                    // Query lookup
+                    if (document.querySelector(v) !== undefined) {
+                        return document.querySelector(v);
+                    }
+                }
+                // Return the input
+                return v;
+            }
+
+            /**
+             * Hides a given view.
+             * @param v View
+             */
+            static hide(v) {
+                // Set style to none
+                this.find(v).setAttribute("hidden", "true");
+            }
+
+            /**
+             * Shows a given view.
+             * @param v View
+             */
+            static show(v) {
+                // Set style to original value
+                this.find(v).removeAttribute("hidden");
+            }
+
+            /**
+             * Removes all children of a given view.
+             * @param v View
+             */
+            static clear(v) {
+                // Store view
+                let view = this.find(v);
+                // Remove all views
+                view.innerHTML = "";
+            }
+
+            /**
+             * Removes a given view.
+             * @param v View
+             */
+            static remove(v) {
+                // Find view
+                let element = this.find(v);
+                // Remove
+                element.parentNode.removeChild(element);
+            }
+
+            /**
+             * Changes a view's visibility.
+             * @param v View
+             */
+            static view(v) {
+                // Add history
+                window.history.replaceState(this._preserve(), document.title);
+                // Change views
+                for (let view of Array.from(arguments)) {
+                    // Store view
+                    let element = this.find(view);
+                    // Store parent
+                    let parent = element.parentNode;
+                    // Hide all
+                    for (let child of parent.children) {
+                        this.hide(child);
+                    }
+                    // Show view
+                    this.show(element);
+                }
+                // Add history
+                window.history.pushState(this._preserve(), document.title);
+            }
+
+            /**
+             * Reads a view's value.
+             * @param v View
+             */
+            static read(v) {
+                // Find view
+                let element = this.find(v);
+                // Check type
+                if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
+                    return element.value;
+                } else {
+                    return element.innerText;
+                }
+            }
+
+            /**
+             * Writes a view's value.
+             * @param v View
+             * @param value Value
+             */
+            static write(v, value) {
+                // Find view
+                let element = this.find(v);
+                // Check type
+                if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
+                    element.value = value;
+                } else {
+                    element.innerText = value;
+                }
+            }
+
+            /**
+             * Populates a template.
+             * @param template Template
+             * @param parameters Parameters
+             * @return HTMLElement
+             */
+            static populate(template, parameters = {}) {
+                // Find the template
+                let templateElement = this.find(template);
+                // If the element is null, create one
+                if (templateElement === null) {
+                    templateElement = document.createElement("template");
+                    // Fill the contents
+                    templateElement.innerHTML = template;
+                }
+                // Store the HTML in a temporary variable
+                let html = templateElement.innerHTML;
+                // Replace parameters
+                for (let key in parameters) {
+                    if (key in parameters) {
+                        // Create the searching values
+                        let search = "${" + key + "}";
+                        let value = parameters[key];
+                        // Sanitize value using the default HTML sanitiser of the target browser
+                        let sanitizer = document.createElement("p");
+                        sanitizer.innerText = value;
+                        value = sanitizer.innerHTML;
+                        // Replace all instances
+                        while (html.includes(search))
+                            html = html.replace(search, value);
+                    }
+                }
+                // Create a wrapper element
+                let wrapperElement = document.createElement("div");
+                // Append HTML to wrapper element
+                wrapperElement.innerHTML = html;
+                // Add functions to the wrapper
+                wrapperElement.find = (elementName) => {
+                    // Return element
+                    return wrapperElement.querySelector(`[name=${elementName}]`);
+                };
+                // Return created wrapper
+                return wrapperElement;
+            }
+
+            /**
+             * Creates a preservable state for all elements in the page.
+             */
+            static _preserve() {
+                // Initialize map
+                let state = [];
+                // Find all elements
+                let elements = document.getElementsByTagName("*");
+                // Loop over all elements
+                for (let element of elements) {
+                    // Make sure the element has an ID
+                    if (element.id.length === 0) {
+                        element.id = Math.floor(Math.random() * 1000000).toString();
+                    }
+                    // Add to object
+                    state.push([element.id, element.hasAttribute("hidden")]);
+                }
+                // Return map
+                return state;
+            }
+
+            /**
+             * Restores a preserved state for elements in the page.
+             * @param state State
+             */
+            static _restore(state = []) {
+                // Loop over map
+                for (let [id, value] of state) {
+                    if (value) {
+                        this.hide(id);
+                    } else {
+                        this.show(id);
+                    }
+                }
+            }
+        }
+
+        // Register a popstate listener to restore states.
+        window.addEventListener("popstate", (event) => {
+            // Change contents
+            UI._restore(event.state);
+        });
+    </script>
+
+    <!-- Application script -->
+    <script type="text/javascript">
+        window.addEventListener("load", function () {
+        });
+    </script>
+
+    <!-- App Title -->
+    <title>AppName</title>
+
+    <!-- No Script -->
+    <noscript></noscript>
+
+    <!-- Additional -->
+</head>
+<body column>
+<!--App Layout-->
+</body>
+</html>

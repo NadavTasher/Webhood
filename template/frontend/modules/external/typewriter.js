@@ -3,15 +3,17 @@
  * https://github.com/NadavTasher/Modules/
  **/
 
-/**
- * Animates a view typing
- * @param view View
- */
-export function type(view) {
-    // Create a promise
-    return new Promise((resolve, reject) => {
-        // Import the UI module
-        Module.import("Core:UI").then((UI) => {
+class Typewriter {
+    /**
+     * Animates typing on views.
+     * @param view View
+     * @return Promise
+     */
+    static animate(view) {
+        // Create a promise
+        return new Promise(async (resolve, reject) => {
+            // Await module import
+            await Module.import("UI");
             // Find the view
             view = UI.find(view);
             // Load the final text
@@ -37,6 +39,6 @@ export function type(view) {
             };
             // Start typing
             setTimeout(type, 200);
-        }).catch(reject);
-    });
+        });
+    }
 }
