@@ -4,7 +4,7 @@
  **/
 
 // Require routes
-const ROUTES = require("../routes/routes.js");
+const ROUTES = require("../../routes/routes.js");
 
 /**
  * Routes requests to requested routes and parses action and parameters along the way.

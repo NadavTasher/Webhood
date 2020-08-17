@@ -2,10 +2,10 @@
 const HTTP = require("http");
 
 // Import the router module
-const route = require("./modules/route.js");
+const route = require("./modules/server/route.js");
 
 // Import the file-server module
-const serve = require("./modules/serve.js");
+const serve = require("./modules/server/serve.js");
 
 // Create a new HTTP server and start listening
 HTTP.createServer(function (request, response) {

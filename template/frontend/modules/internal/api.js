@@ -6,12 +6,12 @@
 class API {
     /**
      * Sends an API call.
-     * @param endpoint API to call
+     * @param route Route
      * @param action Action
      * @param parameters Parameters
      * @return Promise
      */
-    static call(endpoint = null, action = null, parameters = null) {
+    static call(route = null, action = null, parameters = {}) {
         return new Promise((resolve, reject) => {
             // Create a form
             let form = new FormData();
@@ -23,9 +23,9 @@ class API {
             }
 
             // Perform the request
-            fetch(`apis/${endpoint}/?${encodeURIComponent(action)}`, {
+            fetch(`${route}/${action}`, {
                 method: "post",
-                body: form
+                body: JSON.stringify(parameters)
             }).then((response) => {
                 response.json().then((result) => {
                     // Check the result's integrity
