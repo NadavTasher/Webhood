@@ -15,7 +15,7 @@
             </DockerPortBindingImpl>
           </list>
         </option>
-        <option name="commandLineOptions" value="-d" />
+        <option name="commandLineOptions" value="-it" />
         <option name="sourceFilePath" value="template/Dockerfile" />
       </settings>
     </deployment>
