@@ -39,10 +39,10 @@ class Token
         $tokenObject->{Token::PARAMETER_CONTENT} = $tokenContent;
 
         // Create token string
-        $tokenString = base64_encode(json_encode($tokenObject));
+        $tokenString = bin2hex(json_encode($tokenObject));
 
         // Generate signature
-        $tokenSignature = base64_encode(hash_hmac("sha256", $tokenString, getenv(Token::VARIABLE), true));
+        $tokenSignature = hash_hmac("sha256", $tokenString, getenv(Token::VARIABLE));
 
         // Create token slices
         $tokenSlices = array();
@@ -74,11 +74,11 @@ class Token
         $tokenSignature = $tokenSlices[Token::SLICE_SIGNATURE];
 
         // Make sure the signature is correct
-        if (base64_encode(hash_hmac("sha256", $tokenString, getenv(Token::VARIABLE), true)) !== $tokenSignature)
+        if (hash_hmac("sha256", $tokenString, getenv(Token::VARIABLE)) !== $tokenSignature)
             throw new Error("Invalid token signature");
 
         // Extract token array
-        $tokenObject = json_decode(base64_decode($tokenString));
+        $tokenObject = json_decode(hex2bin($tokenString));
 
         // Extract token parameters
         $tokenExpiry = $tokenObject->{Token::PARAMETER_EXPIRY};
