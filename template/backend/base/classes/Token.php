@@ -8,8 +8,8 @@
 class Token
 {
     // Token properties
-    private const VARIABLE = "KEY";
     private const DELIMITER = ":";
+    private const VARIABLE = "TOKEN_SECRET";
 
     // Token parameters
     private const PARAMETER_EXPIRY = 0;
