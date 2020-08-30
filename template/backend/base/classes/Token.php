@@ -32,14 +32,14 @@ class Token
         $tokenContent = $content;
 
         // Create token array
-        $tokenArray = new stdClass();
+        $tokenObject = new stdClass();
 
         // Insert token parameters
-        $tokenArray[Token::PARAMETER_EXPIRY] = $tokenExpiry;
-        $tokenArray[Token::PARAMETER_CONTENT] = $tokenContent;
+        $tokenObject->{Token::PARAMETER_EXPIRY} = $tokenExpiry;
+        $tokenObject->{Token::PARAMETER_CONTENT} = $tokenContent;
 
         // Create token string
-        $tokenString = base64_encode(json_encode($tokenArray));
+        $tokenString = base64_encode(json_encode($tokenObject));
 
         // Generate signature
         $tokenSignature = base64_encode(hash_hmac("sha256", $tokenString, getenv(Token::VARIABLE), true));
@@ -78,11 +78,11 @@ class Token
             throw new Error("Invalid token signature");
 
         // Extract token array
-        $tokenArray = json_decode(base64_decode($tokenString));
+        $tokenObject = json_decode(base64_decode($tokenString));
 
         // Extract token parameters
-        $tokenExpiry = $tokenArray[Token::PARAMETER_EXPIRY];
-        $tokenContent = $tokenArray[Token::PARAMETER_CONTENT];
+        $tokenExpiry = $tokenObject->{Token::PARAMETER_EXPIRY};
+        $tokenContent = $tokenObject->{Token::PARAMETER_CONTENT};
 
         // Make sure the token is not expired
         if ($tokenExpiry !== null && time() > intval($tokenExpiry))
