@@ -10,16 +10,19 @@ class UI {
      * @returns {HTMLElement} View
      */
     static find(v) {
-        if (typeof "" === typeof v || typeof '' === typeof v) {
+        if (typeof String() === typeof v) {
             // ID lookup
-            if (document.getElementById(v) !== undefined) {
+            if (document.getElementById(v) !== null) {
                 return document.getElementById(v);
             }
 
             // Query lookup
-            if (document.querySelector(v) !== undefined) {
+            if (document.querySelector(v) !== null) {
                 return document.querySelector(v);
             }
+
+            // Null fallback
+            return null;
         }
 
         // Return the input
