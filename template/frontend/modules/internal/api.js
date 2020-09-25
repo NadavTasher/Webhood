@@ -6,26 +6,17 @@
 class API {
     /**
      * Sends an API call.
-     * @param endpoint API to call
-     * @param action Action
+     * @param route Route (API)
+     * @param action Action (Function)
      * @param parameters Parameters
      * @return Promise
      */
-    static call(endpoint = null, action = null, parameters = null) {
+    static call(route = null, action = null, parameters = null) {
         return new Promise((resolve, reject) => {
-            // Create a form
-            let form = new FormData();
-
-            // Append parameters to form
-            for (let key in parameters) {
-                if (parameters.hasOwnProperty(key))
-                    form.append(key, parameters[key]);
-            }
-
             // Perform the request
-            fetch(`apis/${endpoint}/?${encodeURIComponent(action)}`, {
+            fetch(`api/${route}/${action}`, {
                 method: "post",
-                body: form
+                body: JSON.stringify(parameters)
             }).then((response) => {
                 response.json().then((result) => {
                     // Check the result's integrity
