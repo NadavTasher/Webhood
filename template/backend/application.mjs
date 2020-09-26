@@ -13,7 +13,7 @@ let server = new Server(8000);
 import base from "./external/base.mjs";
 
 // Enable the routes
-server.router.insert("base", base);
+server.insert("base", base);
 
 // Listen for requests
 server.listen();
