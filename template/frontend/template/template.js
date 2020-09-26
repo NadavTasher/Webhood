@@ -10,8 +10,11 @@ class Module {
      * @param module Module
      */
     static import(module) {
+        // Return a multi-promise
         return Promise.all(
+            // For each argument (module name) in the arguments array (arguments passed to function)
             Array.from(arguments).map((argument) =>
+                // Create a new import promise
                 new Promise((resolve, reject) => {
                     // Transform module name
                     argument = argument.toLowerCase();
