@@ -33,10 +33,7 @@ export default class Server {
      */
     listen() {
         // Start listening for incoming requests
-        HTTP.createServer(async (request, response) => {
-            // Wrap handle due to possible parameter errors and scope errors
-            await this.#handle(request, response);
-        }).listen(this.#port);
+        HTTP.createServer(this.#handle.bind(this)).listen(this.#port);
     }
 
     /**
