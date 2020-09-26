@@ -171,30 +171,19 @@ export default class Server {
                 // Store the validator in a temporary object
                 let validator = object.parameters[parameter];
 
-                // Create a temporary result
-                let validated = false;
-
                 // Check whether the validator is a callable (generic validator)
                 if (typeof validator === "function") {
                     // Try validating using the callable
-                    try {
-                        if (await validator(parameters[parameter]))
-                            validated = true;
-                    } catch (e) {
-                        // Ignore errors
-                    }
+                    if (!await validator(parameters[parameter]))
+                        throw new Error(`Invalid "${parameter}" parameter`);
                 }
 
                 // Check whether the validator is a string (type validator)
                 if (typeof validator === "string") {
                     // Validate types
-                    if (typeof parameters[parameter] === validator)
-                        validated = true;
+                    if (typeof parameters[parameter] !== validator)
+                        throw new Error(`Invalid "${parameter}" parameter`);
                 }
-
-                // Make sure the validation passes
-                if (!validated)
-                    throw new Error(`Invalid "${parameter}" parameter`);
             }
         }
 
