@@ -10,7 +10,7 @@
         <option name="envVars">
           <list>
             <DockerEnvVarImpl>
-              <option name="name" value="secret" />
+              <option name="name" value="password" />
               <option name="value" value="hello" />
             </DockerEnvVarImpl>
           </list>

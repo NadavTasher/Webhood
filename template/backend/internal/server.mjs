@@ -165,7 +165,7 @@ export default class Server {
             // Make sure the parameter is not an internal property
             if (object.parameters.hasOwnProperty(parameter)) {
                 // Make sure the parameter exists in the request parameters
-                if (!(parameter in parameters))
+                if (!parameters.hasOwnProperty(parameter))
                     throw new Error(`Missing "${parameter}" parameter`);
 
                 // Store the validator in a temporary object
