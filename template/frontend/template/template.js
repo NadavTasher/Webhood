@@ -10,42 +10,46 @@ class Module {
      * @param module Module
      */
     static import(module) {
-        return new Promise((resolve, reject) => {
-            // Transform module name
-            module = module.toLowerCase();
+        return Promise.all(
+            Array.from(arguments).map((argument) =>
+                new Promise((resolve, reject) => {
+                    // Transform module name
+                    argument = argument.toLowerCase();
 
-            // Create a script tag
-            let scriptElement = document.createElement("script");
+                    // Create a script tag
+                    let scriptElement = document.createElement("script");
 
-            // Prepare the script tag
-            scriptElement.id = "module:" + module;
-            scriptElement.src = this.locate(module);
+                    // Prepare the script tag
+                    scriptElement.id = "module:" + argument;
+                    scriptElement.src = this.locate(argument);
 
-            // Hook to state handlers
-            scriptElement.addEventListener("load", () => {
-                // Resolve promise
-                resolve("Module was loaded");
-            });
+                    // Hook to state handlers
+                    scriptElement.addEventListener("load", () => {
+                        // Resolve promise
+                        resolve(`Module "${argument}" was loaded`);
+                    });
 
-            scriptElement.addEventListener("error", () => {
-                // Remove element
-                document.head.removeChild(scriptElement);
+                    scriptElement.addEventListener("error", () => {
+                        // Remove element
+                        document.head.removeChild(scriptElement);
 
-                // Reject promise
-                reject("Module was not loaded");
-            });
+                        // Reject promise
+                        reject(`Module "${argument}" was not loaded`);
+                    });
 
-            // Make sure the script is not loaded already
-            if (document.getElementById(scriptElement.id)) {
-                // Resolve promise
-                resolve("Module was loaded already");
+                    // Make sure the script is not loaded already
+                    if (document.getElementById(scriptElement.id)) {
+                        // Resolve promise
+                        resolve(`Module "${argument}" was already loaded`);
 
-                // Finish execution
-                return;
-            }
-            // Append script to head
-            document.head.appendChild(scriptElement);
-        });
+                        // Finish execution
+                        return;
+                    }
+                    // Append script to head
+                    document.head.appendChild(scriptElement);
+                })
+            )
+        );
     }
 
     /**
