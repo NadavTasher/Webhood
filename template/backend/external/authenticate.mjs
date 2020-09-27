@@ -51,6 +51,13 @@ const validators = {
     }
 };
 
+// Export token validator
+export function validate(token) {
+    // Validate using authority
+    return authority.validate(token);
+}
+
+// Export route
 export default {
     validate: {
         handler: (parameters) => {
