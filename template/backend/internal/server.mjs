@@ -89,43 +89,67 @@ export default class Server {
      * @return {Promise<*>} Result
      */
     async #parse(request) {
-        // Parse route and action from URL
-        let split = request.url.split("/", 3).slice(1);
+        // Split URL for query parameters
+        let querySplit = request.url.split("?", 2);
 
-        // Store route name
-        let routeName = split.shift();
+        // Make sure the query split is not empty
+        if (querySplit.length === 0)
+            throw new Error(`Query parsing error`);
+
+        // Parse route and action from path (first slice of query split)
+        let pathSplit = querySplit.shift().split("/", 3).slice(1);
+
+        // Make sure the length of the path split is exactly 2
+        if (pathSplit.length !== 2)
+            throw new Error(`Path parsing error`);
+
+        // Shift path split and store route name
+        let routeName = pathSplit.shift();
 
         // Make sure the route name is valid
         if (routeName === undefined || routeName.length === 0)
             throw new Error(`Missing route name`);
 
-        // Store action name
-        let actionName = split.shift();
+        // Shift path split and store action name
+        let actionName = pathSplit.shift();
 
         // Make sure the action name is valid
         if (actionName === undefined || actionName.length === 0)
             throw new Error(`Missing action name`);
 
-        // Read all of the request data
-        let data = await new Promise((resolve) => {
-            // Create a chunk buffer
-            const chunks = [];
-            // Wait for new data chunks
-            request.on("data", async (chunk) => {
-                // Push the new chunk to the buffer
-                chunks.push(chunk);
-            });
-            // Handle the end of the data
-            request.on("end", async () => {
-                // Concatenate the chunks buffer
-                const data = Buffer.concat(chunks).toString();
-                // Resolve the promise
-                resolve(data);
-            });
-        });
+        // Create a temporary parameters object
+        let parameters = {};
 
-        // Parse data as JSON
-        let parameters = JSON.parse(data);
+        // Check whether the request should parse the post body or the query parameters
+        if (request.method.toLowerCase() === "post"){
+            // Read all of the post data
+            let data = await new Promise((resolve) => {
+                // Create a chunk buffer
+                const chunks = [];
+                // Wait for new data chunks
+                request.on("data", async (chunk) => {
+                    // Push the new chunk to the buffer
+                    chunks.push(chunk);
+                });
+                // Handle the end of the data
+                request.on("end", async () => {
+                    // Concatenate the chunks buffer
+                    const data = Buffer.concat(chunks).toString();
+                    // Resolve the promise
+                    resolve(data);
+                });
+            });
+
+            // Parse data as JSON
+            parameters = JSON.parse(data);
+        }else{
+            // Parse the query as parameters
+            let search = new URLSearchParams(querySplit.shift());
+
+            // Append to parameters
+            for (let key of search.keys())
+                parameters[key] = search.get(key);
+        }
 
         // Handle the request
         return await this.#route(routeName, actionName, parameters);
