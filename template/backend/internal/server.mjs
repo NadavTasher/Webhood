@@ -120,7 +120,23 @@ export default class Server {
         // Create a temporary parameters object
         let parameters = {};
 
-        // Check whether the request should parse the post body or the query parameters
+        // Check whether query parameters are available
+        if (querySplit.length !== 0) {
+            // Parse query string and append parameters
+            let search = new URLSearchParams(querySplit.shift());
+
+            // Append to parameters
+            for (let key of search.keys()) {
+                // Make sure the parameter was not provided already
+                if (parameters.hasOwnProperty(key))
+                    throw new Error(`Parameter "${key}" already provided`);
+
+                // Set the parameter
+                parameters[key] = search.get(key);
+            }
+        }
+
+        // Check whether the request should also parse the post body and append query parameters
         if (request.method.toLowerCase() === "post") {
             // Read all of the post data
             let data = await new Promise((resolve) => {
@@ -140,15 +156,22 @@ export default class Server {
                 });
             });
 
-            // Parse data as JSON
-            parameters = JSON.parse(data);
-        } else {
-            // Parse the query as parameters
-            let search = new URLSearchParams(querySplit.shift());
+            // Parse post data as JSON
+            let object = JSON.parse(data);
+
+            // Make sure the object is of type object
+            if (typeof object !== "object" || Array.isArray(object))
+                throw new Error(`Invalid request body type`);
 
             // Append to parameters
-            for (let key of search.keys())
-                parameters[key] = search.get(key);
+            for (let key in object) {
+                // Make sure the parameter was not provided already
+                if (parameters.hasOwnProperty(key))
+                    throw new Error(`Parameter "${key}" already provided`);
+
+                // Set the parameter
+                parameters[key] = object[key];
+            }
         }
 
         // Handle the request
