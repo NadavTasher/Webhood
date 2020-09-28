@@ -78,7 +78,7 @@ export default class Server {
         // Set output header
         response.setHeader("Content-Type", "application/json");
         // Write output
-        response.write(JSON.stringify(output));
+        response.write(JSON.stringify(output, null, 2));
         // End response
         response.end();
     }
@@ -121,7 +121,7 @@ export default class Server {
         let parameters = {};
 
         // Check whether the request should parse the post body or the query parameters
-        if (request.method.toLowerCase() === "post"){
+        if (request.method.toLowerCase() === "post") {
             // Read all of the post data
             let data = await new Promise((resolve) => {
                 // Create a chunk buffer
@@ -142,7 +142,7 @@ export default class Server {
 
             // Parse data as JSON
             parameters = JSON.parse(data);
-        }else{
+        } else {
             // Parse the query as parameters
             let search = new URLSearchParams(querySplit.shift());
 
