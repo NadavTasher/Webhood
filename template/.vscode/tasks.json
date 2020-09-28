@@ -1,0 +1,36 @@
+{
+    // Simple docker run configuration
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build image",
+            "type": "shell",
+            "command": "docker build . -t test"
+        },
+        {
+            "label": "Stop container",
+            "type": "shell",
+            "command": "docker rm --force test || true"
+        },
+        {
+            "label": "Start container",
+            "type": "shell",
+            "command": "docker run --name test --publish 8000:80 --interactive --tty test || true"
+        },
+        {
+            "label": "Build & Run",
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "panel": "shared",
+                "clear": true,
+            },
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Stop container",
+                "Build image",
+                "Start container"
+            ]
+        }
+    ]
+}
