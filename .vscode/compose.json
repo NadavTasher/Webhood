@@ -1,0 +1,14 @@
+{
+    "version": "3",
+    "services": {
+      "template": {
+        "build": "template",
+        "ports": [
+          "8000:80"
+        ],
+        "environment": [
+          "PASSWORD=Hello"
+        ]
+      }
+    }
+  }

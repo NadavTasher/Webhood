@@ -3,22 +3,17 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build image",
+            "label": "Stop services",
             "type": "shell",
-            "command": "docker build template -t test"
+            "command": "docker-compose -f .vscode/compose.json --project-directory . down"
         },
         {
-            "label": "Stop container",
+            "label": "Start services",
             "type": "shell",
-            "command": "docker rm --force test || true"
+            "command": "docker-compose -f .vscode/compose.json --project-directory . up --build"
         },
         {
-            "label": "Start container",
-            "type": "shell",
-            "command": "docker run --name test --publish 8000:80 --interactive --tty test || true"
-        },
-        {
-            "label": "Build & Run",
+            "label": "Restart services",
             "group": "build",
             "problemMatcher": [],
             "presentation": {
@@ -27,9 +22,8 @@
             },
             "dependsOrder": "sequence",
             "dependsOn": [
-                "Stop container",
-                "Build image",
-                "Start container"
+                "Stop services",
+                "Start services"
             ]
         }
     ]
