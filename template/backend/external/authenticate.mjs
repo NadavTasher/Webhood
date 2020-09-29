@@ -70,26 +70,29 @@ export default {
     },
     signUp: {
         handler: (parameters) => {
-            // Generate a table entry
-            let entry = table.entry(parameters.name);
+            // Search for entries with the name
+            let entries = table.query("name", parameters.name);
 
-            // Make sure the user does not exist
-            if (entry.exists())
+            // Make sure no entries exist
+            if (entries.length !== 0)
                 throw new Error("User already exists");
 
-            // Insert the entry
-            entry.insert();
+            // Create a new entry
+            let id = table.insert();
+
+            // Write name
+            table.set(id, "name", parameters.name);
 
             // Generate values
             let salt = Utilities.random(32);
             let hash = Utilities.hash(parameters.password + salt);
 
             // Update values
-            entry.set("salt", salt);
-            entry.set("hash", hash);
+            table.set(id, "salt", salt);
+            table.set(id, "hash", hash);
 
             // Return token
-            return authority.issue(parameters.name);
+            return authority.issue(id);
         },
         parameters: {
             name: validators.name,
@@ -98,23 +101,26 @@ export default {
     },
     signIn: {
         handler: (parameters) => {
-            // Generate a table entry
-            let entry = table.entry(parameters.name);
+            // Search for entries with the name
+            let entries = table.query("name", parameters.name);
 
-            // Make sure the user does not exist
-            if (!entry.exists())
+            // Make sure there are entries
+            if (entries.length === 0)
                 throw new Error("User does not exist");
 
+            // Read user ID
+            let id = entries.shift();
+
             // Generate values
-            let salt = entry.get("salt");
-            let hash = entry.get("hash");
+            let salt = table.get(id, "salt");
+            let hash = table.get(id, "hash");
 
             // Validate hash
             if (Utilities.hash(parameters.password + salt) !== hash)
                 throw new Error("Incorrect password");
 
             // Issue a token and return
-            return authority.issue(parameters.name);
+            return authority.issue(id);
         },
         parameters: {
             name: validators.name,

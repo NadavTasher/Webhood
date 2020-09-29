@@ -7,7 +7,7 @@
           "8000:80"
         ],
         "environment": [
-          "PASSWORD=Hello"
+          "password=Hello"
         ]
       }
     }

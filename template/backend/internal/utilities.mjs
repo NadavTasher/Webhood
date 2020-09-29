@@ -5,6 +5,7 @@
 
 // Import modules
 import Crypto from "crypto";
+import FileSystem from "fs";
 
 /**
  * This class contains utility functions.
@@ -45,5 +46,71 @@ export default class Utilities {
      */
     static hmac(message, password, output = "hex") {
         return Crypto.createHmac("sha256", password).update(message).digest(output);
+    }
+
+    /**
+     * Checks whether a path exists.
+     * @param path Path
+     * @return {boolean} Exists
+     */
+    static exists(path) {
+        // Check whether the path exists
+        return FileSystem.existsSync(path);
+    }
+
+    /**
+     * Reads a file and parses it as JSON.
+     * @param path Path
+     * @return {*} Value
+     */
+    static read(path) {
+        // Make sure the file exists
+        if (this.exists(path)) {
+            // Read the file and parse as JSON
+            try {
+                // Read data from file
+                let data = FileSystem.readFileSync(path);
+
+                // Parse data as JSON
+                let json = JSON.parse(data);
+
+                // Return JSON
+                return json;
+            } catch (e) {
+                // Ignore errors, let function return null
+            }
+        }
+
+        // Return null as fallback
+        return null;
+    }
+
+    /**
+     * Writes a file with data encoded as JSON.
+     * @param path Path
+     * @param value Value
+     * @return {boolean} Status
+     */
+    static write(path, value) {
+        // Check whether the value is null
+        if (value === null) {
+            // Remove the file
+            FileSystem.unlinkSync(path);
+        } else {
+            // Try encoding and writing the file
+            try {
+                // Encode the data as JSON
+                let json = JSON.stringify(value);
+
+                // Write the data to file
+                FileSystem.writeFileSync(path, json);
+            } catch (e) {
+                // Return false (failure)
+                return false;
+            }
+        }
+
+        // Return true (success)
+        return true;
     }
 }

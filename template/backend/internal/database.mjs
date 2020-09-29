@@ -15,7 +15,7 @@ import Utilities from "./utilities.mjs";
  */
 export default class Table {
 
-    // Initialize private properties
+    // Initialize root directory variable
     #directory = null;
 
     /**
@@ -24,7 +24,7 @@ export default class Table {
      * @param root Parent directory
      */
     constructor(name, root = "/opt") {
-        // Initialize the table path
+        // Initialize the root directory path
         this.#directory = Path.join(root, Utilities.hash(name));
 
         // Make sure the directory exists
@@ -33,100 +33,218 @@ export default class Table {
     }
 
     /**
-     * Returns a valid entry instance for a given entry ID.
-     * @param id Entry ID
-     * @return {Entry} Entry
+     * Inserts a new entry to the table.
+     * @return {string} ID
      */
-    entry(id) {
-        // Create the new entry object
-        return new Entry(id, this.#directory);
-    }
-}
+    insert() {
+        // Generate a new random ID
+        let id = Utilities.random(10);
 
-/**
- * A simple interface for reading and writing database table entries.
- */
-class Entry {
+        // Make sure the entry does not exist
+        if (this.exists(id))
+            throw new Error(`Entry "${id}" already exists`);
 
-    // Initialize private properties
-    #directory = null;
+        // Create a new empty entry file
+        Utilities.write(this.#entry(id), {});
 
-    /**
-     * Entry constructor.
-     * @param id Entry ID
-     * @param root Parent directory
-     */
-    constructor(id, root = null) {
-        // Initialize the entry path
-        this.#directory = Path.join(root, Utilities.hash(id));
+        // Return the entry ID
+        return id;
     }
 
     /**
-     * Reads a value.
+     * Removes an entry from the table.
+     * @param id ID
+     */
+    remove(id) {
+        // Make sure the entry exists
+        if (!this.exists(id))
+            throw new Error(`Entry "${id}" does not exist`);
+
+        // Read the entry's file
+        let entry = Utilities.read(this.#entry(id));
+
+        // Loop over entry and clear values
+        for (let key in entry)
+            this.set(id, key, null);
+
+        // Remove the entry's file
+        Utilities.write(this.#entry(id), null);
+    }
+
+    /**
+     * Checks whether an entry exists in the table.
+     * @param id ID
+     */
+    exists(id) {
+        // Check whether the entry's file exists
+        return Utilities.exists(this.#entry(id));
+    }
+
+    /**
+     * Gets a value from the table.
+     * @param id ID
      * @param key Key
-     * @return {string | number | boolean | array | object | null}
+     * @return {string} Value
      */
-    get(key) {
-        // Create the file path
-        let path = Path.join(this.#directory, Utilities.hash(key));
+    get(id, key) {
+        // Make sure the entry exists
+        if (!this.exists(id))
+            throw new Error(`Entry "${id}" does not exist`);
 
-        // Make sure the value is set
-        if (FileSystem.existsSync(path))
-            return JSON.parse(FileSystem.readFileSync(path));
+        // Read the entry's file
+        let entry = Utilities.read(this.#entry(id));
 
-        // Fallback value
+        // Check whether the key is set
+        if (key in entry) {
+            // Read hash from entry
+            let hash = entry[key];
+
+            // Read the value file
+            return Utilities.read(this.#value(key, hash));
+        }
+
+        // Return null (fallback)
         return null;
     }
 
     /**
-     * Writes a value.
+     * Sets a value in the table.
+     * @param id ID
      * @param key Key
      * @param value Value
      */
-    set(key, value) {
-        // Create the file path
-        let path = Path.join(this.#directory, Utilities.hash(key));
+    set(id, key, value = null) {
+        // Make sure the entry exists
+        if (!this.exists(id))
+            throw new Error(`Entry "${id}" does not exist`);
+
+        // Read the entry's file
+        let entry = Utilities.read(this.#entry(id));
+
+        // Check whether the key is set already
+        if (key in entry) {
+            // Fetch the hash from the entry
+            let hash = entry[key];
+
+            // Delete the key in the entry
+            delete entry[key];
+
+            // Create an empty index
+            let index = [];
+
+            // Check whether the index file exists
+            if (Utilities.exists(this.#index(key, hash)))
+                // Read the index file
+                index = Utilities.read(this.#index(key, hash));
+
+            // Remove the id from the value index
+            index.splice(index.indexOf(id), 1);
+
+            // Write the index file
+            Utilities.write(this.#index(key, hash), index);
+        }
 
         // Make sure the value is not null
-        if (value === null) {
-            // Remove the file
-            FileSystem.unlinkSync(path);
-        } else {
-            // Write the value
-            FileSystem.writeFileSync(path, JSON.stringify(value));
+        if (value !== null) {
+            // Generate the value hash
+            let hash = Utilities.hash(value);
+
+            // Set the key in the entry
+            entry[key] = hash;
+
+            // Create an empty index
+            let index = [];
+
+            // Check whether the index file exists
+            if (Utilities.exists(this.#index(key, hash)))
+                // Read the index file
+                index = Utilities.read(this.#index(key, hash));
+
+            // Push the id into the index
+            index.push(id);
+
+            // Write the index file
+            Utilities.write(this.#index(key, hash), index);
+
+            // Write the value file
+            Utilities.write(this.#value(key, hash), value);
         }
+
+        // Write the entry's file
+        Utilities.write(this.#entry(id), entry);
     }
 
     /**
-     * Checks whether the entry exists.
-     * @return {boolean} Exists
+     * Searches for entries that match the key and value.
+     * @param key Key
+     * @param value Value
      */
-    exists() {
-        // Check against filesystem
-        return FileSystem.existsSync(this.#directory);
+    query(key, value) {
+        // Generate the value hash
+        let hash = Utilities.hash(value);
+
+        // Create an empty index
+        let index = [];
+
+        // Check whether the index file exists
+        if (Utilities.exists(this.#index(key, hash)))
+            // Read the index file
+            index = Utilities.read(this.#index(key, hash));
+
+        // Return the index
+        return index;
     }
 
     /**
-     * Inserts the entry if it does not exist.
+     * Returns an entry file path.
+     * @param id ID
+     * @return {string} Path
      */
-    insert() {
-        // Make sure the entry does not exist
-        if (this.exists())
-            throw new Error(`Entry already exists`);
+    #entry(id) {
+        // Create the entries directory path
+        let directory = Path.join(this.#directory, "entries");
 
-        FileSystem.mkdirSync(this.#directory);
+        // Make sure the directory exists
+        if (!FileSystem.existsSync(directory))
+            FileSystem.mkdirSync(directory, { recursive: true });
+
+        // Create the entry file path
+        return Path.join(directory, id);
     }
 
     /**
-     * Removes the entry if it exists.
+     * Returns an index file path.
+     * @param key Key
+     * @param hash Value hash
+     * @return {string} Path
      */
-    remove() {
-        // Make sure the entry exists
-        if (!this.exists())
-            throw new Error(`Entry does not exist`);
+    #index(key, hash) {
+        // Create the indexes & key directory path
+        let directory = Path.join(this.#directory, "indexes", Utilities.hash(key));
 
-        FileSystem.rmdirSync(this.#directory, {
-            recursive: true
-        });
+        // Make sure the directory exists
+        if (!FileSystem.existsSync(directory))
+            FileSystem.mkdirSync(directory, { recursive: true });
+
+        // Create the index file path
+        return Path.join(directory, hash);
+    }
+
+    /**
+     * Returns an value file path.
+     * @param key Key
+     * @param hash Value hash
+     * @return {string} Path
+     */
+    #value(key, hash) {
+        // Create the values & key directory path
+        let directory = Path.join(this.#directory, "values", Utilities.hash(key));
+
+        // Make sure the directory exists
+        if (!FileSystem.existsSync(directory))
+            FileSystem.mkdirSync(directory, { recursive: true });
+
+        // Create the value file path
+        return Path.join(directory, hash);
     }
 }
