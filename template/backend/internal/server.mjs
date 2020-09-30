@@ -6,6 +6,9 @@
 // Import modules
 import HTTP from "http";
 
+// Import utilities
+import { Validators } from "./utilities.mjs";
+
 /**
  * This class handles requests, parses them then passes them to the internal router.
  */
@@ -74,6 +77,14 @@ export default class Server {
             output.result = error.message;
             output.status = false;
         }
+
+        // Make sure a status is present
+        if (output.status === undefined)
+            output.status = false;
+
+        // Make sure a result is present
+        if (output.result === undefined)
+            output.result = null;
 
         // Set output header
         response.setHeader("Content-Type", "application/json");
@@ -225,10 +236,14 @@ export default class Server {
                         throw new Error(`Invalid "${parameter}" parameter`);
                 }
 
-                // Check whether the validator is a string (type validator)
+                // Check whether the validator is a string (common validator)
                 if (typeof validator === "string") {
-                    // Validate types
-                    if (typeof parameters[parameter] !== validator)
+                    // Make sure a common validator exists
+                    if (!Validators.hasOwnProperty(validator))
+                        throw new Error(`Missing "${validator}" validator`);
+
+                    // Use common validator to validate
+                    if (!Validators[validator](parameters[parameter]))
                         throw new Error(`Invalid "${parameter}" parameter`);
                 }
             }

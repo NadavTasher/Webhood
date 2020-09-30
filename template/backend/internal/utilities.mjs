@@ -7,6 +7,9 @@
 import Crypto from "crypto";
 import FileSystem from "fs";
 
+// Initialize the internal charset
+const Charset = "abcdefghijklmnopqrstuvwxyz0123456789";
+
 /**
  * This class contains utility functions.
  */
@@ -18,7 +21,7 @@ export default class Utilities {
      * @param charset Charset
      * @return {string} Random string
      */
-    static random(length = 0, charset = "abcdefghijklmnopqrstuvwxyz0123456789") {
+    static random(length = 0, charset = Charset) {
         // Make sure the requested length is longer then 0
         if (length === 0)
             return "";
@@ -114,3 +117,84 @@ export default class Utilities {
         return true;
     }
 }
+
+/**
+ * This object contains common variable validators.
+ */
+export const Validators = {
+    // Non-null type validator
+    nonnull: (variable) => {
+        // Value validate
+        return variable !== null;
+    },
+    // String type validator
+    string: (variable) => {
+        // Make sure the variable is not null
+        if (!Validators.nonnull(variable))
+            return false;
+
+        // Type validate
+        return typeof variable === "string";
+    },
+    // Number type validator
+    number: (variable) => {
+        // Make sure the variable is not null
+        if (!Validators.nonnull(variable))
+            return false;
+
+        // Type validate
+        return typeof variable === "number";
+    },
+    // Boolean type validator
+    boolean: (variable) => {
+        // Make sure the variable is not null
+        if (!Validators.nonnull(variable))
+            return false;
+
+        // Type validate
+        return typeof variable === "boolean";
+    },
+    // Array type validator
+    array: (variable) => {
+        // Make sure the variable is not null
+        if (!Validators.nonnull(variable))
+            return false;
+
+        // Type validate
+        return Array.isArray(variable);
+    },
+    // Object type validator
+    object: (variable) => {
+        // Make sure the variable is not null
+        if (!Validators.nonnull(variable))
+            return false;
+
+        // Make sure the variable type is object
+        if (typeof variable !== "object")
+            return false;
+
+        // Make sure it is not an array
+        if (Validators.array(variable))
+            return false;
+
+        return true;
+    },
+    // Custom complex validators
+    id: (variable) => {
+        // Make sure the variable is not null
+        if (!Validators.nonnull(variable))
+            return false;
+
+        // Make sure the variable is a string
+        if (!Validators.string(variable))
+            return false;
+
+        // Loop over all characters in the string
+        for (let char of string)
+            if (!Charset.includes(char))
+                return false;
+
+        // Passed check
+        return true;
+    }
+};
