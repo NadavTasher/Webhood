@@ -67,6 +67,45 @@ const Validators = {
         return typeof variable === "function";
     },
 
+    // String encoding validators
+
+    binary(variable) {
+        // Make sure the variable is not null
+        if (!Validators.nonnull(variable))
+            return false;
+
+        // Make sure the variable is a string
+        if (!Validators.string(variable))
+            return false;
+
+        // Make sure the variable matches the charset
+        return Utilities.match(variable, "01");
+    },
+    decimal(variable) {
+        // Make sure the variable is not null
+        if (!Validators.nonnull(variable))
+            return false;
+
+        // Make sure the variable is a string
+        if (!Validators.string(variable))
+            return false;
+
+        // Make sure the variable matches the charset
+        return Utilities.match(variable, "0123456789");
+    },
+    hexadecimal(variable) {
+        // Make sure the variable is not null
+        if (!Validators.nonnull(variable))
+            return false;
+
+        // Make sure the variable is a string
+        if (!Validators.string(variable))
+            return false;
+
+        // Make sure the variable matches the charset
+        return Utilities.match(variable, "0123456789abcdef");
+    },
+
     // Complex variable validators
 
     id(variable) {
@@ -108,18 +147,6 @@ const Validators = {
 
         // Make sure the length of the variable is valid
         return variable.length === 64;
-    },
-    hexadecimal(variable) {
-        // Make sure the variable is not null
-        if (!Validators.nonnull(variable))
-            return false;
-
-        // Make sure the variable is a string
-        if (!Validators.string(variable))
-            return false;
-
-        // Make sure the variable matches the charset
-        return Utilities.match(variable, "0123456789abcdef");
     }
 };
 
