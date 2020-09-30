@@ -27,39 +27,35 @@ const authority = new Authority(process.env.password);
 
 // Create the table of validators
 const validators = {
-    name: (name) => {
-        if (typeof name !== "string")
-            return false;
+    name: [
+        "string",
+        (name) => {
+            if (name.length < 4)
+                throw new Error("Name too short");
 
-        if (name.length < 4)
-            throw new Error("Name too short");
+            if (name.length > 16)
+                throw new Error("Name too long");
 
-        if (name.length > 16)
-            throw new Error("Name too long");
+            return true;
+        }
+    ],
+    password: [
+        "string",
+        (password) => {
+            if (password.length < 8)
+                throw new Error("Password too short");
 
-        return true;
-    },
-    password: (password) => {
-        if (typeof password !== "string")
-            return false;
+            if (password.length > 128)
+                throw new Error("Password too long");
 
-        if (password.length < 8)
-            throw new Error("Password too short");
-
-        if (password.length > 128)
-            throw new Error("Password too long");
-
-        return true;
-    },
-    token: (token) => {
-        if (typeof token !== "string")
-            return false;
-
-        // Validate token
+            return true;
+        }
+    ],
+    token: ["string", (token) => {
         authority.validate(token);
 
         return true;
-    }
+    }],
 };
 
 // Export token validator

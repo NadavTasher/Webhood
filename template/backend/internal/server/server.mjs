@@ -218,19 +218,8 @@ export default class Server {
         if (!(object.hasOwnProperty("handler") && object.hasOwnProperty("parameters")))
             throw new Error(`Action "${action}" is malformed`);
 
-        // Validate parameters
-        for (let parameter in object.parameters) {
-            // Make sure the parameter is not an internal property
-            if (object.parameters.hasOwnProperty(parameter)) {
-                // Make sure the parameter exists in the request parameters
-                if (!parameters.hasOwnProperty(parameter))
-                    throw new Error(`Missing "${parameter}" parameter`);
-
-                // Validate parameter using common validators
-                if (!(await Variable.valid(parameters[parameter], object.parameters[parameter])))
-                    throw new Error(`Invalid "${parameter}" parameter`);
-            }
-        }
+        // Make sure the parameters object adheres to the parameters scheme
+        Variable.validate(parameters, object.parameters);
 
         // Execute the handler
         return object.handler(parameters);
