@@ -7,9 +7,6 @@
 import Crypto from "crypto";
 import FileSystem from "fs";
 
-// Initialize the internal charset
-const Charset = "abcdefghijklmnopqrstuvwxyz0123456789";
-
 /**
  * This class contains utility functions.
  */
@@ -21,13 +18,28 @@ export default class Utilities {
      * @param charset Charset
      * @return {string} Random string
      */
-    static random(length = 0, charset = Charset) {
+    static random(length = 0, charset = "abcdefghijklmnopqrstuvwxyz0123456789") {
         // Make sure the requested length is longer then 0
         if (length === 0)
             return "";
 
         // Return a random charset character and recurse
         return charset[Math.floor(Math.random() * charset.length)] + this.random(length - 1, charset);
+    }
+
+    /**
+     * Tests whether a string is valid with a given charset.
+     * @param string String
+     * @param charset Charset
+     */
+    static valid(string, charset = "abcdefghijklmnopqrstuvwxyz0123456789") {
+        // Loop over all characters in the string
+        for (let char of string)
+            if (!charset.includes(char))
+                return false;
+
+        // Passed check
+        return true;
     }
 
     /**
@@ -122,6 +134,8 @@ export default class Utilities {
  * This object contains common variable validators.
  */
 export const Validators = {
+    // Simple common type-validators
+
     // Non-null type validator
     nonnull: (variable) => {
         // Value validate
@@ -179,7 +193,9 @@ export const Validators = {
 
         return true;
     },
-    // Custom complex validators
+
+    // Complex variable validators
+
     id: (variable) => {
         // Make sure the variable is not null
         if (!Validators.nonnull(variable))
@@ -189,10 +205,38 @@ export const Validators = {
         if (!Validators.string(variable))
             return false;
 
-        // Loop over all characters in the string
-        for (let char of string)
-            if (!Charset.includes(char))
-                return false;
+        if (!Utilities.valid(variable, "abcdefghijklmnopqrstuvwxyz0123456789"))
+            return false;
+
+        // Passed check
+        return true;
+    },
+    key: (variable) => {
+        // Make sure the variable is not null
+        if (!Validators.nonnull(variable))
+            return false;
+
+        // Make sure the variable is a string
+        if (!Validators.string(variable))
+            return false;
+
+        if (!Utilities.valid(variable, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+            return false;
+
+        // Passed check
+        return true;
+    },
+    hexadecimal: (variable) => {
+        // Make sure the variable is not null
+        if (!Validators.nonnull(variable))
+            return false;
+
+        // Make sure the variable is a string
+        if (!Validators.string(variable))
+            return false;
+
+        if (!Utilities.valid(variable, "0123456789abcdef"))
+            return false;
 
         // Passed check
         return true;
