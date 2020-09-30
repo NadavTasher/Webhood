@@ -4,12 +4,23 @@
  **/
 
 // Import utilities
-import Table from "../internal/database.mjs";
-import Authority from "../internal/token.mjs";
-import Utilities from "../internal/utilities.mjs";
+import Table from "../internal/database/database.mjs";
+import Authority from "../internal/utilities/token.mjs";
+import Hash from "../internal/utilities/hash.mjs";
+import Utilities from "../internal/utilities/utilities.mjs";
 
 // Initialize the database table
-const table = new Table("users");
+const table = new Table("users", {
+    information: {
+        name: "string"
+    },
+    authorization: {
+        password: {
+            hash: "hash",
+            salt: "id"
+        }
+    }
+});
 
 // Initialize a token issuer instance
 const authority = new Authority(process.env.password);
@@ -70,26 +81,29 @@ export default {
     },
     signUp: {
         handler: (parameters) => {
-            // Search for entries with the name
-            let entries = table.query("name", parameters.name);
+            // Generate a user ID
+            let id = Hash.hash(parameters.name);
 
-            // Make sure no entries exist
-            if (entries.length !== 0)
-                throw new Error("User already exists");
-
-            // Create a new entry
-            let id = table.insert();
-
-            // Write name
-            table.set(id, "name", parameters.name);
+            // Make sure the user does not exist
+            if (table.has(id))
+                throw new Error(`User already exists`);
 
             // Generate values
             let salt = Utilities.random(32);
-            let hash = Utilities.hash(parameters.password + salt);
+            let hash = Hash.hash(parameters.password + salt);
 
-            // Update values
-            table.set(id, "salt", salt);
-            table.set(id, "hash", hash);
+            // Write to the database
+            table.set(id, {
+                information: {
+                    name: parameters.name
+                },
+                authorization: {
+                    password: {
+                        hash: hash,
+                        salt: salt
+                    }
+                }
+            });
 
             // Return token
             return authority.issue(id);
@@ -101,22 +115,18 @@ export default {
     },
     signIn: {
         handler: (parameters) => {
-            // Search for entries with the name
-            let entries = table.query("name", parameters.name);
+            // Generate a user ID
+            let id = Hash.hash(parameters.name);
 
-            // Make sure there are entries
-            if (entries.length === 0)
-                throw new Error("User does not exist");
+            // Make sure the user exists
+            if (!table.has(id))
+                throw new Error(`User does not exist`);
 
-            // Read user ID
-            let id = entries.shift();
+            // Read from the database
+            let object = table.get(id);
 
-            // Generate values
-            let salt = table.get(id, "salt");
-            let hash = table.get(id, "hash");
-
-            // Validate hash
-            if (Utilities.hash(parameters.password + salt) !== hash)
+            // Check password match
+            if (Hash.hash(parameters.password + object.authorization.password.salt) !== object.authorization.password.hash)
                 throw new Error("Incorrect password");
 
             // Issue a token and return

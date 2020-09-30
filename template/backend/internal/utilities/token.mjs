@@ -4,7 +4,7 @@
  **/
 
 // Import utilities
-import Utilities from "./utilities.mjs";
+import Hash from "./hash.mjs";
 
 const DELIMITER = ":";
 
@@ -48,7 +48,7 @@ export default class Token {
         let tokenString = Buffer.from(JSON.stringify(tokenObject)).toString("base64");
 
         // Create an HMAC for the token then encode it as a Base64 string
-        let tokenHMAC = Utilities.hmac(tokenString, this.#password, "base64");
+        let tokenHMAC = Hash.hmac(tokenString, this.#password, "base64");
 
         // Create an array with the parts of the token
         let tokenSlices = [tokenString, tokenHMAC];
@@ -74,7 +74,7 @@ export default class Token {
         let tokenHMAC = tokenSlices.shift();
 
         // Make sure the signature is valid
-        if (Utilities.hmac(tokenString, this.#password, "base64") !== tokenHMAC)
+        if (Hash.hmac(tokenString, this.#password, "base64") !== tokenHMAC)
             throw new Error(`Invalid token signature`);
 
         // Parse the token string as Base64 then as JSON

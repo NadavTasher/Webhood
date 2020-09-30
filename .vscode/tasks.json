@@ -5,7 +5,7 @@
         {
             "label": "Stop services",
             "type": "shell",
-            "command": "docker-compose -f .vscode/compose.json --project-directory . down"
+            "command": "docker-compose -f .vscode/compose.json --project-directory . down --timeout 1"
         },
         {
             "label": "Start services",

@@ -7,7 +7,7 @@
 import HTTP from "http";
 
 // Import utilities
-import { Validators } from "./utilities.mjs";
+import Variable from "../utilities/variable.mjs";
 
 /**
  * This class handles requests, parses them then passes them to the internal router.
@@ -226,26 +226,9 @@ export default class Server {
                 if (!parameters.hasOwnProperty(parameter))
                     throw new Error(`Missing "${parameter}" parameter`);
 
-                // Store the validator in a temporary object
-                let validator = object.parameters[parameter];
-
-                // Check whether the validator is a callable (generic validator)
-                if (typeof validator === "function") {
-                    // Try validating using the callable
-                    if (!await validator(parameters[parameter]))
-                        throw new Error(`Invalid "${parameter}" parameter`);
-                }
-
-                // Check whether the validator is a string (common validator)
-                if (typeof validator === "string") {
-                    // Make sure a common validator exists
-                    if (!Validators.hasOwnProperty(validator))
-                        throw new Error(`Missing "${validator}" validator`);
-
-                    // Use common validator to validate
-                    if (!Validators[validator](parameters[parameter]))
-                        throw new Error(`Invalid "${parameter}" parameter`);
-                }
+                // Validate parameter using common validators
+                if (!(await Variable.valid(parameters[parameter], object.parameters[parameter])))
+                    throw new Error(`Invalid "${parameter}" parameter`);
             }
         }
 
