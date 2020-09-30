@@ -9,21 +9,6 @@
 export default class Utilities {
 
     /**
-     * Tests whether a string is valid with a given charset.
-     * @param string String
-     * @param charset Charset
-     */
-    static match(string, charset = "abcdefghijklmnopqrstuvwxyz0123456789") {
-        // Loop over all characters in the string
-        for (let char of string)
-            if (!charset.includes(char))
-                return false;
-
-        // Passed check
-        return true;
-    }
-
-    /**
      * Generates random strings.
      * @param length Length
      * @param charset Charset

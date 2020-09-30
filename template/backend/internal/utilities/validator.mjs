@@ -3,8 +3,18 @@
  * https://github.com/NadavTasher/Template/
  **/
 
-// Import general utilities
-import Utilities from "./utilities.mjs";
+// Utility functions
+const Utilities = {
+    match(string, charset = "abcdefghijklmnopqrstuvwxyz0123456789") {
+        // Loop over all characters in the string
+        for (let char of string)
+            // Return false if the charset does not contain the char
+            if (!charset.includes(char))
+                return false;
+
+        return true;
+    }
+};
 
 // Common validators
 const Validators = {
@@ -153,7 +163,7 @@ const Validators = {
 /**
 * This class contains variable validation utility functions.
 */
-export default class Variable {
+export default class Validator {
 
     /**
      * Checks whether a variable is valid using a validator function, scheme or validator name.

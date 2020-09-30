@@ -8,8 +8,7 @@ import Path from "path";
 import FileSystem from "fs";
 
 // Import utilities
-import Hash from "../utilities/hash.mjs";
-import Variable from "../utilities/variable.mjs";
+import Validator from "../utilities/validator.mjs";
 
 /**
  * A simple interface for reading and writing database tables.
@@ -29,7 +28,7 @@ export default class Table {
      */
     constructor(name, scheme = {}, root = "/opt") {
         // Make sure the name is valid
-        Variable.validate(name, "key");
+        Validator.validate(name, "key");
 
         // Initialize the schema
         this.#scheme = scheme;
@@ -48,7 +47,7 @@ export default class Table {
      */
     has(id) {
         // Make sure the ID is valid
-        Variable.validate(id, "id");
+        Validator.validate(id, "id");
 
         // Check whether the entry exists
         return FileSystem.existsSync(Path.join(this.#root, id));
@@ -60,7 +59,7 @@ export default class Table {
      */
     get(id) {
         // Make sure the ID is valid
-        Variable.validate(id, "id");
+        Validator.validate(id, "id");
 
         // Make sure the entry exists
         if (!this.has(id))
@@ -70,7 +69,7 @@ export default class Table {
         let object = JSON.parse(FileSystem.readFileSync(Path.join(this.#root, id)));
 
         // Make sure the entry adheres to the scheme
-        Variable.validate(object, this.#scheme);
+        Validator.validate(object, this.#scheme);
 
         // Return the entry
         return object;
@@ -83,10 +82,10 @@ export default class Table {
      */
     set(id, entry) {
         // Make sure the ID is valid
-        Variable.validate(id, "id");
+        Validator.validate(id, "id");
 
         // Make sure the entry adheres to the scheme
-        Variable.validate(entry, this.#scheme);
+        Validator.validate(entry, this.#scheme);
 
         // Read the entry
         FileSystem.writeFileSync(Path.join(this.#root, id), JSON.stringify(entry));

@@ -7,7 +7,7 @@
 import HTTP from "http";
 
 // Import utilities
-import Variable from "../utilities/variable.mjs";
+import Validator from "../utilities/validator.mjs";
 
 /**
  * This class handles requests, parses them then passes them to the internal router.
@@ -219,7 +219,7 @@ export default class Server {
             throw new Error(`Action "${action}" is malformed`);
 
         // Make sure the parameters object adheres to the parameters scheme
-        Variable.validate(parameters, object.parameters);
+        Validator.validate(parameters, object.parameters);
 
         // Execute the handler
         return object.handler(parameters);

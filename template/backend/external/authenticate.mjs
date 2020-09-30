@@ -5,8 +5,8 @@
 
 // Import utilities
 import Table from "../internal/database/database.mjs";
-import Authority from "../internal/utilities/token.mjs";
 import Hash from "../internal/utilities/hash.mjs";
+import Authority from "../internal/utilities/token.mjs";
 import Utilities from "../internal/utilities/utilities.mjs";
 
 // Initialize the database table
