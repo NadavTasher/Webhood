@@ -1,0 +1,33 @@
+name: Build multi-arch images
+
+on:
+  pull_request:
+    branches: master
+  push:
+    branches: master
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code setup
+        uses: actions/checkout@v2
+
+      - name: Buildx setup
+        uses: crazy-max/ghaction-docker-buildx@v2
+        with:
+          buildx-version: latest
+          skip-cache: false
+          qemu-version: latest
+
+      - name: Build images
+        run: docker buildx build --platform linux/amd64,linux/arm64/v8,linux/arm/v7,linux/ppc64le,linux/s390x -t nadavtasher/template .
+
+      - name: Docker login
+        run: echo "${{ secrets.TOKEN }}" | docker login --username "${{ secrets.NAME }}" --password-stdin
+
+      - name: Push images as date
+        run: docker buildx build --platform linux/amd64,linux/arm64/v8,linux/arm/v7,linux/ppc64le,linux/s390x -t nadavtasher/template:$(date +%Y.%m.%d) . --push
+
+      - name: Push images as latest
+        run: docker buildx build --platform linux/amd64,linux/arm64/v8,linux/arm/v7,linux/ppc64le,linux/s390x -t nadavtasher/template:latest . --push
