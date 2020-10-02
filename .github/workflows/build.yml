@@ -21,7 +21,7 @@ jobs:
           qemu-version: latest
 
       - name: Build images
-        run: docker buildx build --platform linux/amd64,linux/arm64/v8,linux/arm/v7,linux/ppc64le,linux/s390x template
+        run: docker buildx build --platform linux/amd64,linux/arm64/v8,linux/arm/v7,linux/ppc64le,linux/s390x template --tag image
 
       - name: Login to dockerhub
         run: echo "${{ secrets.TOKEN }}" | docker login --username "${{ secrets.NAME }}" --password-stdin
