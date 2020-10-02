@@ -8,5 +8,5 @@ VOLUME /opt
 COPY backend backend
 COPY frontend frontend
 
-# Set command
+# Set default command
 CMD ["application.mjs"]
