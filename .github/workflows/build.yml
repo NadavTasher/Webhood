@@ -21,17 +21,13 @@ jobs:
           qemu-version: latest
 
       - name: Build images
-        run: docker buildx build --platform linux/amd64,linux/arm64/v8,linux/arm/v7,linux/ppc64le,linux/s390x -t image template
+        run: docker buildx build --platform linux/amd64,linux/arm64/v8,linux/arm/v7,linux/ppc64le,linux/s390x template
 
-      - name: Docker login
+      - name: Login to dockerhub
         run: echo "${{ secrets.TOKEN }}" | docker login --username "${{ secrets.NAME }}" --password-stdin
 
       - name: Push images as date
-        run: |
-          docker tag image nadavtasher/template:$(date +%Y.%m.%d)
-          docker push nadavtasher/template:$(date +%Y.%m.%d)
+        run: docker buildx build --platform linux/amd64,linux/arm64/v8,linux/arm/v7,linux/ppc64le,linux/s390x template --tag nadavtasher/template:$(date +%Y.%m.%d) --push
 
       - name: Push images as latest
-        run: |
-          docker tag image nadavtasher/template:latest
-          docker push nadavtasher/template:latest
+        run: docker buildx build --platform linux/amd64,linux/arm64/v8,linux/arm/v7,linux/ppc64le,linux/s390x template --tag nadavtasher/template:latest --push
