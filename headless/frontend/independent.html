@@ -10,7 +10,7 @@
     <meta charset="UTF-8" />
 
     <!-- App Description -->
-    <meta name="description" content="AppDescription">
+    <meta name="description" content="AppDescription" />
 
     <!-- Viewport -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes, minimal-ui" />
@@ -48,19 +48,9 @@
             margin: auto !important;
         }
 
-        /* Base */
+        /* Base properties */
 
-        [text],
-        [button],
-        [input],
-        [row],
-        [column],
-        p,
-        button,
-        input,
-        div,
-        body,
-        html {
+        [text], [button], [input], [row], [column], p, button, input, div, body, html {
             /* Font */
             font-family: sans-serif;
             text-decoration: none;
@@ -69,164 +59,128 @@
             transition-duration: 0.5s;
         }
 
-        /* Flex */
+        /* Flex properties */
 
-        [text],
-        [button],
-        [input],
-        [row],
-        [column],
-        p,
-        button,
-        input,
-        div,
-        body,
-        html {
+        [text], [button], [input], [row], [column], p, button, input, div, body, html {
             display: flex;
             flex-direction: column;
         }
 
-        [row] {
+        /* Default properties */
+
+        [row = ""], [row = all] {
             flex-direction: row;
         }
 
-        [column] {
+        [column = ""], [column = all] {
             flex-direction: column;
         }
 
-        /* Alignment */
+        /* Mobile properties */
 
-        [text],
-        [button],
-        [input],
-        p,
-        button,
-        input {
+        @media(max-width: 500px) {
+            [row = "mobile"] {
+                flex-direction: row;
+            }
+
+            [column = "mobile"] {
+                flex-direction: column;
+            }
+        }
+
+        /* Desktop properties */
+
+        @media(min-width: 500px) {
+            [row = "desktop"] {
+                flex-direction: row;
+            }
+
+            [column = "desktop"] {
+                flex-direction: column;
+            }
+        }
+
+        /* Alignment properties */
+
+        [text], [button], [input], p, button, input {
             justify-content: center;
             justify-items: center;
             align-content: center;
             align-items: stretch;
         }
 
-        [row],
-        [column],
-        div,
-        body,
-        html {
+        [row], [column], div, body, html {
             justify-content: center;
             align-content: center;
         }
 
-        [row] {
+        [row], [column] {
             align-items: stretch;
         }
 
-        [column] {
-            align-items: stretch;
-        }
+        /* Padding & Margin properties */
 
-        /* Padding, Margins */
-
-        [text],
-        [button],
-        [input],
-        p,
-        button,
-        input {
+        [text], [button], [input], p, button, input {
             padding: 1.25vh;
             margin: 1vh;
         }
 
-        [row],
-        [column],
-        div,
-        body,
-        html {
+        [row], [column], div, body, html {
             padding: 0;
             margin: 0;
         }
 
-        /* Sizing */
+        /* Sizing properties */
 
-        [text],
-        [button],
-        [input],
-        [row],
-        [column],
-        p,
-        button,
-        input,
-        div,
-        body,
-        html {
+        [text], [button], [input], [row], [column], p, button, input, div, body, html {
             line-height: 100%;
             min-height: fit-content;
         }
 
-        [button],
-        [input],
-        button,
-        input {
+        [button], [input], button, input {
             width: auto;
         }
 
-        [row]>* {
+        [row] > * {
             width: 100%;
         }
 
-        /* Border */
+        /* Border properties */
 
-        [button],
-        [input],
-        button,
-        input {
+        [button], [input], button, input {
             border-style: solid;
             border-radius: 0.5vh;
         }
 
-        [input],
-        input {
+        [input], input {
             border-width: 0 0 0.25vh 0;
         }
 
-        [button],
-        button {
+        [button], button {
             border-width: 0.25vh;
         }
 
-        /* Colors */
+        /* Color properties */
 
-        [text],
-        [button],
-        [input],
-        p,
-        button,
-        input {
+        [text], [button], [input], p, button, input {
             background-color: transparent;
         }
 
-        [button],
-        [input],
-        button,
-        input {
+        [button], [input], button, input {
             color: var(--passive);
             border-color: var(--passive);
         }
 
-        [button]:hover,
-        [input]:hover,
-        button:hover,
-        input:hover {
+        [button]:hover, [input]:hover, button:hover, input:hover {
             color: var(--active);
             border-color: var(--active);
         }
 
-        [text],
-        p {
+        [text], p {
             color: var(--passive);
         }
 
-        /* Text alignment */
+        /* Text alignment properties */
 
         [center] {
             text-align: center;
@@ -243,7 +197,7 @@
             text-align-last: end;
         }
 
-        /* Text size */
+        /* Text size properties */
 
         [tiny] {
             font-size: 1.5vh;
@@ -265,7 +219,7 @@
             font-size: 5.5vh;
         }
 
-        /* Additional */
+        /* Additional properties */
 
         [hidden] {
             display: none !important;

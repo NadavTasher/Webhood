@@ -19,7 +19,7 @@ body {
     margin: auto !important;
 }
 
-/* Base */
+/* Base properties */
 
 [text], [button], [input], [row], [column], p, button, input, div, body, html {
     /* Font */
@@ -30,22 +30,48 @@ body {
     transition-duration: 0.5s;
 }
 
-/* Flex */
+/* Flex properties */
 
 [text], [button], [input], [row], [column], p, button, input, div, body, html {
     display: flex;
     flex-direction: column;
 }
 
-[row] {
+/* Default properties */
+
+[row = ""], [row = all] {
     flex-direction: row;
 }
 
-[column] {
+[column = ""], [column = all] {
     flex-direction: column;
 }
 
-/* Alignment */
+/* Mobile properties */
+
+@media(max-width: 500px) {
+    [row = "mobile"] {
+        flex-direction: row;
+    }
+
+    [column = "mobile"] {
+        flex-direction: column;
+    }
+}
+
+/* Desktop properties */
+
+@media(min-width: 500px) {
+    [row = "desktop"] {
+        flex-direction: row;
+    }
+
+    [column = "desktop"] {
+        flex-direction: column;
+    }
+}
+
+/* Alignment properties */
 
 [text], [button], [input], p, button, input {
     justify-content: center;
@@ -59,15 +85,11 @@ body {
     align-content: center;
 }
 
-[row] {
+[row], [column] {
     align-items: stretch;
 }
 
-[column] {
-    align-items: stretch;
-}
-
-/* Padding, Margins */
+/* Padding & Margin properties */
 
 [text], [button], [input], p, button, input {
     padding: 1.25vh;
@@ -79,7 +101,7 @@ body {
     margin: 0;
 }
 
-/* Sizing */
+/* Sizing properties */
 
 [text], [button], [input], [row], [column], p, button, input, div, body, html {
     line-height: 100%;
@@ -94,7 +116,7 @@ body {
     width: 100%;
 }
 
-/* Border */
+/* Border properties */
 
 [button], [input], button, input {
     border-style: solid;
@@ -109,7 +131,7 @@ body {
     border-width: 0.25vh;
 }
 
-/* Colors */
+/* Color properties */
 
 [text], [button], [input], p, button, input {
     background-color: transparent;
@@ -129,7 +151,7 @@ body {
     color: var(--passive);
 }
 
-/* Text alignment */
+/* Text alignment properties */
 
 [center] {
     text-align: center;
@@ -146,7 +168,7 @@ body {
     text-align-last: end;
 }
 
-/* Text size */
+/* Text size properties */
 
 [tiny] {
     font-size: 1.5vh;
@@ -168,7 +190,7 @@ body {
     font-size: 5.5vh;
 }
 
-/* Additional */
+/* Additional properties */
 
 [hidden] {
     display: none !important;
