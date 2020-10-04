@@ -9,7 +9,7 @@ import Crypto from "crypto";
 /**
  * This class contains hashing utility functions.
  */
-export default class Hash {
+export class Hash {
     
     /**
      * Hashes a given message.

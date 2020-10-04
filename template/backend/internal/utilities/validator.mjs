@@ -157,13 +157,60 @@ const Validators = {
 
         // Make sure the length of the variable is valid
         return variable.length === 64;
+    },
+    email(variable) {
+        // Make sure the variable is not null
+        if (!Validators.nonnull(variable))
+            return false;
+
+        // Make sure the variable is a string
+        if (!Validators.string(variable))
+            return false;
+
+        // Split the string on the @ mark
+        let split = variable.split("@");
+
+        // Make sure there are exactly two parts
+        if (split.length !== 2)
+            return false;
+
+        // Validate the first part
+        let personal = split.shift();
+
+        // Loop over parts split by "."
+        for (let part of personal.split(".")) {
+            // Make sure the part length if longer then 0
+            if (part.length === 0)
+                return false;
+
+            // Make sure the part matches the charset
+            if (!Utilities.match(part, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+/=?^_`{|}~-"))
+                return false;
+        }
+
+        // Validate the second part
+        let domain = split.shift();
+
+        // Loop over parts split by "."
+        for (let part of domain.split(".")) {
+            // Make sure the part length if longer then 0
+            if (part.length === 0)
+                return false;
+
+            // Make sure the part matches the charset
+            if (!Utilities.match(part, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"))
+                return false;
+        }
+
+        // Passed validation
+        return true;
     }
 };
 
 /**
 * This class contains variable validation utility functions.
 */
-export default class Validator {
+export class Validator {
 
     /**
      * Checks whether a variable is valid using a validator function, scheme or validator name.
@@ -238,4 +285,4 @@ export default class Validator {
             }
         }
     }
-}
+};

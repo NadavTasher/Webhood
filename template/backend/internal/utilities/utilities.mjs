@@ -6,7 +6,7 @@
 /**
  * This class contains general utility functions.
  */
-export default class Utilities {
+export class Utilities {
 
     /**
      * Generates random strings.

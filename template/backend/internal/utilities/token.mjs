@@ -4,7 +4,7 @@
  **/
 
 // Import utilities
-import Hash from "./hash.mjs";
+import { Hash } from "./hash.mjs";
 
 const DELIMITER = ":";
 
@@ -17,7 +17,7 @@ const VALIDITY_DEFAULT = (60 * 60 * 24 * 365) * 1000;
 /**
  * A simple interface for issuing and validating tokens.
  */
-export default class Token {
+export class Authority {
 
     // Initialize private class members
     #password = null;

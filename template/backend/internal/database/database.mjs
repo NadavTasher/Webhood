@@ -8,12 +8,12 @@ import Path from "path";
 import FileSystem from "fs";
 
 // Import utilities
-import Validator from "../utilities/validator.mjs";
+import { Validator } from "../utilities/validator.mjs";
 
 /**
  * A simple interface for reading and writing database tables.
  */
-export default class Table {
+export class Table {
 
     // Initialize root directories
     #root = null;
@@ -89,5 +89,52 @@ export default class Table {
 
         // Read the entry
         FileSystem.writeFileSync(Path.join(this.#root, id), JSON.stringify(entry));
+    }
+
+    /**
+     * Returns a list with all entry IDs.
+     */
+    ids() {
+        // Initialize a list which will be populated with entry IDs
+        let ids = [];
+
+        // List all files in the database
+        let files = FileSystem.readdirSync(this.#root);
+
+        // Loop over files to make sure they all have valid IDs
+        for (let file of files) {
+            // Make sure the ID is valid
+            if (Validator.valid(id, "id"))
+                // Append to list
+                ids.push(file);
+        }
+
+        // Return ID list
+        return ids;
+    }
+
+    /**
+     * Returns an object with all entries.
+     */
+    entries() {
+        // Initialize a list which will be populated with entry IDs
+        let entries = {};
+
+        // List all files in the database
+        let files = FileSystem.readdirSync(this.#root);
+
+        // Loop over files to make sure they all have valid IDs
+        for (let file of files) {
+            // Try reading the entry
+            try {
+                // Read the entry
+                entries[file] = this.get(file);
+            } catch (e) {
+                // Ignore errors
+            }
+        }
+
+        // Return entried object
+        return entries;
     }
 }

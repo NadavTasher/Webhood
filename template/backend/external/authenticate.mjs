@@ -4,13 +4,13 @@
  **/
 
 // Import utilities
-import Table from "../internal/database/database.mjs";
-import Hash from "../internal/utilities/hash.mjs";
-import Authority from "../internal/utilities/token.mjs";
-import Utilities from "../internal/utilities/utilities.mjs";
+import { Hash } from "../internal/utilities/hash.mjs";
+import { Table } from "../internal/database/database.mjs";
+import { Authority } from "../internal/utilities/token.mjs";
+import { Utilities } from "../internal/utilities/utilities.mjs";
 
 // Initialize the database table
-const table = new Table("users", {
+const mTable = new Table("users", {
     information: {
         name: "string"
     },
@@ -23,56 +23,58 @@ const table = new Table("users", {
 });
 
 // Initialize a token issuer instance
-const authority = new Authority(process.env.password);
+const mAuthority = new Authority(process.env.password);
 
 // Create the table of validators
-const validators = {
+const mValidators = {
     name: [
-        "string",
+        ("string"),
         (name) => {
             if (name.length < 4)
-                throw new Error("Name too short");
+                throw new Error(`Name too short`);
 
             if (name.length > 16)
-                throw new Error("Name too long");
+                throw new Error(`Name too long`);
 
             return true;
         }
     ],
     password: [
-        "string",
+        ("string"),
         (password) => {
             if (password.length < 8)
-                throw new Error("Password too short");
+                throw new Error(`Password too short`);
 
             if (password.length > 128)
-                throw new Error("Password too long");
+                throw new Error(`Password too long`);
 
             return true;
         }
     ],
-    token: ["string", (token) => {
-        authority.validate(token);
-
-        return true;
-    }],
+    token: [
+        ("string"),
+        (token) => {
+            mAuthority.validate(token);
+            return true;
+        }
+    ],
 };
 
-// Export token validator
-export function validate(token) {
+// Export user validator
+export function User(token) {
     // Validate using authority
-    return authority.validate(token);
+    return mAuthority.validate(token);
 }
 
 // Export route
-export default {
+export const Routes = {
     validate: {
         handler: (parameters) => {
             // Return the name
-            return authority.validate(parameters.token);
+            return mAuthority.validate(parameters.token);
         },
         parameters: {
-            token: validators.token
+            token: mValidators.token
         }
     },
     signUp: {
@@ -81,7 +83,7 @@ export default {
             let id = Hash.hash(parameters.name);
 
             // Make sure the user does not exist
-            if (table.has(id))
+            if (mTable.has(id))
                 throw new Error(`User already exists`);
 
             // Generate values
@@ -89,7 +91,7 @@ export default {
             let hash = Hash.hash(parameters.password + salt);
 
             // Write to the database
-            table.set(id, {
+            mTable.set(id, {
                 information: {
                     name: parameters.name
                 },
@@ -102,11 +104,11 @@ export default {
             });
 
             // Return token
-            return authority.issue(id);
+            return mAuthority.issue(id);
         },
         parameters: {
-            name: validators.name,
-            password: validators.password
+            name: mValidators.name,
+            password: mValidators.password
         }
     },
     signIn: {
@@ -115,22 +117,22 @@ export default {
             let id = Hash.hash(parameters.name);
 
             // Make sure the user exists
-            if (!table.has(id))
+            if (!mTable.has(id))
                 throw new Error(`User does not exist`);
 
             // Read from the database
-            let object = table.get(id);
+            let object = mTable.get(id);
 
             // Check password match
             if (Hash.hash(parameters.password + object.authorization.password.salt) !== object.authorization.password.hash)
-                throw new Error("Incorrect password");
+                throw new Error(`Incorrect password`);
 
             // Issue a token and return
-            return authority.issue(id);
+            return mAuthority.issue(id);
         },
         parameters: {
-            name: validators.name,
-            password: validators.password
+            name: mValidators.name,
+            password: mValidators.password
         }
     }
 };

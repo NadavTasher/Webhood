@@ -7,12 +7,12 @@
 import HTTP from "http";
 
 // Import utilities
-import Validator from "../utilities/validator.mjs";
+import { Validator } from "../utilities/validator.mjs";
 
 /**
  * This class handles requests, parses them then passes them to the internal router.
  */
-export default class Server {
+export class Server {
 
     // Initialize private class members
     #port = null;
