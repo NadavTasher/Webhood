@@ -64,7 +64,7 @@ class Authenticate {
                     password: UI.find("password").value
                 }).then((token) => {
                     // Store the token
-                    this.token(token);
+                    localStorage.token = token;
 
                     // Click the validate button
                     UI.find("validate").click();
@@ -88,7 +88,7 @@ class Authenticate {
 
                 // Try to validate
                 API.call("authenticate".toLowerCase(), "validate", {
-                    token: this.token()
+                    token: localStorage.token
                 }).then((userID) => {
                     // Restore the HTML
                     document.body.innerHTML = contents;
@@ -106,7 +106,7 @@ class Authenticate {
             });
 
             // Automatic validation
-            if (this.token() !== null) {
+            if (localStorage.token !== null) {
                 // Click the validate button
                 UI.find("validate").click();
             } else {
@@ -114,25 +114,5 @@ class Authenticate {
                 UI.show("interface");
             }
         });
-    }
-
-    /**
-     * Returns the authentication token.
-     */
-    static token(token = null) {
-        // Check the token
-        if (token !== null)
-            // Set the token
-            localStorage.setItem("token", token);
-        // Return the token
-        return localStorage.getItem("token");
-    }
-
-    /**
-     * Signs the user out.
-     */
-    static finalize() {
-        // Remove from localStorage
-        localStorage.removeItem("token");
     }
 }
