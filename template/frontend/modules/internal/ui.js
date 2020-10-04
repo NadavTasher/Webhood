@@ -16,11 +16,6 @@ class UI {
                 return document.getElementById(v);
             }
 
-            // Query lookup
-            if (document.querySelector(v) !== null) {
-                return document.querySelector(v);
-            }
-
             // Null fallback
             return null;
         }

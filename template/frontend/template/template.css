@@ -30,6 +30,11 @@ body {
     transition-duration: 0.5s;
 }
 
+[button], [input], [pointer] {
+    /* Cursor type */
+    cursor: pointer;
+}
+
 /* Flex properties */
 
 [text], [button], [input], p, button, input, div, body, html {
