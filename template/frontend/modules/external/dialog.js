@@ -16,7 +16,7 @@ class Dialog {
                 await Module.import("UI");
 
                 // Parse HTML code
-                let html = atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IGJvdHRvbTogMDsgd2lkdGg6IDEwMCU7IiByb3cgc3RyZXRjaD4KICAgIDxkaXYgbmFtZT0iaW5uZXIiIGNvbHVtbj4KICAgICAgICA8ZGl2IG5hbWU9ImRpYWxvZyIgc3R5bGU9ImJhY2tncm91bmQtY29sb3I6IHZhcigtLWNvYXN0ZXIpOyIgcm93PgogICAgICAgICAgICA8IS0tIE1lc3NhZ2UgLS0+CiAgICAgICAgICAgIDxwIHNtYWxsIGxlZnQgbmFtZT0ibWVzc2FnZSIgc3R5bGU9IndpZHRoOiAxMDAlOyI+JHttZXNzYWdlfTwvcD4KICAgICAgICAgICAgPCEtLSBCdXR0b24gLS0+CiAgICAgICAgICAgIDxwIHRpbnkgY2VudGVyIHBvaW50ZXIgbmFtZT0iY2xvc2UiPkRpc21pc3M8L3A+CiAgICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KPC9kaXY+");
+                let html = atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IGJvdHRvbTogMDsgd2lkdGg6IDEwMCU7IiByb3cgc3RyZXRjaD4KICAgIDxkaXYgbmFtZT0iaW5uZXIiIGNvbHVtbj4KICAgICAgICA8ZGl2IG5hbWU9ImRpYWxvZyIgc3R5bGU9ImJhY2tncm91bmQtY29sb3I6IHZhcigtLWNvYXN0ZXIpOyIgcm93PgogICAgICAgICAgICA8IS0tIE1lc3NhZ2UgLS0+CiAgICAgICAgICAgIDxwIHRpbnkgbGVmdCBuYW1lPSJtZXNzYWdlIiBzdHlsZT0id2lkdGg6IDEwMCU7Ij4ke21lc3NhZ2V9PC9wPgogICAgICAgICAgICA8IS0tIEJ1dHRvbiAtLT4KICAgICAgICAgICAgPHAgdGlueSBjZW50ZXIgcG9pbnRlciBuYW1lPSJjbG9zZSI+RGlzbWlzczwvcD4KICAgICAgICA8L2Rpdj4KICAgIDwvZGl2Pgo8L2Rpdj4=");
 
                 // Create a dialog instance
                 let instance = UI.populate(html, {
