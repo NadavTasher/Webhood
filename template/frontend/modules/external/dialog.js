@@ -20,7 +20,7 @@ class Dialog {
 
                 // Create a dialog instance
                 let instance = UI.populate(html, {
-                    message: message
+                    message: message.toString()
                 });
 
                 // Start a timeout for the toast
@@ -65,7 +65,7 @@ class Dialog {
 
                 // Create a dialog instance
                 let instance = UI.populate(html, {
-                    message: message
+                    message: message.toString()
                 });
 
                 // Hook to click listener
@@ -99,8 +99,8 @@ class Dialog {
 
                 // Create a dialog instance
                 let instance = UI.populate(html, {
-                    title: title,
-                    message: message
+                    title: title.toString(),
+                    message: message.toString()
                 });
 
                 // Hook to click listener
@@ -134,8 +134,8 @@ class Dialog {
 
                 // Create a dialog instance
                 let instance = UI.populate(html, {
-                    title: title,
-                    message: message
+                    title: title.toString(),
+                    message: message.toString()
                 });
 
                 // Hook to click listeners
@@ -177,8 +177,8 @@ class Dialog {
 
                 // Create a dialog instance
                 let instance = UI.populate(html, {
-                    title: title,
-                    placeholder: placeholder
+                    title: title.toString(),
+                    placeholder: placeholder.toString()
                 });
 
                 // Hook to click listeners
@@ -220,7 +220,7 @@ class Dialog {
 
                 // Create a dialog instance
                 let instance = UI.populate(html, {
-                    explaination: explaination
+                    explaination: explaination.toString()
                 });
 
                 // Handle promise state updates
