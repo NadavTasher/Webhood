@@ -30,7 +30,7 @@ class Dialog {
 
                     // Resolve promise
                     resolve("Closed by timeout");
-                }, 3000 + 100 * message.length);
+                }, 3000 + 100 * message.toString().length);
 
                 // Hook to click listener
                 instance.find("close").addEventListener("click", () => {
