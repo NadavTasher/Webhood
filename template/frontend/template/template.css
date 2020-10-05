@@ -60,7 +60,7 @@ div, body, html {
 /* Padding & Margin properties */
 
 [text], [button], [input], p, button, input {
-    padding: 0.75vh;
+    padding: 1vh;
     margin: 1vh;
 }
 
