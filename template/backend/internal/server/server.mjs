@@ -53,6 +53,17 @@ export class Server {
         this.#routes[name] = route;
     }
 
+    /**
+     * Inserts multiple new routes.
+     * @param routes Routes
+     */
+    insertAll(routes) {
+        // Loop over all routes
+        for (let name in routes)
+            // Insert route
+            this.insert(name, routes[name]);
+    }
+
     // Private functions
 
     /**
