@@ -158,48 +158,4 @@ class Dialog {
             }
         );
     }
-
-    /**
-     * Displays a loading dialog which waits on a Promise and wraps it.
-     * @param {Promise} promise Promise
-     * @param {string} explaination Explaination
-     */
-    static loading(promise, explaination = "Loading...") {
-        return new Promise(
-            async (resolve, reject) => {
-                // Await module load
-                await Module.import("UI");
-
-                // Parse HTML code
-                let html = atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IHRvcDogMDsgYm90dG9tOiAwOyBoZWlnaHQ6IDEwMCU7IHdpZHRoOiAxMDAlOyIgcm93IHN0cmV0Y2g+CiAgICA8ZGl2IG5hbWU9ImlubmVyIiBzdHlsZT0ibWF4LXdpZHRoOiA1MDBweDsgcGFkZGluZzogMXZoOyIgY29sdW1uPgogICAgICAgIDxkaXYgbmFtZT0iZGlhbG9nIiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tY29hc3Rlcik7IGJvcmRlci1yYWRpdXM6IDF2aDsiIGNvbHVtbj4KICAgICAgICAgICAgPCEtLSBFeHBsYWluYXRpb24gLS0+CiAgICAgICAgICAgIDxwIHNtYWxsIGxlZnQgbmFtZT0iZXhwbGFpbmF0aW9uIj4ke2V4cGxhaW5hdGlvbn08L3A+CiAgICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KPC9kaXY+");
-
-                // Create a dialog instance
-                let instance = UI.populate(html, {
-                    explaination: explaination.toString()
-                });
-
-                // Handle promise state updates
-                promise.then(
-                    (result) => {
-                        // Remove from body
-                        UI.remove(instance);
-
-                        // Resolve promise
-                        resolve(result);
-                    }
-                ).catch(
-                    (reason) => {
-                        // Remove from body
-                        UI.remove(instance);
-
-                        // Reject promise
-                        reject(reason);
-                    }
-                );
-
-                // Append to body
-                document.body.appendChild(instance);
-            }
-        );
-    }
 }
