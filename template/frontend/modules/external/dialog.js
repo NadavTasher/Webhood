@@ -6,51 +6,6 @@
 class Dialog {
 
     /**
-     * Toasts a bar message at the bottom of the screen.
-     * @param {string} message Message
-     */
-    static toast(message) {
-        return new Promise(
-            async (resolve, reject) => {
-                // Await module load
-                await Module.import("UI");
-
-                // Parse HTML code
-                let html = atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IGJvdHRvbTogMDsgd2lkdGg6IDEwMCU7IiByb3cgc3RyZXRjaD4KICAgIDxkaXYgbmFtZT0iaW5uZXIiIGNvbHVtbj4KICAgICAgICA8ZGl2IG5hbWU9ImRpYWxvZyIgc3R5bGU9ImJhY2tncm91bmQtY29sb3I6IHZhcigtLWNvYXN0ZXIpOyIgcm93PgogICAgICAgICAgICA8IS0tIE1lc3NhZ2UgLS0+CiAgICAgICAgICAgIDxwIHRpbnkgbGVmdCBuYW1lPSJtZXNzYWdlIiBzdHlsZT0id2lkdGg6IDEwMCU7Ij4ke21lc3NhZ2V9PC9wPgogICAgICAgICAgICA8IS0tIEJ1dHRvbiAtLT4KICAgICAgICAgICAgPHAgdGlueSBjZW50ZXIgcG9pbnRlciBuYW1lPSJjbG9zZSI+RGlzbWlzczwvcD4KICAgICAgICA8L2Rpdj4KICAgIDwvZGl2Pgo8L2Rpdj4=");
-
-                // Create a dialog instance
-                let instance = UI.populate(html, {
-                    message: message.toString()
-                });
-
-                // Start a timeout for the toast
-                let timeout = setTimeout(() => {
-                    // Remove from body
-                    UI.remove(instance);
-
-                    // Resolve promise
-                    resolve("Closed by timeout");
-                }, 3000 + 100 * message.toString().length);
-
-                // Hook to click listener
-                instance.find("close").addEventListener("click", () => {
-                    // Clear the timeout
-                    clearTimeout(timeout);
-
-                    // Remove from body
-                    UI.remove(instance);
-
-                    // Resolve promise
-                    resolve("Closed by user");
-                });
-
-                // Append to body
-                document.body.appendChild(instance);
-            }
-        );
-    }
-
-    /**
      * Displays a simple alert dialog.
      * @param {string} message Message
      */
