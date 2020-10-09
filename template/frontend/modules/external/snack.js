@@ -3,10 +3,10 @@
  * https://github.com/NadavTasher/Template/
  **/
 
-class Toast {
+class Snack {
 
     /**
-     * Shows a timeout toast message at the bottom of the viewport.
+     * Shows a timeout snack message at the bottom of the viewport.
      * @param {string} message Message
      * @param {boolean} dismissable Dismissable
      */
@@ -18,7 +18,7 @@ class Toast {
 
                 // Create a toast instance
                 let instance = UI.populate(
-                    atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IGJvdHRvbTogMDsgd2lkdGg6IDEwMCU7IiByb3cgc3RyZXRjaD48ZGl2IG5hbWU9ImlubmVyIiBjb2x1bW4+PGRpdiBuYW1lPSJkaWFsb2ciIHN0eWxlPSJtYXJnaW46IDAuNXZoOyBib3JkZXItcmFkaXVzOiAwLjV2aDsgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tY29hc3Rlcik7IiByb3cgc3RyZXRjaD48cCB0aW55IGxlZnQgbmFtZT0ibWVzc2FnZSI+PC9wPjxwIHRpbnkgcmlnaHQgcG9pbnRlciBoaWRkZW4gbmFtZT0iYnV0dG9uIj5EaXNtaXNzPC9wPjwvZGl2PjwvZGl2PjwvZGl2Pg==")
+                    atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IGJvdHRvbTogMDsgd2lkdGg6IDEwMCU7IiByb3cgc3RyZXRjaD48ZGl2IG5hbWU9ImlubmVyIiBjb2x1bW4+PGRpdiBuYW1lPSJkaWFsb2ciIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1jb2FzdGVyKTsiIHJvdyBzdHJldGNoPjxwIHRpbnkgbGVmdCBuYW1lPSJtZXNzYWdlIj48L3A+PHAgdGlueSByaWdodCBwb2ludGVyIGhpZGRlbiBuYW1lPSJidXR0b24iPkRpc21pc3M8L3A+PC9kaXY+PC9kaXY+PC9kaXY+")
                 );
 
                 // Check whether toast should be dismissable
@@ -57,7 +57,7 @@ class Toast {
     }
 
     /**
-     * Shows a progress toast message at the bottom of the viewport.
+     * Shows a progress snack message at the bottom of the viewport.
      * @param {string} message Message
      * @param {Promise} promise Promise
      */
@@ -69,7 +69,7 @@ class Toast {
                 
                 // Create a toast instance
                 let instance = UI.populate(
-                    atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IGJvdHRvbTogMDsgd2lkdGg6IDEwMCU7IiByb3cgc3RyZXRjaD48ZGl2IG5hbWU9ImlubmVyIiBjb2x1bW4+PGRpdiBuYW1lPSJkaWFsb2ciIHN0eWxlPSJtYXJnaW46IDAuNXZoOyBib3JkZXItcmFkaXVzOiAwLjV2aDsgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tY29hc3Rlcik7IiByb3cgc3RyZXRjaD48cCB0aW55IGxlZnQgbmFtZT0ibWVzc2FnZSI+PC9wPjxwIHRpbnkgcmlnaHQgcG9pbnRlciBoaWRkZW4gbmFtZT0iYnV0dG9uIj5EaXNtaXNzPC9wPjwvZGl2PjwvZGl2PjwvZGl2Pg==")
+                    atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IGJvdHRvbTogMDsgd2lkdGg6IDEwMCU7IiByb3cgc3RyZXRjaD48ZGl2IG5hbWU9ImlubmVyIiBjb2x1bW4+PGRpdiBuYW1lPSJkaWFsb2ciIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1jb2FzdGVyKTsiIHJvdyBzdHJldGNoPjxwIHRpbnkgbGVmdCBuYW1lPSJtZXNzYWdlIj48L3A+PHAgdGlueSByaWdodCBwb2ludGVyIGhpZGRlbiBuYW1lPSJidXR0b24iPkRpc21pc3M8L3A+PC9kaXY+PC9kaXY+PC9kaXY+")
                 );
 
                 // Fill message information
