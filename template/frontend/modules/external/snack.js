@@ -61,7 +61,7 @@ class Snack {
      * @param {string} message Message
      * @param {Promise} promise Promise
      */
-    static progress(message, promise = new Promise()) {
+    static progress(message, promise) {
         return new Promise(
             async (resolve, reject) => {
                 // Await module load
