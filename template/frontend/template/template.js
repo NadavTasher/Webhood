@@ -3,6 +3,14 @@
  * https://github.com/NadavTasher/Template/
  **/
 
+// Lock the viewport height to prevent keyboard resizes
+window.addEventListener("load", function () {
+    // Find meta tag
+    let element = document.querySelector("meta[name=viewport]");
+    // Update meta tag
+    element.content = element.content.replace("device-height", Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0) + "px");
+});
+
 class Module {
 
     /**
