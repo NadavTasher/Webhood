@@ -95,5 +95,5 @@ window.addEventListener("load", function () {
     // Make sure viewport exists
     if (element !== null)
         // Update viewport height
-        element.content = element.content.replace("device-height", Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0) + "px");
+        element.content = element.content.replace("device-height", Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0));
 });
