@@ -1,0 +1,27 @@
+# Select compose version
+version: "3"
+
+# Define services
+services: 
+
+    # Create template service
+    template:
+
+        # Select service image
+        image: nadavtasher/template
+
+        # Expose ports
+        ports: 
+            - 80:80
+
+        # Mount volumes
+        volumes:
+            # Persistent data volume
+            - data:/opt
+
+            # Sources volumes
+            - ./sources/frontend/index.html:/project/frontend/index.html:ro
+            - ./sources/backend/application.mjs:/project/backend/application.mjs:ro
+
+volumes:
+    data:
