@@ -93,7 +93,7 @@ window.addEventListener("load", function () {
     let element = document.querySelector(`meta[name="viewport"]`);
     
     // Make sure viewport exists
-    if (viewport !== null)
+    if (element !== null)
         // Update viewport height
         element.content = element.content.replace("device-height", Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0) + "px");
 });
