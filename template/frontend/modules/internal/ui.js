@@ -160,9 +160,10 @@ class UI {
                 sanitizer.innerText = value;
                 value = sanitizer.innerHTML;
 
-                // Replace all instances
-                while (html.includes(search))
-                    html = html.replace(search, value);
+                // Make sure the replacement value does not contain the original search value and replace occurences
+                if (!value.includes(search))
+                    while (html.includes(search))
+                        html = html.replace(search, value);
             }
         }
         // Create a wrapper element
