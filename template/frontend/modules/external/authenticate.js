@@ -7,7 +7,7 @@ class Authenticate {
     /**
      * Authenticates the user by requiring sign-up, sign-in and token validation.
      */
-    static initialize(title = document.title) {
+    static initialize(title = `Welcome to ${document.title}`) {
         return new Promise(async (resolve, reject) => {
             // Await module imports
             await Module.import("API", "UI", "External:Toast");
@@ -16,14 +16,14 @@ class Authenticate {
             let contents = document.body.innerHTML;
 
             // Load the new HTML
-            document.body.innerHTML = atob("PGRpdiByb3cgc3RyZXRjaD4KICAgIDxkaXYgc3R5bGU9Im1heC13aWR0aDogNTAwcHg7IiBjb2x1bW4+CiAgICAgICAgPCEtLSBUaXRsZXMgLS0+CiAgICAgICAgPHAgbGFyZ2UgY2VudGVyIGlkPSJ0aXRsZSI+V2VsY29tZSBiYWNrITwvcD4KICAgICAgICA8cCBzbWFsbCBjZW50ZXI+UGxlYXNlIGF1dGhlbnRpY2F0ZSB0byBjb250aW51ZTwvcD4KICAgICAgICA8IS0tIFVzZXIgaW50ZXJmYWNlcyAtLT4KICAgICAgICA8ZGl2IGlkPSJpbnRlcmZhY2UiIGNvbHVtbj4KICAgICAgICAgICAgPCEtLSBJbnB1dHMgLS0+CiAgICAgICAgICAgIDxkaXYgaWQ9ImlucHV0cyIgY29sdW1uPgogICAgICAgICAgICAgICAgPGlucHV0IHNtYWxsIGxlZnQgaWQ9Im5hbWUiIHR5cGU9InRleHQiIHBsYWNlaG9sZGVyPSJOYW1lIiAvPgogICAgICAgICAgICAgICAgPGlucHV0IHNtYWxsIGxlZnQgaWQ9InBhc3N3b3JkIiB0eXBlPSJwYXNzd29yZCIgcGxhY2Vob2xkZXI9IlBhc3N3b3JkIiAvPgogICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgPCEtLSBCdXR0b25zIC0tPgogICAgICAgICAgICA8ZGl2IGlkPSJidXR0b25zIiByb3cgc3RyZXRjaD4KICAgICAgICAgICAgICAgIDxwIHNtYWxsIGxlZnQgcG9pbnRlciBpZD0idmFsaWRhdGUiIGhpZGRlbj5WYWxpZGF0ZTwvYnV0dG9uPgogICAgICAgICAgICAgICAgPHAgc21hbGwgcmlnaHQgcG9pbnRlciBpZD0iY29udGludWUiPkNvbnRpbnVlPC9idXR0b24+CiAgICAgICAgICAgIDwvZGl2PgogICAgICAgIDwvZGl2PgogICAgPC9kaXY+CjwvZGl2Pg==");
+            document.body.innerHTML = atob("PGRpdiByb3cgc3RyZXRjaD48ZGl2IHN0eWxlPSJtYXgtd2lkdGg6IDUwMHB4OyIgY29sdW1uPjxwIGxhcmdlIGNlbnRlciBpZD0idGl0bGUiPldlbGNvbWUgYmFjayE8L3A+PHAgc21hbGwgY2VudGVyPlBsZWFzZSBhdXRoZW50aWNhdGUgdG8gY29udGludWU8L3A+PGRpdiBpZD0iaW50ZXJmYWNlIiBjb2x1bW4+PGRpdiBpZD0iaW5wdXRzIiBjb2x1bW4+PGlucHV0IHNtYWxsIGxlZnQgaWQ9Im5hbWUiIHR5cGU9InRleHQiIHBsYWNlaG9sZGVyPSJOYW1lIi8+PGlucHV0IHNtYWxsIGxlZnQgaWQ9InBhc3N3b3JkIiB0eXBlPSJwYXNzd29yZCIgcGxhY2Vob2xkZXI9IlBhc3N3b3JkIi8+PC9kaXY+PGRpdiBpZD0iYnV0dG9ucyIgcm93IHN0cmV0Y2g+PHAgc21hbGwgbGVmdCBwb2ludGVyIGlkPSJ2YWxpZGF0ZSIgaGlkZGVuPlZhbGlkYXRlPC9idXR0b24+PHAgc21hbGwgcmlnaHQgcG9pbnRlciBpZD0iY29udGludWUiPkNvbnRpbnVlPC9idXR0b24+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+");
 
             // Update the title
-            UI.write("title", `Welcome to ${title}`);
+            UI.write("title", title);
 
             // Register event listeners
             UI.find("continue").addEventListener("click", (event) => {
-                Toast.loading("Issuing new token...",
+                Toast.progress("Issuing new token...",
                     API.call("authenticate", "issue", {
                         name: UI.find("name").value,
                         password: UI.find("password").value
@@ -36,16 +36,11 @@ class Authenticate {
                         // Click the validation button
                         UI.find("validate").click();
                     }
-                ).catch(
-                    (reason) => {
-                        // Display reason
-                        Toast.toast(reason);
-                    }
-                );
+                ).catch(Toast.timeout);
             });
 
             UI.find("validate").addEventListener("click", (event) => {
-                Toast.loading("Validating token...",
+                Toast.progress("Validating token...",
                     API.call("authenticate", "validate", {
                         token: localStorage.token
                     })
@@ -57,12 +52,7 @@ class Authenticate {
                         // Resolve promise
                         resolve(id);
                     }
-                ).catch(
-                    (reason) => {
-                        // Display reason
-                        Toast.toast(reason);
-                    }
-                );
+                ).catch(Toast.timeout);
             });
 
             // Automatic validation
