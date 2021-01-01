@@ -104,7 +104,7 @@ export class Table {
         // Loop over files to make sure they all have valid IDs
         for (let file of files) {
             // Make sure the ID is valid
-            if (Validator.valid(id, "id"))
+            if (Validator.valid(file, "id"))
                 // Append to list
                 ids.push(file);
         }
