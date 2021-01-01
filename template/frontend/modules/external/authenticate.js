@@ -25,8 +25,8 @@ class Authenticate {
             UI.find("continue").addEventListener("click", (event) => {
                 Toast.progress("Issuing new token...",
                     API.call("authenticate", "issue", {
-                        name: UI.find("name").value,
-                        password: UI.find("password").value
+                        name: UI.read("name"),
+                        password: UI.read("password")
                     })
                 ).then(
                     (token) => {
