@@ -52,160 +52,240 @@ export class Utilities {
 }
 
 /**
- * A class with many different useful type validators.
+ * This class contains variable validation utility functions.
  */
-export class Validators {
-    static nonnull(variable) {
+export class Validator {
+
+    /**
+     * Checks whether a variable is valid using a validator function, scheme or validator name.
+     * @param variable Variable
+     * @param validator Validator
+     * @return {boolean} Is valid
+     */
+    static valid(variable, validator = "nonnull") {
+        // Wrap execution with try/catch
+        try {
+            // Validate using the validation function
+            this.validate(variable, validator);
+
+            // Validation passed - return true
+            return true;
+        } catch {
+            // Validation failed - return false
+            return false;
+        }
+    }
+
+    /**
+     * Validates a variable using a validator function, scheme or validator name.
+     * @param variable Variable
+     * @param validator Validator
+     * @throws {Error} Validation error
+     */
+    static validate(variable, validator = "nonnull") {
+
+        // Check whether the validator is a function
+        if (Validator.isFunction(validator)) {
+            // Execute the validator
+            if (validator(variable) === false)
+                throw new Error(`Variable is invalid`);
+        }
+
+        // Check whether the validator is a string
+        if (Validator.isString(validator)) {
+            // Create validator name
+            let property = `is${validator.charAt(0).toUpperCase() + validator.slice(1).toLowerCase()}`;
+
+            // Make sure the validator exists
+            if (!Validator.hasOwnProperty(property))
+                throw new Error(`Missing "${validator}" validator`);
+
+            // Validate using the validator
+            this.validate(variable, Validator[property]);
+        }
+
+        // Check whether the validator is an array
+        if (Validator.isArray(validator)) {
+            // Loop over validator and individually validate with each item
+            for (let item of validator)
+                this.validate(variable, item);
+        }
+
+        // Check whether the validator is an object (scheme)
+        if (Validator.isObject(validator)) {
+            // Make sure the variable is an object
+            if (!Validator.isObject(variable))
+                throw new Error(`Variable is not an object`);
+
+            // Loop over each of the validator's properties and validate them
+            for (let property in validator) {
+                // Make sure the property is a valid key
+                if (!Validator.isKey(property))
+                    throw new Error(`Key "${property}" is invalid`);
+
+                // Make sure the property exists in the variable
+                if (!variable.hasOwnProperty(property))
+                    throw new Error(`Missing "${property}" property`);
+
+                // Validate recursively
+                this.validate(variable[property], validator[property]);
+            }
+        }
+    }
+
+    // Type validators
+
+    static isNonnull(variable) {
         // Make sure the variable is not null
         return variable !== null;
     }
 
-    static string(variable) {
+    static isString(variable) {
         // Make sure the variable is not null
-        if (!Validators.nonnull(variable))
+        if (!Validator.isNonnull(variable))
             return false;
 
         // Make sure the type is string
         return typeof variable === "string";
     }
 
-    static number(variable) {
+    static isNumber(variable) {
         // Make sure the variable is not null
-        if (!Validators.nonnull(variable))
+        if (!Validator.isNonnull(variable))
             return false;
 
         // Make sure the type is number
         return typeof variable === "number";
     }
 
-    static boolean(variable) {
+    static isBoolean(variable) {
         // Make sure the variable is not null
-        if (!Validators.nonnull(variable))
+        if (!Validator.isNonnull(variable))
             return false;
 
         // Make sure the type is boolean
         return typeof variable === "boolean";
     }
 
-    static array(variable) {
+    static isArray(variable) {
         // Make sure the variable is not null
-        if (!Validators.nonnull(variable))
+        if (!Validator.isNonnull(variable))
             return false;
 
         // Make sure the variable is an array
         return Array.isArray(variable);
     }
 
-    static object(variable) {
+    static isObject(variable) {
         // Make sure the variable is not null
-        if (!Validators.nonnull(variable))
+        if (!Validator.isNonnull(variable))
             return false;
 
         // Make sure the variable is not an array
-        if (Validators.array(variable))
+        if (Validator.isArray(variable))
             return false;
 
         return typeof variable === "object";
     }
 
-    static function(variable) {
+    static isFunction(variable) {
         // Make sure the variable is not null
-        if (!Validators.nonnull(variable))
+        if (!Validator.isNonnull(variable))
             return false;
 
         // Make sure the variable type is function
         return typeof variable === "function";
     }
 
-    static binary(variable) {
+    static isBinary(variable) {
         // Make sure the variable is not null
-        if (!Validators.nonnull(variable))
+        if (!Validator.isNonnull(variable))
             return false;
 
         // Make sure the variable is a string
-        if (!Validators.string(variable))
+        if (!Validator.isString(variable))
             return false;
 
         // Make sure the variable matches the charset
         return Utilities.match(variable, "01");
     }
 
-    static decimal(variable) {
+    static isDecimal(variable) {
         // Make sure the variable is not null
-        if (!Validators.nonnull(variable))
+        if (!Validator.isNonnull(variable))
             return false;
 
         // Make sure the variable is a string
-        if (!Validators.string(variable))
+        if (!Validator.isString(variable))
             return false;
 
         // Make sure the variable matches the charset
         return Utilities.match(variable, "0123456789");
     }
 
-    static hexadecimal(variable) {
+    static isHexadecimal(variable) {
         // Make sure the variable is not null
-        if (!Validators.nonnull(variable))
+        if (!Validator.isNonnull(variable))
             return false;
 
         // Make sure the variable is a string
-        if (!Validators.string(variable))
+        if (!Validator.isString(variable))
             return false;
 
         // Make sure the variable matches the charset
         return Utilities.match(variable, "0123456789abcdef");
     }
 
-    static id(variable) {
+    static isId(variable) {
         // Make sure the variable is not null
-        if (!Validators.nonnull(variable))
+        if (!Validator.isNonnull(variable))
             return false;
 
         // Make sure the variable is a string
-        if (!Validators.string(variable))
+        if (!Validator.isString(variable))
             return false;
 
         // Make sure the variable matches the charset
         return Utilities.match(variable, "abcdefghijklmnopqrstuvwxyz0123456789");
     }
 
-    static key(variable) {
+    static isKey(variable) {
         // Make sure the variable is not null
-        if (!Validators.nonnull(variable))
+        if (!Validator.isNonnull(variable))
             return false;
 
         // Make sure the variable is a string
-        if (!Validators.string(variable))
+        if (!Validator.isString(variable))
             return false;
 
         // Make sure the variable matches the charset
         return Utilities.match(variable, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
     }
 
-    static hash(variable) {
+    static isHash(variable) {
         // Make sure the variable is not null
-        if (!Validators.nonnull(variable))
+        if (!Validator.isNonnull(variable))
             return false;
 
         // Make sure the variable is a string
-        if (!Validators.string(variable))
+        if (!Validator.isString(variable))
             return false;
 
         // Make sure the variable is hexadecimal
-        if (!Validators.hexadecimal(variable))
+        if (!Validator.isHexadecimal(variable))
             return false;
 
         // Make sure the length of the variable is valid
         return variable.length === 64;
     }
 
-    static email(variable) {
+    static isEmail(variable) {
         // Make sure the variable is not null
-        if (!Validators.nonnull(variable))
+        if (!Validator.isNonnull(variable))
             return false;
 
         // Make sure the variable is a string
-        if (!Validators.string(variable))
+        if (!Validator.isString(variable))
             return false;
 
         // Split the string on the @ mark
@@ -245,86 +325,6 @@ export class Validators {
 
         // Passed validation
         return true;
-    }
-};
-
-/**
- * This class contains variable validation utility functions.
- */
-export class Validator {
-
-    /**
-     * Checks whether a variable is valid using a validator function, scheme or validator name.
-     * @param variable Variable
-     * @param validator Validator
-     * @return {boolean} Is valid
-     */
-    static valid(variable, validator = "nonnull") {
-        // Wrap execution with try/catch
-        try {
-            // Validate using the validation function
-            this.validate(variable, validator);
-
-            // Validation passed - return true
-            return true;
-        } catch {
-            // Validation failed - return false
-            return false;
-        }
-    }
-
-    /**
-     * Validates a variable using a validator function, scheme or validator name.
-     * @param variable Variable
-     * @param validator Validator
-     * @throws {Error} Validation error
-     */
-    static validate(variable, validator = "nonnull") {
-
-        // Check whether the validator is a function
-        if (Validators.function(validator)) {
-            // Execute the validator
-            if (validator(variable) === false)
-                throw new Error(`Variable is invalid`);
-        }
-
-        // Check whether the validator is a string
-        if (Validators.string(validator)) {
-            // Make sure the validator exists
-            if (!Validators.hasOwnProperty(validator))
-                throw new Error(`Missing "${validator}" validator`);
-
-            // Validate using the validator
-            this.validate(variable, Validators[validator]);
-        }
-
-        // Check whether the validator is an array
-        if (Validators.array(validator)) {
-            // Loop over validator and individually validate with each item
-            for (let item of validator)
-                this.validate(variable, item);
-        }
-
-        // Check whether the validator is an object (scheme)
-        if (Validators.object(validator)) {
-            // Make sure the variable is an object
-            if (!Validators.object(variable))
-                throw new Error(`Variable is not an object`);
-
-            // Loop over each of the validator's properties and validate them
-            for (let property in validator) {
-                // Make sure the property is a valid key
-                if (!Validators.key(property))
-                    throw new Error(`Key "${property}" is invalid`);
-
-                // Make sure the property exists in the variable
-                if (!variable.hasOwnProperty(property))
-                    throw new Error(`Missing "${property}" property`);
-
-                // Validate recursively
-                this.validate(variable[property], validator[property]);
-            }
-        }
     }
 };
 
