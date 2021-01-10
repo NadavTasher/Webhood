@@ -504,11 +504,18 @@ export class Database {
         // Make sure the ID is valid
         Validator.validate(id, "id");
 
-        // Make sure the entry adheres to the scheme
-        Validator.validate(entry, this.#scheme);
+        // Check whether the entry is undefined
+        if (entry === undefined || entry === null) {
+            // Check whether the file exists
+            if (FileSystem.existsSync(Path.join(this.#root, id)))
+                FileSystem.unlinkSync(Path.join(this.#root, id));
+        } else {
+            // Make sure the entry adheres to the scheme
+            Validator.validate(entry, this.#scheme);
 
-        // Read the entry
-        FileSystem.writeFileSync(Path.join(this.#root, id), JSON.stringify(entry));
+            // Read the entry
+            FileSystem.writeFileSync(Path.join(this.#root, id), JSON.stringify(entry));
+        }
     }
 
     /**
