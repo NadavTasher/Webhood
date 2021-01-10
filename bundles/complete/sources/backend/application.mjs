@@ -4,7 +4,7 @@
  **/
 
 // Import internal parts
-import { Server } from "./internal/server/server.mjs";
+import { Server } from "./internal/server.mjs";
 
 // Create the server
 let mServer = new Server(8000);
