@@ -1,9 +1,26 @@
 # Select the base image
 FROM nadavtasher/base
 
+# Set image metadata
+LABEL maintainer="hey@nadav.app"
+LABEL description="A simple web application image."
+
+# Change working directory and copy scripts
+WORKDIR /bin
+
+# Copy scripts
+COPY scripts/application application
+COPY scripts/console console
+
+# Add execution permissions
+RUN chmod +x application console
+
+# Change working directory and copy sources
+WORKDIR /project
+
 # Copy sources
-COPY backend backend
-COPY frontend frontend
+COPY sources/backend backend
+COPY sources/frontend frontend
 
 # Set default command
-CMD ["application.mjs"]
+CMD ["application"]

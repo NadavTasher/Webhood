@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# This script launches a REPL console on the container
+
+# Change working directory to the project directory
+cd /project/backend;
+
+# Launch console
+node console.mjs

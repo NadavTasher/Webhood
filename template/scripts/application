@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# This script launches a REPL console on the container
+
+# Change working directory to the configuration directory
+cd /etc/caddy;
+
+# Start caddy
+caddy start > /dev/null 2>&1;
+
+# Change working directory to the project directory
+cd /project/backend;
+
+# Start the application
+node application.mjs
