@@ -113,10 +113,7 @@ export class Validator {
 
         // Check whether the validator is an object (scheme)
         if (Validator.isObject(validator)) {
-            // Make sure the variable is an object
-            if (!Validator.isObject(variable))
-                throw new Error(`Variable is not an object`);
-
+           
             // Loop over each of the validator's properties and validate them
             for (let property in validator) {
                 // Make sure the property is a valid key
@@ -131,6 +128,20 @@ export class Validator {
                 this.validate(variable[property], validator[property]);
             }
         }
+    }
+
+    // Functor validators
+
+    static equal(variable) {
+        return (input) => variable === input;
+    }
+
+    static range(minimum, maximum) {
+        return (input) => input >= minimum && input <= maximum;
+    }
+
+    static match(charset = "abcdefghijklmnopqrstuvwxyz0123456789") {
+        return (input) => Utilities.match(input, charset);
     }
 
     // Type validators
