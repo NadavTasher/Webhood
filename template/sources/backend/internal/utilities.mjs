@@ -401,7 +401,7 @@ export class Password {
     static validate(password, token) {
         // Parse the token object
         let tokenObject = JSON.parse(Buffer.from(token, "base64").toString());
-    
+
         // Ensure integrity
         if (!tokenObject.hasOwnProperty(SALT_KEY) || !tokenObject.hasOwnProperty(HASH_KEY))
             throw new Error("Invalid password token");
@@ -486,6 +486,48 @@ export class Authority {
     }
 };
 
+
+/**
+ * A simple interface for accessing files.
+ */
+export class File {
+
+    // Initialize file path
+    #path = null;
+
+    /**
+     * File constructor.
+     * @param path File path
+     * @param root Parent directory
+     */
+    constructor(path, root = "/opt") {
+        // Initialize the file path
+        this.#path = Path.join(root, path);
+    }
+
+    /**
+     * Reads the file contents.
+     * @param fallback Fallback data
+     */
+    read(fallback = null) {
+        // Make sure the file exists
+        if (!FileSystem.existsSync(this.#path))
+            return fallback;
+
+        // Read the contents
+        return JSON.parse(FileSystem.readFileSync(this.#path));
+    }
+
+    /**
+     * Writes the file contents.
+     * @param data Data
+     */
+    write(data = null) {
+        // Write the data
+        FileSystem.writeFileSync(this.#path, JSON.stringify(data));
+    }
+}
+
 /**
  * A simple interface for reading and writing database tables.
  */
@@ -498,7 +540,7 @@ export class Database {
     #scheme = null;
 
     /**
-     * Table constructor.
+     * Database constructor.
      * @param name Table name
      * @param root Parent directory
      */
