@@ -74,22 +74,19 @@ class UI {
         // Replace history
         window.history.replaceState(this._preserve(), document.title);
 
-        // Change views
-        for (let view of Array.from(arguments)) {
-            // Store view
-            let element = this.find(view);
+        // Store view
+        let element = this.find(v);
 
-            // Store parent
-            let parent = element.parentNode;
+        // Store parent
+        let parent = element.parentNode;
 
-            // Hide all
-            for (let child of parent.children) {
-                this.hide(child);
-            }
-
-            // Show view
-            this.show(element);
+        // Hide all
+        for (let child of parent.children) {
+            this.hide(child);
         }
+
+        // Show view
+        this.show(element);
 
         // Add history
         if (history)
