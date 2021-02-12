@@ -70,8 +70,8 @@ class UI {
      * Changes a view's visibility.
      * @param v View
      */
-    static view(v) {
-        // Add history
+    static view(v, history = true) {
+        // Replace history
         window.history.replaceState(this._preserve(), document.title);
 
         // Change views
@@ -92,7 +92,8 @@ class UI {
         }
 
         // Add history
-        window.history.pushState(this._preserve(), document.title);
+        if (history)
+            window.history.pushState(this._preserve(), document.title);
     }
 
     /**
