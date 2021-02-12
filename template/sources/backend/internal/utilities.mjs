@@ -15,6 +15,9 @@ const VALIDITY_KEY = "validity";
 const CONTENT_DEFAULT = null;
 const VALIDITY_DEFAULT = (60 * 60 * 24 * 365) * 1000;
 
+const SALT_KEY = "salt";
+const HASH_KEY = "hash";
+
 /**
  * This class contains general utility functions.
  */
@@ -113,7 +116,7 @@ export class Validator {
 
         // Check whether the validator is an object (scheme)
         if (Validator.isObject(validator)) {
-           
+
             // Loop over each of the validator's properties and validate them
             for (let property in validator) {
                 // Make sure the property is a valid key
@@ -365,6 +368,48 @@ export class Hash {
         return Crypto.createHmac("sha256", password).update(message).digest(output);
     }
 };
+
+/**
+ * A simple interface for validating and creating password bundles.
+ */
+export class Password {
+
+    /**
+     * Generates a password token.
+     * @param password Password
+     * @return {string} Password token
+     */
+    static generate(password) {
+        // Create the salt
+        let salt = Utilities.random(64);
+
+        // Create the token object
+        let tokenObject = {
+            [SALT_KEY]: salt,
+            [HASH_KEY]: Hash.hash(password + salt)
+        };
+
+        // Stringify, encode and return
+        return Buffer.from(JSON.stringify(tokenObject)).toString("base64");
+    }
+
+    /**
+     * Validates a password using a password token.
+     * @param password Password
+     * @param token Password token
+     */
+    static validate(password, token) {
+        // Parse the token object
+        let tokenObject = JSON.parse(Buffer.from(token, "base64").toString());
+    
+        // Ensure integrity
+        if (!tokenObject.hasOwnProperty(SALT_KEY) || !tokenObject.hasOwnProperty(HASH_KEY))
+            throw new Error("Invalid password token");
+
+        // Validate password
+        return Hash.hash(password + tokenObject[SALT_KEY]) === tokenObject[HASH_KEY];
+    }
+}
 
 /**
  * A simple interface for issuing and validating tokens.
