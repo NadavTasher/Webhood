@@ -7,7 +7,7 @@
 import { Hash, Database, Authority, Utilities } from "../internal/utilities.mjs";
 
 // Initialize a token issuer instance
-export const Token = new Authority(process.env.password);
+export const Token = new Authority(process.env.secret);
 
 // Initialize the database table
 export const Users = new Database("users", {
