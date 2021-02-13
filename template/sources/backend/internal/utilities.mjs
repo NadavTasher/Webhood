@@ -18,6 +18,9 @@ const VALIDITY_DEFAULT = (60 * 60 * 24 * 365) * 1000;
 const SALT_KEY = "salt";
 const HASH_KEY = "hash";
 
+// Extend classes
+Date.prototype.getEpochDay = function () { return Math.floor(this.getTime() / (1000 * 60 * 60 * 24)); };
+
 /**
  * This class contains general utility functions.
  */
