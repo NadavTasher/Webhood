@@ -3,6 +3,9 @@
  * https://github.com/NadavTasher/Template/
  **/
 
+ // Extend classes
+ String.prototype.element = function() { return UI.find(this); };
+
 class UI {
     /**
      * Returns a view by its ID or by it's own value.
