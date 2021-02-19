@@ -90,7 +90,7 @@
 
         [text], [button], [input], p, button, input {
             padding: 1vh;
-            margin: 0.5vh;
+            margin: 1vh;
         }
 
         div, body, html {
@@ -237,6 +237,20 @@
 
     <!-- Template script  -->
     <script type="text/javascript">
+        // Extend classes
+        Date.prototype.getEpochDay = function () { return Math.floor(this.getTime() / (1000 * 60 * 60 * 24)); };
+
+        // Lock the viewport height to prevent keyboard resizes
+        window.addEventListener("load", function () {
+            // Query viewport element
+            let element = document.querySelector(`meta[name="viewport"]`);
+
+            // Make sure viewport exists
+            if (element !== null)
+                // Update viewport height
+                element.content = element.content.replace("device-height", Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0));
+        });
+
         class API {
             /**
              * Sends an API call.
@@ -273,6 +287,17 @@
                 });
             }
         }
+
+        // Extend classes
+        String.prototype.find = function () { return UI.find(this.toString()); };
+        String.prototype.hide = function () { return UI.hide(this.toString()); };
+        String.prototype.show = function () { return UI.show(this.toString()); };
+        String.prototype.clear = function () { return UI.clear(this.toString()); };
+        String.prototype.remove = function () { return UI.remove(this.toString()); };
+        String.prototype.view = function (history = true) { return UI.view(this.toString(), history); };
+        String.prototype.read = function () { return UI.read(this.toString()); };
+        String.prototype.write = function (value) { return UI.write(this.toString(), value); };
+        String.prototype.populate = function (parameters = {}) { return UI.populate(this.toString(), parameters); };
 
         class UI {
             /**
@@ -341,29 +366,27 @@
              * Changes a view's visibility.
              * @param v View
              */
-            static view(v) {
-                // Add history
+            static view(v, history = true) {
+                // Replace history
                 window.history.replaceState(this._preserve(), document.title);
 
-                // Change views
-                for (let view of Array.from(arguments)) {
-                    // Store view
-                    let element = this.find(view);
+                // Store view
+                let element = this.find(v);
 
-                    // Store parent
-                    let parent = element.parentNode;
+                // Store parent
+                let parent = element.parentNode;
 
-                    // Hide all
-                    for (let child of parent.children) {
-                        this.hide(child);
-                    }
-
-                    // Show view
-                    this.show(element);
+                // Hide all
+                for (let child of parent.children) {
+                    this.hide(child);
                 }
 
+                // Show view
+                this.show(element);
+
                 // Add history
-                window.history.pushState(this._preserve(), document.title);
+                if (history)
+                    window.history.pushState(this._preserve(), document.title);
             }
 
             /**
