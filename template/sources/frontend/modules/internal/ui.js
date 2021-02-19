@@ -4,15 +4,15 @@
  **/
 
 // Extend classes
-String.prototype.find = function () { return UI.find(this); };
-String.prototype.hide = function () { return UI.hide(this); };
-String.prototype.show = function () { return UI.show(this); };
-String.prototype.clear = function () { return UI.clear(this); };
-String.prototype.remove = function () { return UI.remove(this); };
-String.prototype.view = function (history = true) { return UI.view(this, history); };
-String.prototype.read = function () { return UI.read(this); };
-String.prototype.write = function (value) { return UI.write(this, value); };
-String.prototype.populate = function (parameters = {}) { return UI.populate(this, parameters); };
+String.prototype.find = function () { return UI.find(this.toString()); };
+String.prototype.hide = function () { return UI.hide(this.toString()); };
+String.prototype.show = function () { return UI.show(this.toString()); };
+String.prototype.clear = function () { return UI.clear(this.toString()); };
+String.prototype.remove = function () { return UI.remove(this.toString()); };
+String.prototype.view = function (history = true) { return UI.view(this.toString(), history); };
+String.prototype.read = function () { return UI.read(this.toString()); };
+String.prototype.write = function (value) { return UI.write(this.toString(), value); };
+String.prototype.populate = function (parameters = {}) { return UI.populate(this.toString(), parameters); };
 
 class UI {
     /**
