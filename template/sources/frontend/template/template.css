@@ -73,7 +73,7 @@ div, body, html {
 
 [text], [button], [input], p, button, input, div, body, html {
     line-height: 100%;
-    min-width: 0;
+    min-width: fit-content;
     min-height: fit-content;
 }
 
