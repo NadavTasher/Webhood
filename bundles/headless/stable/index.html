@@ -109,6 +109,10 @@
             width: auto;
         }
 
+        [row] > * {
+            min-width: 0;
+        }
+
         /* Border properties */
 
         [button], [input], button, input {
@@ -193,28 +197,8 @@
             font-size: 5.5vh;
         }
 
-        /* Media queries */
-
-        @media(max-width: 500px) {
-            [portrait = row] {
-                flex-direction: row;
-            }
-
-            [portrait = column] {
-                flex-direction: column;
-            }
-        }
-
-        /* Desktop properties */
-
-        @media(min-width: 500px) {
-            [landscape = row] {
-                flex-direction: row;
-            }
-
-            [landscape = column] {
-                flex-direction: column;
-            }
+        [gigantic] {
+            font-size: 6.5vh;
         }
 
         /* Additional properties */
