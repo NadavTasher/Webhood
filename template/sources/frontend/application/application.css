@@ -1,8 +1,8 @@
 :root {
+    --text: #707070;
     --theme: #FFFFFF;
-    --passive: #333344;
-    --active: #777788;
-    --coaster: #DDDDEE;
+    --active: #C0C0C0;
+    --passive: #F0F0F0;
 }
 
 body {
