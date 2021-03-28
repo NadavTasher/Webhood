@@ -10,7 +10,7 @@ class Countdown {
      * @param date Date
      * @return Promise
      */
-    static start(view, date) {
+    static start(date, callback = null) {
         // Create a promise
         return new Promise(async (resolve, reject) => {
             // Await module import
@@ -61,7 +61,8 @@ class Countdown {
                 // Make sure the countdown is still running
                 if (delta > 0) {
                     // Countdown update
-                    UI.write(view, stringify(delta));
+                    if (callback)
+                        callback(stringify(delta));
                 } else {
                     // Clear the interval
                     clearInterval(interval);

@@ -18,7 +18,7 @@ class Toast {
 
                 // Create a toast instance
                 let instance = UI.populate(
-                    atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IGJvdHRvbTogMDsgd2lkdGg6IDEwMCU7IiByb3cgc3RyZXRjaD48ZGl2IG5hbWU9ImlubmVyIiBjb2x1bW4+PGRpdiBuYW1lPSJkaWFsb2ciIHN0eWxlPSJtYXJnaW46IDAuNXZoOyBib3JkZXItcmFkaXVzOiAwLjV2aDsgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tY29hc3Rlcik7IiByb3cgc3RyZXRjaD48cCB0aW55IGxlZnQgbmFtZT0ibWVzc2FnZSI+PC9wPjxwIHRpbnkgcmlnaHQgcG9pbnRlciBoaWRkZW4gbmFtZT0iYnV0dG9uIj5EaXNtaXNzPC9wPjwvZGl2PjwvZGl2PjwvZGl2Pg==")
+                    atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IGJvdHRvbTogMDsgd2lkdGg6IDEwMCU7IiByb3cgc3RyZXRjaD48ZGl2IG5hbWU9ImlubmVyIiBjb2x1bW4+PGRpdiBuYW1lPSJkaWFsb2ciIHN0eWxlPSJtYXJnaW46IDAuNXZoOyBib3JkZXItcmFkaXVzOiAwLjV2aDsgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tcGFzc2l2ZSk7IiByb3c+PHAgc21hbGwgbGVmdCBzdHJldGNoZWQgbmFtZT0ibWVzc2FnZSI+PC9wPjxidXR0b24gc21hbGwgcmlnaHQgcG9pbnRlciBoaWRkZW4gbmFtZT0iYnV0dG9uIj5EaXNtaXNzPC9idXR0b24+PC9kaXY+PC9kaXY+PC9kaXY+")
                 );
 
                 // Check whether toast should be dismissable
@@ -69,7 +69,7 @@ class Toast {
                 
                 // Create a toast instance
                 let instance = UI.populate(
-                    atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IGJvdHRvbTogMDsgd2lkdGg6IDEwMCU7IiByb3cgc3RyZXRjaD48ZGl2IG5hbWU9ImlubmVyIiBjb2x1bW4+PGRpdiBuYW1lPSJkaWFsb2ciIHN0eWxlPSJtYXJnaW46IDAuNXZoOyBib3JkZXItcmFkaXVzOiAwLjV2aDsgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tY29hc3Rlcik7IiByb3cgc3RyZXRjaD48cCB0aW55IGxlZnQgbmFtZT0ibWVzc2FnZSI+PC9wPjxwIHRpbnkgcmlnaHQgcG9pbnRlciBoaWRkZW4gbmFtZT0iYnV0dG9uIj5EaXNtaXNzPC9wPjwvZGl2PjwvZGl2PjwvZGl2Pg==")
+                    atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IGJvdHRvbTogMDsgd2lkdGg6IDEwMCU7IiByb3cgc3RyZXRjaD48ZGl2IG5hbWU9ImlubmVyIiBjb2x1bW4+PGRpdiBuYW1lPSJkaWFsb2ciIHN0eWxlPSJtYXJnaW46IDAuNXZoOyBib3JkZXItcmFkaXVzOiAwLjV2aDsgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tcGFzc2l2ZSk7IiByb3c+PHAgc21hbGwgbGVmdCBzdHJldGNoZWQgbmFtZT0ibWVzc2FnZSI+PC9wPjxwIGxhcmdlIHNwaW5uaW5nIGNlbnRlcj4mb3BsdXM7PC9wPjwvZGl2PjwvZGl2PjwvZGl2Pg==")
                 );
 
                 // Fill message information

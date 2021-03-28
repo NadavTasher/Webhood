@@ -16,7 +16,7 @@ class Authenticate {
             let contents = document.body.innerHTML;
 
             // Load the new HTML
-            document.body.innerHTML = atob("PGRpdiByb3cgc3RyZXRjaD48ZGl2IHN0eWxlPSJtYXgtd2lkdGg6IDUwMHB4OyIgY29sdW1uPjxwIGxhcmdlIGNlbnRlciBpZD0idGl0bGUiPldlbGNvbWUgYmFjayE8L3A+PHAgc21hbGwgY2VudGVyPlBsZWFzZSBhdXRoZW50aWNhdGUgdG8gY29udGludWU8L3A+PGRpdiBpZD0iaW50ZXJmYWNlIiBjb2x1bW4+PGRpdiBpZD0iaW5wdXRzIiBjb2x1bW4+PGlucHV0IHNtYWxsIGxlZnQgaWQ9Im5hbWUiIHR5cGU9InRleHQiIHBsYWNlaG9sZGVyPSJOYW1lIi8+PGlucHV0IHNtYWxsIGxlZnQgaWQ9InBhc3N3b3JkIiB0eXBlPSJwYXNzd29yZCIgcGxhY2Vob2xkZXI9IlBhc3N3b3JkIi8+PC9kaXY+PGRpdiBpZD0iYnV0dG9ucyIgcm93IHN0cmV0Y2g+PHAgc21hbGwgbGVmdCBwb2ludGVyIGlkPSJ2YWxpZGF0ZSIgaGlkZGVuPlZhbGlkYXRlPC9idXR0b24+PHAgc21hbGwgcmlnaHQgcG9pbnRlciBpZD0iY29udGludWUiPkNvbnRpbnVlPC9idXR0b24+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+");
+            document.body.innerHTML = atob("PGRpdiByb3cgc3RyZXRjaD48ZGl2IHN0eWxlPSJtYXgtd2lkdGg6IDUwMHB4OyIgY29sdW1uPjxwIGxhcmdlIGNlbnRlciBpZD0idGl0bGUiPldlbGNvbWUgYmFjayE8L3A+PHAgc21hbGwgY2VudGVyPlBsZWFzZSBhdXRoZW50aWNhdGUgdG8gY29udGludWU8L3A+PGRpdiBpZD0iaW50ZXJmYWNlIiBjb2x1bW4+PGRpdiBpZD0iaW5wdXRzIiBjb2x1bW4+PGlucHV0IG1lZGl1bSBsZWZ0IGlkPSJuYW1lIiB0eXBlPSJ0ZXh0IiBwbGFjZWhvbGRlcj0iTmFtZSIvPjxpbnB1dCBtZWRpdW0gbGVmdCBpZD0icGFzc3dvcmQiIHR5cGU9InBhc3N3b3JkIiBwbGFjZWhvbGRlcj0iUGFzc3dvcmQiLz48L2Rpdj48ZGl2IGlkPSJidXR0b25zIiByb3cgc3RyZXRjaD48YnV0dG9uIG1lZGl1bSBsZWZ0IHBvaW50ZXIgaWQ9InZhbGlkYXRlIiBoaWRkZW4+VmFsaWRhdGU8L2J1dHRvbj48YnV0dG9uIG1lZGl1bSByaWdodCBwb2ludGVyIGlkPSJjb250aW51ZSI+Q29udGludWU8L2J1dHRvbj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj4=");
 
             // Update the title
             UI.write("title", title);

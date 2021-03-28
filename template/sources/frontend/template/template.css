@@ -70,7 +70,8 @@ div, body, html {
 }
 
 [input], input {
-    margin: 0.5vh;
+    margin: 1vh;
+    padding: 0.5vh;
 }
 
 div, body, html {
@@ -94,8 +95,14 @@ div, body, html {
     width: auto;
 }
 
-[row] > * {
+[input], input {
     min-width: 0;
+}
+
+[stretch] > *, [stretched] {
+    width: fill-available;
+    width: -moz-available;
+    width: -webkit-fill-available;
 }
 
 /* Border properties */
@@ -208,13 +215,21 @@ div, body, html {
     }
 }
 
-/* Additional properties */
-
-[stretch] > * {
-    width: fill-available;
-    width: -moz-available;
-    width: -webkit-fill-available;
+[spinning] {
+    animation: spinning 2s linear 0s infinite normal both;
 }
+
+@keyframes spinning {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Additional properties */
 
 [hidden] {
     display: none !important;

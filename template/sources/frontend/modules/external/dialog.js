@@ -17,7 +17,7 @@ class Dialog {
 
                 // Create a dialog instance
                 let instance = UI.populate(
-                    atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IHRvcDogMDsgYm90dG9tOiAwOyBoZWlnaHQ6IDEwMCU7IHdpZHRoOiAxMDAlOyBiYWNrZ3JvdW5kLWNvbG9yOiAjODA4MDgwODA7IiByb3cgc3RyZXRjaD48ZGl2IG5hbWU9ImlubmVyIiBzdHlsZT0ibWF4LXdpZHRoOiA1MDBweDsgcGFkZGluZzogMXZoOyIgY29sdW1uPjxkaXYgbmFtZT0iZGlhbG9nIiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tY29hc3Rlcik7IGJvcmRlci1yYWRpdXM6IDF2aDsiIGNvbHVtbj48cCBzbWFsbCBsZWZ0IG5hbWU9Im1lc3NhZ2UiPiR7bWVzc2FnZX08L3A+PGRpdiByb3cgc3RyZXRjaD48cCB0aW55IHJpZ2h0IHBvaW50ZXIgbmFtZT0iYXBwcm92ZSI+Q2xvc2U8L3A+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+"),
+                    atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IHRvcDogMDsgYm90dG9tOiAwOyBoZWlnaHQ6IDEwMCU7IHdpZHRoOiAxMDAlOyBiYWNrZ3JvdW5kLWNvbG9yOiAjODA4MDgwODA7IiByb3cgc3RyZXRjaD48ZGl2IG5hbWU9ImlubmVyIiBzdHlsZT0ibWF4LXdpZHRoOiA1MDBweDsgcGFkZGluZzogMXZoOyIgY29sdW1uPjxkaXYgbmFtZT0iZGlhbG9nIiBjb2FzdGVkIGNvbHVtbj48cCBtZWRpdW0gbGVmdCBuYW1lPSJtZXNzYWdlIj4ke21lc3NhZ2V9PC9wPjxkaXYgcm93IHN0cmV0Y2g+PGJ1dHRvbiBzbWFsbCByaWdodCBwb2ludGVyIG5hbWU9ImFwcHJvdmUiPkNsb3NlPC9idXR0b24+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+"),
                     {
                         message: message.toString()
                     }
@@ -50,7 +50,7 @@ class Dialog {
 
                 // Create a dialog instance
                 let instance = UI.populate(
-                    atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IHRvcDogMDsgYm90dG9tOiAwOyBoZWlnaHQ6IDEwMCU7IHdpZHRoOiAxMDAlOyBiYWNrZ3JvdW5kLWNvbG9yOiAjODA4MDgwODA7IiByb3cgc3RyZXRjaD48ZGl2IG5hbWU9ImlubmVyIiBzdHlsZT0ibWF4LXdpZHRoOiA1MDBweDsgcGFkZGluZzogMXZoOyIgY29sdW1uPjxkaXYgbmFtZT0iZGlhbG9nIiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tY29hc3Rlcik7IGJvcmRlci1yYWRpdXM6IDF2aDsiIGNvbHVtbj48cCBzbWFsbCBsZWZ0IG5hbWU9Im1lc3NhZ2UiPiR7bWVzc2FnZX08L3A+PGRpdiByb3cgc3RyZXRjaD48cCB0aW55IGxlZnQgcG9pbnRlciBuYW1lPSJkZWNsaW5lIj5ObzwvcD48cCB0aW55IHJpZ2h0IHBvaW50ZXIgbmFtZT0iYXBwcm92ZSI+WWVzPC9wPjwvZGl2PjwvZGl2PjwvZGl2PjwvZGl2Pg=="),
+                    atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IHRvcDogMDsgYm90dG9tOiAwOyBoZWlnaHQ6IDEwMCU7IHdpZHRoOiAxMDAlOyBiYWNrZ3JvdW5kLWNvbG9yOiAjODA4MDgwODA7IiByb3cgc3RyZXRjaD48ZGl2IG5hbWU9ImlubmVyIiBzdHlsZT0ibWF4LXdpZHRoOiA1MDBweDsgcGFkZGluZzogMXZoOyIgY29sdW1uPjxkaXYgbmFtZT0iZGlhbG9nIiBjb2FzdGVkIGNvbHVtbj48cCBtZWRpdW0gbGVmdCBuYW1lPSJtZXNzYWdlIj4ke21lc3NhZ2V9PC9wPjxkaXYgcm93IHN0cmV0Y2g+PGJ1dHRvbiBzbWFsbCBsZWZ0IHBvaW50ZXIgbmFtZT0iZGVjbGluZSI+Tm88L2J1dHRvbj48YnV0dG9uIHNtYWxsIHJpZ2h0IHBvaW50ZXIgbmFtZT0iYXBwcm92ZSI+WWVzPC9idXR0b24+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+"),
                     {
                         message: message.toString()
                     }
@@ -91,7 +91,7 @@ class Dialog {
 
                 // Create a dialog instance
                 let instance = UI.populate(
-                    atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IHRvcDogMDsgYm90dG9tOiAwOyBoZWlnaHQ6IDEwMCU7IHdpZHRoOiAxMDAlOyBiYWNrZ3JvdW5kLWNvbG9yOiAjODA4MDgwODA7IiByb3cgc3RyZXRjaD48ZGl2IG5hbWU9ImlubmVyIiBzdHlsZT0ibWF4LXdpZHRoOiA1MDBweDsgcGFkZGluZzogMXZoOyIgY29sdW1uPjxkaXYgbmFtZT0iZGlhbG9nIiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tY29hc3Rlcik7IGJvcmRlci1yYWRpdXM6IDF2aDsiIGNvbHVtbj48aW5wdXQgc21hbGwgbGVmdCBwbGFjZWhvbGRlcj0iJHtwbGFjZWhvbGRlcn0iIG5hbWU9ImlucHV0Ii8+PGRpdiByb3cgc3RyZXRjaD48cCB0aW55IGxlZnQgcG9pbnRlciBuYW1lPSJkZWNsaW5lIj5DYW5jZWw8L3A+PHAgdGlueSByaWdodCBwb2ludGVyIG5hbWU9ImFwcHJvdmUiPkNvbmZpcm08L3A+PC9kaXY+PC9kaXY+PC9kaXY+PC9kaXY+"),
+                    atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IHRvcDogMDsgYm90dG9tOiAwOyBoZWlnaHQ6IDEwMCU7IHdpZHRoOiAxMDAlOyBiYWNrZ3JvdW5kLWNvbG9yOiAjODA4MDgwODA7IiByb3cgc3RyZXRjaD48ZGl2IG5hbWU9ImlubmVyIiBzdHlsZT0ibWF4LXdpZHRoOiA1MDBweDsgcGFkZGluZzogMXZoOyIgY29sdW1uPjxkaXYgbmFtZT0iZGlhbG9nIiBjb2FzdGVkIGNvbHVtbj48aW5wdXQgbWVkaXVtIGxlZnQgcGxhY2Vob2xkZXI9IiR7cGxhY2Vob2xkZXJ9IiBuYW1lPSJpbnB1dCIvPjxkaXYgcm93IHN0cmV0Y2g+PGJ1dHRvbiBzbWFsbCBsZWZ0IHBvaW50ZXIgbmFtZT0iZGVjbGluZSI+Q2FuY2VsPC9idXR0b24+PGJ1dHRvbiBzbWFsbCByaWdodCBwb2ludGVyIG5hbWU9ImFwcHJvdmUiPkNvbmZpcm08L2J1dHRvbj48L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj4="),
                     {
                         placeholder: placeholder.toString()
                     }

@@ -18,7 +18,7 @@ class Snack {
 
                 // Create a toast instance
                 let instance = UI.populate(
-                    atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IGJvdHRvbTogMDsgd2lkdGg6IDEwMCU7IiByb3cgc3RyZXRjaD48ZGl2IG5hbWU9ImlubmVyIiBjb2x1bW4+PGRpdiBuYW1lPSJkaWFsb2ciIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1jb2FzdGVyKTsiIHJvdyBzdHJldGNoPjxwIHRpbnkgbGVmdCBuYW1lPSJtZXNzYWdlIj48L3A+PHAgdGlueSByaWdodCBwb2ludGVyIGhpZGRlbiBuYW1lPSJidXR0b24iPkRpc21pc3M8L3A+PC9kaXY+PC9kaXY+PC9kaXY+")
+                    atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IGJvdHRvbTogMDsgd2lkdGg6IDEwMCU7IiByb3cgc3RyZXRjaD48ZGl2IG5hbWU9ImlubmVyIiBjb2x1bW4+PGRpdiBuYW1lPSJkaWFsb2ciIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1wYXNzaXZlKTsiIHJvdz48cCBzbWFsbCBsZWZ0IHN0cmV0Y2hlZCBuYW1lPSJtZXNzYWdlIj48L3A+PGJ1dHRvbiBzbWFsbCByaWdodCBoaWRkZW4gbmFtZT0iYnV0dG9uIj5EaXNtaXNzPC9idXR0b24+PC9kaXY+PC9kaXY+PC9kaXY+")
                 );
 
                 // Check whether toast should be dismissable
@@ -69,7 +69,7 @@ class Snack {
                 
                 // Create a toast instance
                 let instance = UI.populate(
-                    atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IGJvdHRvbTogMDsgd2lkdGg6IDEwMCU7IiByb3cgc3RyZXRjaD48ZGl2IG5hbWU9ImlubmVyIiBjb2x1bW4+PGRpdiBuYW1lPSJkaWFsb2ciIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1jb2FzdGVyKTsiIHJvdyBzdHJldGNoPjxwIHRpbnkgbGVmdCBuYW1lPSJtZXNzYWdlIj48L3A+PHAgdGlueSByaWdodCBwb2ludGVyIGhpZGRlbiBuYW1lPSJidXR0b24iPkRpc21pc3M8L3A+PC9kaXY+PC9kaXY+PC9kaXY+")
+                    atob("PGRpdiBuYW1lPSJvdXRlciIgc3R5bGU9InBvc2l0aW9uOiBmaXhlZDsgbGVmdDogMDsgcmlnaHQ6IDA7IGJvdHRvbTogMDsgd2lkdGg6IDEwMCU7IiByb3cgc3RyZXRjaD48ZGl2IG5hbWU9ImlubmVyIiBjb2x1bW4+PGRpdiBuYW1lPSJkaWFsb2ciIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1wYXNzaXZlKTsiIHJvdz48cCBzbWFsbCBsZWZ0IHN0cmV0Y2hlZCBuYW1lPSJtZXNzYWdlIj48L3A+PHAgbGFyZ2Ugc3Bpbm5pbmcgY2VudGVyPiZvcGx1czs8L3A+PC9kaXY+PC9kaXY+PC9kaXY+")
                 );
 
                 // Fill message information
