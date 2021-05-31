@@ -14,7 +14,7 @@ class Countdown {
         // Create a promise
         return new Promise(async (resolve, reject) => {
             // Await module import
-            await Module.import("UI");
+            await Module.load("UI");
 
             // Initialize the interval variable
             let interval;

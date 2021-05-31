@@ -13,7 +13,7 @@ class Typewriter {
         // Create a promise
         return new Promise(async (resolve, reject) => {
             // Await module import
-            await Module.import("UI");
+            await Module.load("UI");
 
             // Find the view
             view = UI.find(view);

@@ -13,7 +13,7 @@ class Dialog {
 		return new Promise(
 			async (resolve, reject) => {
 				// Await module load
-				await Module.import("UI");
+				await Module.load("UI");
 
 				// Create a dialog instance
 				let instance = UI.populate(
@@ -46,7 +46,7 @@ class Dialog {
 		return new Promise(
 			async (resolve, reject) => {
 				// Await module load
-				await Module.import("UI");
+				await Module.load("UI");
 
 				// Create a dialog instance
 				let instance = UI.populate(
@@ -87,7 +87,7 @@ class Dialog {
 		return new Promise(
 			async (resolve, reject) => {
 				// Await module load
-				await Module.import("UI");
+				await Module.load("UI");
 
 				// Create a dialog instance
 				let instance = UI.populate(
@@ -132,7 +132,7 @@ class Snack {
 		return new Promise(
 			async (resolve, reject) => {
 				// Await module load
-				await Module.import("UI");
+				await Module.load("UI");
 
 				// Create a toast instance
 				let instance = UI.populate(
@@ -183,7 +183,7 @@ class Snack {
 		return new Promise(
 			async (resolve, reject) => {
 				// Await module load
-				await Module.import("UI");
+				await Module.load("UI");
 
 				// Create a toast instance
 				let instance = UI.populate(
@@ -230,7 +230,7 @@ class Toast {
 		return new Promise(
 			async (resolve, reject) => {
 				// Await module load
-				await Module.import("UI");
+				await Module.load("UI");
 
 				// Create a toast instance
 				let instance = UI.populate(
@@ -281,7 +281,7 @@ class Toast {
 		return new Promise(
 			async (resolve, reject) => {
 				// Await module load
-				await Module.import("UI");
+				await Module.load("UI");
 
 				// Create a toast instance
 				let instance = UI.populate(
