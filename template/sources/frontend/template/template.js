@@ -9,10 +9,10 @@ Date.prototype.getEpochDay = function () { return Math.floor(this.getTime() / (1
 class Module {
 
     /**
-     * Imports a module.
+     * Loads a module.
      * @param module Module
      */
-    static import(module) {
+    static load(module) {
         // Return a multi-promise
         return Promise.all(
             // For each argument (module name) in the arguments array (arguments passed to function)

@@ -7,16 +7,24 @@
 import REPL from "repl";
 
 // Import utilities
-import { Utilities, Validator, Hash, Password, Authority, File, Database } from "./internal/utilities.mjs";
+import {
+    File,
+    Hash,
+    Type,
+    Token,
+    Charset,
+    Password,
+    Validator
+} from "./internal/utilities.mjs";
 
 // Initialize REPL
 let mREPL = REPL.start();
 
 // Update context
-mREPL.context.Utilities = Utilities;
-mREPL.context.Validator = Validator;
-mREPL.context.Hash = Hash;
-mREPL.context.Password = Password;
-mREPL.context.Authority = Authority;
 mREPL.context.File = File;
-mREPL.context.Database = Database;
+mREPL.context.Hash = Hash;
+mREPL.context.Type = Type;
+mREPL.context.Token = Token;
+mREPL.context.Charset = Charset;
+mREPL.context.Password = Password;
+mREPL.context.Validator = Validator;
