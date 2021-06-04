@@ -14,7 +14,8 @@ import {
     Token,
     Charset,
     Password,
-    Validator
+    Validator,
+    Authority
 } from "./internal/utilities.mjs";
 
 // Initialize REPL
@@ -28,3 +29,4 @@ mREPL.context.Token = Token;
 mREPL.context.Charset = Charset;
 mREPL.context.Password = Password;
 mREPL.context.Validator = Validator;
+mREPL.context.Authority = Authority;

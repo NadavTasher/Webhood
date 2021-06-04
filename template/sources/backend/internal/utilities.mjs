@@ -7,10 +7,10 @@
 import { File } from "./utilities/file.mjs";
 import { Hash } from "./utilities/hash.mjs";
 import { Type } from "./utilities/type.mjs";
-import { Token } from "./utilities/token.mjs";
 import { Charset } from "./utilities/charset.mjs";
 import { Password } from "./utilities/password.mjs";
 import { Validator } from "./utilities/validator.mjs";
+import { Token, Authority } from "./utilities/authority.mjs";
 
 // Export all subclasses
 export {
@@ -20,7 +20,8 @@ export {
     Token,
     Charset,
     Password,
-    Validator
+    Validator,
+    Authority
 };
 
 // Extend classes
