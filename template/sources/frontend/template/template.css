@@ -28,6 +28,8 @@ body {
     /* Transition and Outline */
     outline: none;
     transition-duration: 0.5s;
+    /* Overflow */
+    overflow-wrap: anywhere;
 }
 
 [button], [input], [pointer] {
