@@ -205,7 +205,7 @@ class UI {
         for (let element of elements) {
             // Make sure the element has an ID
             if (element.id.length === 0) {
-                element.id = Math.floor(Math.random() * 1000000).toString();
+                element.id = Charset.random(10);
             }
 
             // Add to object

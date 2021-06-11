@@ -38,4 +38,4 @@ export class Password {
 		// Validate password
 		return Hash.hash(password + array[0]) === array[1];
 	}
-}
+};

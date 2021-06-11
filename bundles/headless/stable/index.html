@@ -276,6 +276,402 @@
         // Extend classes
         Date.prototype.getEpochDay = function () { return Math.floor(this.getTime() / (1000 * 60 * 60 * 24)); };
 
+        /**
+         * This class contains general utility functions.
+         */
+        class Charset {
+
+            /**
+             * Generates random strings.
+             * @param length Length
+             * @param charset Charset
+             * @return {string} Random string
+             */
+            static random(length = 0, charset = "abcdefghijklmnopqrstuvwxyz0123456789") {
+                // Make sure the requested length is longer then 0
+                if (length === 0)
+                    return "";
+
+                // Return a random charset character and recurse
+                return charset[Math.floor(Math.random() * charset.length)] + this.random(length - 1, charset);
+            }
+
+            /**
+             * Checks whether a string matches a given charset.
+             * @param string String
+             * @param charset Charset
+             */
+            static match(string, charset = "abcdefghijklmnopqrstuvwxyz0123456789") {
+                // Loop over all characters in the string
+                for (let char of string)
+                    // Return false if the charset does not contain the char
+                    if (!charset.includes(char))
+                        return false;
+
+                return true;
+            }
+        };
+
+        /**
+        * Simple class to validate different types of objects.
+        */
+        class Type {
+
+            /**
+             * Returns whether a variable is non-null.
+             * @param variable Variable
+             * @returns {Boolean} Is Non-null
+             */
+            static isNonnull(variable) {
+                // Make sure the variable is not null
+                return variable !== null;
+            }
+
+            /**
+             * Returns whether a variable is a string.
+             * @param variable Variable
+             * @returns {Boolean} Is a string
+             */
+            static isString(variable) {
+                // Make sure the variable is not null
+                if (!Type.isNonnull(variable))
+                    return false;
+
+                // Make sure the type is string
+                return typeof variable === "string";
+            }
+
+            /**
+             * Returns whether a variable is a number.
+             * @param variable Variable
+             * @returns {Boolean} Is a number
+             */
+            static isNumber(variable) {
+                // Make sure the variable is not null
+                if (!Type.isNonnull(variable))
+                    return false;
+
+                // Make sure the type is number
+                return typeof variable === "number";
+            }
+
+            /**
+             * Returns whether a variable is a boolean.
+             * @param variable Variable
+             * @returns {Boolean} Is a boolean
+             */
+            static isBoolean(variable) {
+                // Make sure the variable is not null
+                if (!Type.isNonnull(variable))
+                    return false;
+
+                // Make sure the type is boolean
+                return typeof variable === "boolean";
+            }
+
+            /**
+             * Returns whether a variable is an array.
+             * @param variable Variable
+             * @returns {Boolean} Is an array
+             */
+            static isArray(variable) {
+                // Make sure the variable is not null
+                if (!Type.isNonnull(variable))
+                    return false;
+
+                // Make sure the variable is an array
+                return Array.isArray(variable);
+            }
+
+            /**
+             * Returns whether a variable is an object.
+             * @param variable Variable
+             * @returns {Boolean} Is an object
+             */
+            static isObject(variable) {
+                // Make sure the variable is not null
+                if (!Type.isNonnull(variable))
+                    return false;
+
+                // Make sure the variable is not an array
+                if (Type.isArray(variable))
+                    return false;
+
+                return typeof variable === "object";
+            }
+
+            /**
+             * Returns whether a variable is a function.
+             * @param variable Variable
+             * @returns {Boolean} Is a function
+             */
+            static isFunction(variable) {
+                // Make sure the variable is not null
+                if (!Type.isNonnull(variable))
+                    return false;
+
+                // Make sure the variable type is function
+                return typeof variable === "function";
+            }
+
+            /**
+             * Returns whether a variable is a binary string.
+             * @param variable Variable
+             * @returns {Boolean} Is a binary string
+             */
+            static isBinary(variable) {
+                // Make sure the variable is not null
+                if (!Type.isNonnull(variable))
+                    return false;
+
+                // Make sure the variable is a string
+                if (!Type.isString(variable))
+                    return false;
+
+                // Make sure the variable matches the charset
+                return Charset.match(variable, "01");
+            }
+
+            /**
+             * Returns whether a variable is a decimal string.
+             * @param variable Variable
+             * @returns {Boolean} Is a decimal string
+             */
+            static isDecimal(variable) {
+                // Make sure the variable is not null
+                if (!Type.isNonnull(variable))
+                    return false;
+
+                // Make sure the variable is a string
+                if (!Type.isString(variable))
+                    return false;
+
+                // Make sure the variable matches the charset
+                return Charset.match(variable, "0123456789");
+            }
+
+            /**
+             * Returns whether a variable is a hexadecimal string.
+             * @param variable Variable
+             * @returns {Boolean} Is a hexadecimal string
+             */
+            static isHexadecimal(variable) {
+                // Make sure the variable is not null
+                if (!Type.isNonnull(variable))
+                    return false;
+
+                // Make sure the variable is a string
+                if (!Type.isString(variable))
+                    return false;
+
+                // Make sure the variable matches the charset
+                return Charset.match(variable, "0123456789abcdef");
+            }
+
+            /**
+             * Returns whether a variable is an ID string.
+             * @param variable Variable
+             * @returns {Boolean} Is an ID string
+             */
+            static isId(variable) {
+                // Make sure the variable is not null
+                if (!Type.isNonnull(variable))
+                    return false;
+
+                // Make sure the variable is a string
+                if (!Type.isString(variable))
+                    return false;
+
+                // Make sure the variable matches the charset
+                return Charset.match(variable, "abcdefghijklmnopqrstuvwxyz0123456789");
+            }
+
+            /**
+             * Returns whether a variable is a key string.
+             * @param variable Variable
+             * @returns {Boolean} Is a key string
+             */
+            static isKey(variable) {
+                // Make sure the variable is not null
+                if (!Type.isNonnull(variable))
+                    return false;
+
+                // Make sure the variable is a string
+                if (!Type.isString(variable))
+                    return false;
+
+                // Make sure the variable matches the charset
+                return Charset.match(variable, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            }
+
+            /**
+             * Returns whether a variable is a hash string.
+             * @param variable Variable
+             * @returns {Boolean} Is a hash string
+             */
+            static isHash(variable) {
+                // Make sure the variable is not null
+                if (!Type.isNonnull(variable))
+                    return false;
+
+                // Make sure the variable is a string
+                if (!Type.isString(variable))
+                    return false;
+
+                // Make sure the variable is hexadecimal
+                if (!Type.isHexadecimal(variable))
+                    return false;
+
+                // Make sure the length of the variable is valid
+                return variable.length === 64;
+            }
+
+            /**
+             * Returns whether a variable is an email string.
+             * @param variable Variable
+             * @returns {Boolean} Is an email string
+             */
+            static isEmail(variable) {
+                // Make sure the variable is not null
+                if (!Type.isNonnull(variable))
+                    return false;
+
+                // Make sure the variable is a string
+                if (!Type.isString(variable))
+                    return false;
+
+                // Split the string on the @ mark
+                let split = variable.split("@");
+
+                // Make sure there are exactly two parts
+                if (split.length !== 2)
+                    return false;
+
+                // Validate the first part
+                let personal = split.shift();
+
+                // Loop over parts split by "."
+                for (let part of personal.split(".")) {
+                    // Make sure the part length if longer then 0
+                    if (part.length === 0)
+                        return false;
+
+                    // Make sure the part matches the charset
+                    if (!Charset.match(part, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+/=?^_`{|}~-"))
+                        return false;
+                }
+
+                // Validate the second part
+                let domain = split.shift();
+
+                // Loop over parts split by "."
+                for (let part of domain.split(".")) {
+                    // Make sure the part length if longer then 0
+                    if (part.length === 0)
+                        return false;
+
+                    // Make sure the part matches the charset
+                    if (!Charset.match(part, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"))
+                        return false;
+                }
+
+                // Passed validation
+                return true;
+            }
+        }
+
+        /**
+        * This class contains variable validation utility functions.
+        */
+        class Validator {
+
+            /**
+             * Checks whether a variable is valid using a validator function, scheme or validator name.
+             * @param variable Variable
+             * @param validator Validator
+             * @return {boolean} Is valid
+             */
+            static valid(variable, validator = "nonnull") {
+                // Wrap execution with try/catch
+                try {
+                    // Validate using the validation function
+                    this.validate(variable, validator);
+
+                    // Validation passed - return true
+                    return true;
+                } catch {
+                    // Validation failed - return false
+                    return false;
+                }
+            }
+
+            /**
+             * Validates a variable using a validator function, scheme or validator name.
+             * @param variable Variable
+             * @param validator Validator
+             * @throws {Error} Validation error
+             */
+            static validate(variable, validator = "nonnull") {
+
+                // Check whether the validator is a function
+                if (Type.isFunction(validator)) {
+                    // Execute the validator
+                    if (validator(variable) === false)
+                        throw new Error(`Variable is invalid`);
+                }
+
+                // Check whether the validator is a string
+                if (Type.isString(validator)) {
+                    // Create validator name
+                    let property = `is${validator.charAt(0).toUpperCase() + validator.slice(1).toLowerCase()}`;
+
+                    // Make sure the validator exists
+                    if (!Type.hasOwnProperty(property))
+                        throw new Error(`Missing "${validator}" validator`);
+
+                    // Validate using the validator
+                    this.validate(variable, Type[property]);
+                }
+
+                // Check whether the validator is an array
+                if (Type.isArray(validator)) {
+                    // Loop over validator and individually validate with each item
+                    for (let item of validator)
+                        this.validate(variable, item);
+                }
+
+                // Check whether the validator is an object (scheme)
+                if (Type.isObject(validator)) {
+
+                    // Loop over each of the validator's properties and validate them
+                    for (let property in validator) {
+                        // Make sure the property is a string
+                        if (!Type.isString(property))
+                            throw new Error(`Key is not a valid string`);
+
+                        // Check whether the key is optional
+                        let optional = false;
+                        while (property.startsWith("?")) {
+                            property = property.slice(1);
+                            optional = true;
+                        }
+
+                        // Make sure the property is a valid key
+                        if (!Type.isKey(property))
+                            throw new Error(`Key "${property}" is invalid`);
+
+                        // Make sure the property exists in the variable
+                        if (!variable.hasOwnProperty(property) && !optional)
+                            throw new Error(`Missing "${property}" property`);
+
+                        // Validate recursively
+                        if (variable.hasOwnProperty(property))
+                            this.validate(variable[property], validator[property]);
+                    }
+                }
+            }
+        }
+
         // Lock the viewport height to prevent keyboard resizes
         window.addEventListener("load", function () {
             // Query viewport element
@@ -526,7 +922,7 @@
                 for (let element of elements) {
                     // Make sure the element has an ID
                     if (element.id.length === 0) {
-                        element.id = Math.floor(Math.random() * 1000000).toString();
+                        element.id = Charset.random(10);
                     }
 
                     // Add to object
@@ -559,11 +955,11 @@
             UI._restore(event.state);
         });
 
-        // GUI resources (Styles, Layouts) encoded in Base64
-        const resources = "PCEtLSBHZW5lcmFsIHN0eWxlIGZvciBhbGwgR1VJIGVsZW1lbnRzIC0tPgo8c3R5bGU+CgkvKiBTaXppbmcgYW5kIHBvc2l0aW9uaW5nICovCglbc2NyZWVuXSB7CgkJcG9zaXRpb246IGZpeGVkOwoJfQoKCVtzY3JlZW5dIHsKCQlsZWZ0OiAwOwoJCXJpZ2h0OiAwOwoJCXdpZHRoOiAxMDAlOwoJfQoKCVtzY3JlZW5dIHsKCQl0b3A6IDA7CgkJYm90dG9tOiAwOwoJCWhlaWdodDogMTAwJTsKCX0KCglbZGlhbG9nXSB7CgkJcGFkZGluZzogMnZoOwoJfQoKCVtkcmF3ZXJdIHsKCQlwYWRkaW5nOiAydmg7CgkJbWF4LWhlaWdodDogMzB2aDsKCQlhbGlnbi1zZWxmOiBmbGV4LWVuZDsKCX0KCglbc3Bpbm5lcl0gewoJCXdpZHRoOiAzdmg7CgkJaGVpZ2h0OiAzdmg7CgkJbWFyZ2luOiAxdmg7CgkJYWxpZ24tc2VsZjogY2VudGVyOwoJfQoKCVtsaW1pdGVkXSB7CgkJbWluLXdpZHRoOiA0MHZ3OwoJCW1heC13aWR0aDogNzB2dzsKCX0KCgkvKiBUaGVtaW5nIGFuZCBzdHlsaW5nICovCglbZGltbWVkXSB7CgkJYmFja2dyb3VuZC1jb2xvcjogIzAwMDAwMDMwOwoJfQoKCVtzcGlubmVyXSB7CgkJYm9yZGVyLXdpZHRoOiAxdmg7CgkJYm9yZGVyLXJhZGl1czogNTAlOwoJCWJvcmRlci1zdHlsZTogc29saWQ7CgkJYm9yZGVyLWNvbG9yOiB0cmFuc3BhcmVudDsKCQlib3JkZXItdG9wLWNvbG9yOiB2YXIoLS10ZXh0KTsKCX0KCglbZHJhd2VyXSB7CgkJYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tcGFzc2l2ZSk7Cgl9Cjwvc3R5bGU+CjwhLS0gTWFya3VwIGZvciBhbGwgR1VJIGVsZW1lbnRzIC0tPgo8dGVtcGxhdGUgaWQ9InByb2dyZXNzLXNjcmVlbiI+Cgk8ZGl2IHNjcmVlbiBkaW1tZWQ+CgkJPGRpdiBzcGlubmVyIHNwaW5uaW5nPjwvZGl2PgoJCTxwIGxhcmdlIGNlbnRlcj4ke21lc3NhZ2V9PC9wPgoJPC9kaXY+CjwvdGVtcGxhdGU+Cjx0ZW1wbGF0ZSBpZD0icHJvZ3Jlc3MtZGlhbG9nIj4KCTxkaXYgc2NyZWVuIGRpbW1lZCByb3c+CgkJPGRpdiBsaW1pdGVkPgoJCQk8ZGl2IGNvYXN0ZWQgc3RyZXRjaGVkIGRpYWxvZyByb3c+CgkJCQk8ZGl2IHNwaW5uZXIgc3Bpbm5pbmc+PC9kaXY+CgkJCQk8cCBtZWRpdW0gY2VudGVyPiR7bWVzc2FnZX08L3A+CgkJCTwvZGl2PgoJCTwvZGl2PgoJPC9kaXY+CjwvdGVtcGxhdGU+Cjx0ZW1wbGF0ZSBpZD0icHJvZ3Jlc3MtZHJhd2VyIj4KCTxkaXYgc2NyZWVuIGRpbW1lZCByb3c+CgkJPGRpdiBkcmF3ZXIgc3RyZXRjaGVkPgoJCQk8ZGl2IHNwaW5uZXIgc3Bpbm5pbmc+PC9kaXY+CgkJCTxwIG1lZGl1bSBjZW50ZXI+JHttZXNzYWdlfTwvcD4KCQk8L2Rpdj4KCTwvZGl2Pgo8L3RlbXBsYXRlPgo8dGVtcGxhdGUgaWQ9ImFsZXJ0LWRpYWxvZyI+Cgk8ZGl2IHNjcmVlbiBkaW1tZWQgcm93PgoJCTxkaXYgbGltaXRlZD4KCQkJPGRpdiBjb2FzdGVkIHN0cmV0Y2hlZCBkaWFsb2c+CgkJCQk8cCBtZWRpdW0gbGVmdD4ke21lc3NhZ2V9PC9wPgoJCQkJPGJ1dHRvbiBtZWRpdW0gY2VudGVyIG5hbWU9ImNsb3NlIj5DbG9zZTwvYnV0dG9uPgoJCQk8L2Rpdj4KCQk8L2Rpdj4KCTwvZGl2Pgo8L3RlbXBsYXRlPgo8dGVtcGxhdGUgaWQ9ImFsZXJ0LWRyYXdlciI+Cgk8ZGl2IHNjcmVlbiBkaW1tZWQgcm93PgoJCTxkaXYgZHJhd2VyIHN0cmV0Y2hlZD4KCQkJPHAgbWVkaXVtIGxlZnQ+JHttZXNzYWdlfTwvcD4KCQkJPGJ1dHRvbiBtZWRpdW0gY2VudGVyIG5hbWU9ImNsb3NlIj5DbG9zZTwvYnV0dG9uPgoJCTwvZGl2PgoJPC9kaXY+CjwvdGVtcGxhdGU+Cjx0ZW1wbGF0ZSBpZD0icHJvbXB0LWRpYWxvZyI+Cgk8ZGl2IHNjcmVlbiBkaW1tZWQgcm93PgoJCTxkaXYgbGltaXRlZD4KCQkJPGRpdiBjb2FzdGVkIHN0cmV0Y2hlZCBkaWFsb2c+CgkJCQk8cCBtZWRpdW0gbGVmdD4ke3RpdGxlfTwvcD4KCQkJCTxpbnB1dCBtZWRpdW0gbGVmdCBuYW1lPSJpbnB1dCIgcGxhY2Vob2xkZXI9IiR7cGxhY2Vob2xkZXJ9IiAvPgoJCQkJPGRpdiByb3cgc3RyZXRjaD4KCQkJCQk8YnV0dG9uIG1lZGl1bSBjZW50ZXIgbmFtZT0iZGVjbGluZSI+Q2FuY2VsPC9idXR0b24+CgkJCQkJPGJ1dHRvbiBtZWRpdW0gY2VudGVyIG5hbWU9ImFwcHJvdmUiPk9rPC9idXR0b24+CgkJCQk8L2Rpdj4KCQkJPC9kaXY+CgkJPC9kaXY+Cgk8L2Rpdj4KPC90ZW1wbGF0ZT4KPHRlbXBsYXRlIGlkPSJwcm9tcHQtZHJhd2VyIj4KCTxkaXYgc2NyZWVuIGRpbW1lZCByb3c+CgkJPGRpdiBkcmF3ZXIgc3RyZXRjaGVkPgoJCQk8cCBtZWRpdW0gbGVmdD4ke3RpdGxlfTwvcD4KCQkJPGlucHV0IG1lZGl1bSBsZWZ0IG5hbWU9ImlucHV0IiBwbGFjZWhvbGRlcj0iJHtwbGFjZWhvbGRlcn0iIC8+CgkJCTxkaXYgcm93IHN0cmV0Y2g+CgkJCQk8YnV0dG9uIG1lZGl1bSBjZW50ZXIgbmFtZT0iZGVjbGluZSI+Q2FuY2VsPC9idXR0b24+CgkJCQk8YnV0dG9uIG1lZGl1bSBjZW50ZXIgbmFtZT0iYXBwcm92ZSI+T2s8L2J1dHRvbj4KCQkJPC9kaXY+CgkJPC9kaXY+Cgk8L2Rpdj4KPC90ZW1wbGF0ZT4=";
+        // GUI resources
+        const resourcesGUI = "PCEtLSBHZW5lcmFsIHN0eWxlIGZvciBhbGwgR1VJIGVsZW1lbnRzIC0tPgo8c3R5bGU+CgkvKiBTaXppbmcgYW5kIHBvc2l0aW9uaW5nICovCglbc2NyZWVuXSB7CgkJcG9zaXRpb246IGZpeGVkOwoJfQoKCVtzY3JlZW5dIHsKCQlsZWZ0OiAwOwoJCXJpZ2h0OiAwOwoJCXdpZHRoOiAxMDAlOwoJfQoKCVtzY3JlZW5dIHsKCQl0b3A6IDA7CgkJYm90dG9tOiAwOwoJCWhlaWdodDogMTAwJTsKCX0KCglbZGlhbG9nXSB7CgkJcGFkZGluZzogMnZoOwoJfQoKCVtkcmF3ZXJdIHsKCQlwYWRkaW5nOiAydmg7CgkJbWF4LWhlaWdodDogMzB2aDsKCQlhbGlnbi1zZWxmOiBmbGV4LWVuZDsKCX0KCglbc3Bpbm5lcl0gewoJCXdpZHRoOiAzdmg7CgkJaGVpZ2h0OiAzdmg7CgkJbWFyZ2luOiAxdmg7CgkJYWxpZ24tc2VsZjogY2VudGVyOwoJfQoKCVtsaW1pdGVkXSB7CgkJbWluLXdpZHRoOiA0MHZ3OwoJCW1heC13aWR0aDogNzB2dzsKCX0KCgkvKiBUaGVtaW5nIGFuZCBzdHlsaW5nICovCglbZGltbWVkXSB7CgkJYmFja2dyb3VuZC1jb2xvcjogIzAwMDAwMDMwOwoJfQoKCVtzcGlubmVyXSB7CgkJYm9yZGVyLXdpZHRoOiAxdmg7CgkJYm9yZGVyLXJhZGl1czogNTAlOwoJCWJvcmRlci1zdHlsZTogc29saWQ7CgkJYm9yZGVyLWNvbG9yOiB0cmFuc3BhcmVudDsKCQlib3JkZXItdG9wLWNvbG9yOiB2YXIoLS10ZXh0KTsKCX0KCglbZHJhd2VyXSB7CgkJYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tcGFzc2l2ZSk7Cgl9Cjwvc3R5bGU+CjwhLS0gTWFya3VwIGZvciBhbGwgR1VJIGVsZW1lbnRzIC0tPgo8dGVtcGxhdGUgaWQ9InByb2dyZXNzLXNjcmVlbiI+Cgk8ZGl2IHNjcmVlbiBkaW1tZWQ+CgkJPGRpdiBzcGlubmVyIHNwaW5uaW5nPjwvZGl2PgoJCTxwIGxhcmdlIGNlbnRlcj4ke21lc3NhZ2V9PC9wPgoJPC9kaXY+CjwvdGVtcGxhdGU+Cjx0ZW1wbGF0ZSBpZD0icHJvZ3Jlc3MtZGlhbG9nIj4KCTxkaXYgc2NyZWVuIGRpbW1lZCByb3c+CgkJPGRpdiBsaW1pdGVkPgoJCQk8ZGl2IGNvYXN0ZWQgc3RyZXRjaGVkIGRpYWxvZyByb3c+CgkJCQk8ZGl2IHNwaW5uZXIgc3Bpbm5pbmc+PC9kaXY+CgkJCQk8cCBtZWRpdW0gY2VudGVyPiR7bWVzc2FnZX08L3A+CgkJCTwvZGl2PgoJCTwvZGl2PgoJPC9kaXY+CjwvdGVtcGxhdGU+Cjx0ZW1wbGF0ZSBpZD0icHJvZ3Jlc3MtZHJhd2VyIj4KCTxkaXYgc2NyZWVuIGRpbW1lZCByb3c+CgkJPGRpdiBkcmF3ZXIgc3RyZXRjaGVkPgoJCQk8ZGl2IHNwaW5uZXIgc3Bpbm5pbmc+PC9kaXY+CgkJCTxwIG1lZGl1bSBjZW50ZXI+JHttZXNzYWdlfTwvcD4KCQk8L2Rpdj4KCTwvZGl2Pgo8L3RlbXBsYXRlPgo8dGVtcGxhdGUgaWQ9ImFsZXJ0LWRpYWxvZyI+Cgk8ZGl2IHNjcmVlbiBkaW1tZWQgcm93PgoJCTxkaXYgbGltaXRlZD4KCQkJPGRpdiBjb2FzdGVkIHN0cmV0Y2hlZCBkaWFsb2c+CgkJCQk8cCBtZWRpdW0gbGVmdD4ke21lc3NhZ2V9PC9wPgoJCQkJPGJ1dHRvbiBtZWRpdW0gY2VudGVyIG5hbWU9ImNsb3NlIj5DbG9zZTwvYnV0dG9uPgoJCQk8L2Rpdj4KCQk8L2Rpdj4KCTwvZGl2Pgo8L3RlbXBsYXRlPgo8dGVtcGxhdGUgaWQ9ImFsZXJ0LWRyYXdlciI+Cgk8ZGl2IHNjcmVlbiBkaW1tZWQgcm93PgoJCTxkaXYgZHJhd2VyIHN0cmV0Y2hlZD4KCQkJPHAgbWVkaXVtIGxlZnQ+JHttZXNzYWdlfTwvcD4KCQkJPGJ1dHRvbiBtZWRpdW0gY2VudGVyIG5hbWU9ImNsb3NlIj5DbG9zZTwvYnV0dG9uPgoJCTwvZGl2PgoJPC9kaXY+CjwvdGVtcGxhdGU+Cjx0ZW1wbGF0ZSBpZD0icHJvbXB0LWRpYWxvZyI+Cgk8ZGl2IHNjcmVlbiBkaW1tZWQgcm93PgoJCTxkaXYgbGltaXRlZD4KCQkJPGRpdiBjb2FzdGVkIHN0cmV0Y2hlZCBkaWFsb2c+CgkJCQk8cCBtZWRpdW0gbGVmdD4ke3RpdGxlfTwvcD4KCQkJCTxpbnB1dCBtZWRpdW0gbGVmdCBuYW1lPSJpbnB1dCIgcGxhY2Vob2xkZXI9IiR7cGxhY2Vob2xkZXJ9IiAvPgoJCQkJPGRpdiByb3cgc3RyZXRjaD4KCQkJCQk8YnV0dG9uIG1lZGl1bSBjZW50ZXIgbmFtZT0iZGVjbGluZSI+Q2FuY2VsPC9idXR0b24+CgkJCQkJPGJ1dHRvbiBtZWRpdW0gY2VudGVyIG5hbWU9ImFwcHJvdmUiPk9rPC9idXR0b24+CgkJCQk8L2Rpdj4KCQkJPC9kaXY+CgkJPC9kaXY+Cgk8L2Rpdj4KPC90ZW1wbGF0ZT4KPHRlbXBsYXRlIGlkPSJwcm9tcHQtZHJhd2VyIj4KCTxkaXYgc2NyZWVuIGRpbW1lZCByb3c+CgkJPGRpdiBkcmF3ZXIgc3RyZXRjaGVkPgoJCQk8cCBtZWRpdW0gbGVmdD4ke3RpdGxlfTwvcD4KCQkJPGlucHV0IG1lZGl1bSBsZWZ0IG5hbWU9ImlucHV0IiBwbGFjZWhvbGRlcj0iJHtwbGFjZWhvbGRlcn0iIC8+CgkJCTxkaXYgcm93IHN0cmV0Y2g+CgkJCQk8YnV0dG9uIG1lZGl1bSBjZW50ZXIgbmFtZT0iZGVjbGluZSI+Q2FuY2VsPC9idXR0b24+CgkJCQk8YnV0dG9uIG1lZGl1bSBjZW50ZXIgbmFtZT0iYXBwcm92ZSI+T2s8L2J1dHRvbj4KCQkJPC9kaXY+CgkJPC9kaXY+Cgk8L2Rpdj4KPC90ZW1wbGF0ZT4=";
 
         // Install resources
-        document.head.innerHTML += atob(resources);
+        document.head.innerHTML += atob(resourcesGUI);
 
         class Progress {
 

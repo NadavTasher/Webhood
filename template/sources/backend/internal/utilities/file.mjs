@@ -46,4 +46,4 @@ export class File {
 		// Write the data
 		FileSystem.writeFileSync(this.#path, JSON.stringify(data));
 	}
-}
+};

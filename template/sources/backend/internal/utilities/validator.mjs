@@ -71,16 +71,28 @@ export class Validator {
 
 			// Loop over each of the validator's properties and validate them
 			for (let property in validator) {
+				// Make sure the property is a string
+				if (!Type.isString(property))
+					throw new Error(`Key is not a valid string`);
+
+				// Check whether the key is optional
+				let optional = false;
+				while (property.startsWith("?")) {
+					property = property.slice(1);
+					optional = true;
+				}
+
 				// Make sure the property is a valid key
 				if (!Type.isKey(property))
 					throw new Error(`Key "${property}" is invalid`);
 
 				// Make sure the property exists in the variable
-				if (!variable.hasOwnProperty(property))
+				if (!variable.hasOwnProperty(property) && !optional)
 					throw new Error(`Missing "${property}" property`);
 
 				// Validate recursively
-				this.validate(variable[property], validator[property]);
+				if (variable.hasOwnProperty(property))
+					this.validate(variable[property], validator[property]);
 			}
 		}
 	}
