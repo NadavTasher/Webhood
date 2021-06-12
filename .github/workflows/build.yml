@@ -54,5 +54,5 @@ jobs:
 
                     # What are our version tags?
                     tags: |
-                        nadavtasher/template:${{ env.DATE }}
-                        nadavtasher/template:${{ env.LATEST }}
+                        webhood/template:${{ env.DATE }}
+                        webhood/template:${{ env.LATEST }}
