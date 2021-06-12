@@ -53,8 +53,13 @@ class Editor {
 		// Loop over each line and parse it
 		for (const lineIndex in textLines) {
 			// Append new line
-			if (editorElements.length > 0)
+			if (editorElements.length > 0) 
 				editorElements.push(document.createElement("br"));
+
+			// Append line finder
+			const lineFinder = document.createElement("span");
+			lineFinder.id = view.id + "-" + lineIndex;
+			editorElements.push(lineFinder);
 
 			// Find line text
 			const lineText = textLines[lineIndex];
@@ -63,7 +68,7 @@ class Editor {
 			if (lineText.startsWith(comments.prefix)) {
 				// Add span to element
 				editorElements.push(Editor._span(lineText, comments.color, () => {
-					comments.function(lineIndex, lineText);
+					comments.function(lineText, lineIndex, lineText);
 				}));
 			} else {
 				// Parse each word
@@ -82,7 +87,7 @@ class Editor {
 
 					// Add spans to element
 					editorElements.push(Editor._span(wordText, properties.color, () => {
-						properties.function(lineIndex, lineText);
+						properties.function(wordText, lineIndex, lineText);
 					}));
 				}
 			}
