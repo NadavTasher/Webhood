@@ -1,5 +1,5 @@
 # Select the base image
-FROM nadavtasher/base
+FROM webhood/base
 
 # Set image metadata
 LABEL maintainer="hey@nadav.app"
