@@ -3,7 +3,7 @@ FROM webhood/base
 
 # Set image metadata
 LABEL maintainer="hey@nadav.app"
-LABEL description="A simple web application image."
+LABEL description="The Webhood template image"
 
 # Change working directory and copy scripts
 WORKDIR /bin
