@@ -29,7 +29,7 @@ class Editor {
 			"color": "#9cdcfe"
 		},
 		"keywords": {}
-	}, separators = ["\\s", "\\."]) {
+	}, separators = /\s\./) {
 		// Check options for default variables and types
 		if (!Validator.valid(options, {"comments": {"color": "string", "prefix": "string"}}))
 			options.comments = {"color": "#669352", "prefix": "#"};
@@ -43,7 +43,7 @@ class Editor {
 		
 		// Define constants
 		const text = UI.read(view);
-		const regex = new RegExp(`(?=[${separators.join("")}])|(?<=[${separators.join("")}])`);
+		const regex = new RegExp(`(?=[${separators}])|(?<=[${separators}])`);
 
 		// Split text to lines
 		const lines = text.split("\n");
