@@ -20,74 +20,75 @@ class Editor {
 	 * @param {Object} options Keyword bindings
 	 * @returns Lines
 	 */
-	static render(view, defaults = {
-		"color": "#9cdcfe",
-		"function": () => { }
-	}, comments = {
-		"color": "669352",
-		"prefix": "#",
-		"function": () => {}
-	}, keywords = {}, separators = ["\\s", "\\."]) {
-		// Validate parameters
-		Validator.validate(defaults, {
-			"color": "string",
-			"function": "function"
-		});
-
-		Validator.validate(comments, {
-			"color": "string",
-			"prefix": "string",
-			"function": "function"
-		});
+	static render(view, callback = (type, text, line) => {}, options = {
+		"comments": {
+			"color": "#669352",
+			"prefix": "#"
+		},
+		"variables": {
+			"color": "#9cdcfe"
+		},
+		"keywords": {}
+	}, separators = ["\\s", "\\."]) {
+		// Check options for default variables and types
+		if (!Validator.valid(options, {"comments": {"color": "string", "prefix": "string"}}))
+			options.comments = {"color": "#669352", "prefix": "#"};
+		if (!Validator.valid(options, {"variables": {"color": "string"}}))
+			options.variables = {"color": "#9cdcfe"};
+		if (!Validator.valid(options, {"keywords": "object"}))
+			options.keywords = {};
 
 		// Find view in page
 		view = UI.find(view);
-
-		// Read view text
+		
+		// Define constants
 		const text = UI.read(view);
-		const textLines = text.split("\n");
+		const regex = new RegExp(`(?=[${separators.join("")}])|(?<=[${separators.join("")}])`);
+
+		// Split text to lines
+		const lines = text.split("\n");
 
 		// Create HTML contents
-		let editorElements = [];
+		let elements = [];
 
 		// Loop over each line and parse it
-		for (const lineIndex in textLines) {
+		for (const index in lines) {
 			// Append new line
-			if (editorElements.length > 0) 
-				editorElements.push(document.createElement("br"));
+			if (elements.length > 0) 
+				elements.push(document.createElement("br"));
 
 			// Append line finder
-			const lineFinder = document.createElement("span");
-			lineFinder.id = view.id + "-" + lineIndex;
-			editorElements.push(lineFinder);
+			const hook = document.createElement("span");
+			hook.id = view.id + "-" + index;
+			elements.push(hook);
 
 			// Find line text
-			const lineText = textLines[lineIndex];
+			const line = lines[index];
 
 			// Check for comment
-			if (lineText.startsWith(comments.prefix)) {
+			if (line.startsWith(options.comments.prefix)) {
 				// Add span to element
-				editorElements.push(Editor._span(lineText, comments.color, () => {
-					comments.function(lineText, lineIndex, lineText);
+				elements.push(Editor._span(line, options.comments.color, () => {
+					callback("comment", line, index);
 				}));
 			} else {
 				// Parse each word
-				const wordArray = lineText.split(new RegExp(`(?=[${separators.join("")}])|(?<=[${separators.join("")}])`));
+				const words = line.split(regex);
 
 				// Loop over each word and parse it
-				for (const wordText of wordArray) {
+				for (const word of words) {
 					// Load styles
-					let properties = defaults;
+					let color;
 
 					// Find proper properties
-					for (let type in keywords) {
-						if (keywords[type].words.includes(wordText))
-							properties = keywords[type].properties;
+					for (let type in options.keywords) {
+						if (options.keywords[type].values.includes(word))
+							color = options.keywords[type].color;
 					}
 
 					// Add spans to element
-					editorElements.push(Editor._span(wordText, properties.color, () => {
-						properties.function(wordText, lineIndex, lineText);
+					elements.push(Editor._span(word, color ? color : options.variables.color, () => {
+						callback(color ? "keyword" : "variable", word, index);
 					}));
 				}
 			}
@@ -97,15 +98,16 @@ class Editor {
 		UI.clear(view);
 
 		// Append all children to view
-		for (const element of editorElements)
+		for (const element of elements)
 			view.appendChild(element);
 
 		// Make the view an editor
 		view.setAttribute("editor", "true");
+		view.setAttribute("spellcheck", "false");
 		view.setAttribute("contenteditable", "true");
 
 		// Return lines
-		return textLines;
+		return lines;
 	}
 
 	/**
