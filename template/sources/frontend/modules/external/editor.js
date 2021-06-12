@@ -20,7 +20,7 @@ class Editor {
 	 * @param {Object} options Keyword bindings
 	 * @returns Lines
 	 */
-	static render(view, callback = (type, text, line) => {}, options = {
+	static render(view, callback = (type, text, line) => { }, options = {
 		"comments": {
 			"color": "#669352",
 			"prefix": "#"
@@ -31,16 +31,16 @@ class Editor {
 		"keywords": {}
 	}, separators = /\s\./) {
 		// Check options for default variables and types
-		if (!Validator.valid(options, {"comments": {"color": "string", "prefix": "string"}}))
-			options.comments = {"color": "#669352", "prefix": "#"};
-		if (!Validator.valid(options, {"variables": {"color": "string"}}))
-			options.variables = {"color": "#9cdcfe"};
-		if (!Validator.valid(options, {"keywords": "object"}))
+		if (!Validator.valid(options, { "comments": { "color": "string", "prefix": "string" } }))
+			options.comments = { "color": "#669352", "prefix": "#" };
+		if (!Validator.valid(options, { "variables": { "color": "string" } }))
+			options.variables = { "color": "#9cdcfe" };
+		if (!Validator.valid(options, { "keywords": "object" }))
 			options.keywords = {};
 
 		// Find view in page
 		view = UI.find(view);
-		
+
 		// Define constants
 		const text = UI.read(view);
 		const regex = new RegExp(`(?=[${separators}])|(?<=[${separators}])`);
@@ -54,7 +54,7 @@ class Editor {
 		// Loop over each line and parse it
 		for (const index in lines) {
 			// Append new line
-			if (elements.length > 0) 
+			if (elements.length > 0)
 				elements.push(document.createElement("br"));
 
 			// Append line finder
@@ -82,8 +82,9 @@ class Editor {
 
 					// Find proper properties
 					for (let type in options.keywords) {
-						if (options.keywords[type].values.includes(word))
-							color = options.keywords[type].color;
+						if (Validator.valid(type, { "color": "string", "values": "array" }))
+							if (options.keywords[type].values.includes(word))
+								color = options.keywords[type].color;
 					}
 
 					// Add spans to element
