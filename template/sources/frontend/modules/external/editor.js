@@ -4,7 +4,7 @@
  **/
 
 // Style resources
-const resourcesEditor = "PCEtLSBHZW5lcmFsIHN0eWxlIGZvciBlZGl0b3IgZWxlbWVudHMgLS0+CjxzdHlsZT4KCVtlZGl0b3JdIHsKCQlkaXNwbGF5OiBibG9jazsKCX0KCglbZWRpdG9yXSA+IHNwYW4gewoJCXdoaXRlLXNwYWNlOiBwcmU7Cgl9Cjwvc3R5bGU+";
+const resourcesEditor = "PCEtLSBHZW5lcmFsIHN0eWxlIGZvciBlZGl0b3IgZWxlbWVudHMgLS0+CjxzdHlsZT4KCVtlZGl0b3JdIHsKCQlkaXNwbGF5OiBibG9jazsKCQlsaW5lLWhlaWdodDogMTQwJTsKCX0KCglbZWRpdG9yXSA+IHNwYW4gewoJCXdoaXRlLXNwYWNlOiBwcmU7CgkJY3Vyc29yOiBwb2ludGVyOwoJfQo8L3N0eWxlPg==";
 
 // Install resources
 document.head.innerHTML += atob(resourcesEditor);
@@ -16,11 +16,11 @@ class Editor {
 
 	/**
 	 * Renders a text editor.
-	 * @param {String} view View to work on
+	 * @param {String} view Editor view
 	 * @param {Object} options Keyword bindings
 	 * @returns Lines
 	 */
-	static render(view, callback = (type, text, line) => { }, options = {
+	static render(view, text, callback = (type, text, line) => { }, options = {
 		"comments": {
 			"color": "#669352",
 			"prefix": "#"
@@ -37,12 +37,10 @@ class Editor {
 			options.variables = { "color": "#9cdcfe" };
 		if (!Validator.valid(options, { "keywords": "object" }))
 			options.keywords = {};
-
-		// Find view in page
+		// Find editor view
 		view = UI.find(view);
 
-		// Define constants
-		const text = UI.read(view);
+		// Create splitting regex
 		const regex = new RegExp(`(?=[${separators}])|(?<=[${separators}])`);
 
 		// Split text to lines
@@ -57,18 +55,13 @@ class Editor {
 			if (elements.length > 0)
 				elements.push(document.createElement("br"));
 
-			// Append line finder
-			const hook = document.createElement("span");
-			hook.id = view.id + "-" + index;
-			elements.push(hook);
-
 			// Find line text
 			const line = lines[index];
 
 			// Check for comment
 			if (line.startsWith(options.comments.prefix)) {
 				// Add span to element
-				elements.push(Editor._span(line, options.comments.color, () => {
+				elements.push(Editor._span(index, line, options.comments.color, () => {
 					callback("comment", line, index);
 				}));
 			} else {
@@ -82,13 +75,13 @@ class Editor {
 
 					// Find proper properties
 					for (let type in options.keywords) {
-						if (Validator.valid(type, { "color": "string", "values": "array" }))
+						if (Validator.valid(options.keywords[type], { "color": "string", "values": "array" }))
 							if (options.keywords[type].values.includes(word))
 								color = options.keywords[type].color;
 					}
 
 					// Add spans to element
-					elements.push(Editor._span(word, color ? color : options.variables.color, () => {
+					elements.push(Editor._span(index, word, color ? color : options.variables.color, () => {
 						callback(color ? "keyword" : "variable", word, index);
 					}));
 				}
@@ -112,18 +105,41 @@ class Editor {
 	}
 
 	/**
+	 * Scrolls the requested line into view.
+	 * @param {String} view Editor view
+	 * @param {Number} line Line index
+	 */
+	static scroll(view, line) {
+		// Find editor view
+		view = UI.find(view);
+
+		// Find element to scroll
+		for (const child of view.children) {
+			if (child.line == line) {
+				child.scrollIntoView();
+				return true;
+			}
+		}
+
+		// Failed to scroll
+		return false;
+	}
+
+	/**
 	 * Creates a span with text, color and click event.
+	 * @param {String} line Line index
 	 * @param {String} text Text in span
 	 * @param {String} color Color in span
-	 * @param {FUnction} click Click function
+	 * @param {Function} click Click function
 	 * @returns Span
 	 */
-	static _span(text, color = "var(--text)", click = () => { }) {
+	static _span(line, text, color = "var(--text)", click = () => { }) {
 		// Create span
 		let span = document.createElement("span");
 
 		// Update span with values
 		span.innerText = text;
+		span.line = line;
 		span.style.color = color;
 
 		// Add event listeners
