@@ -75,7 +75,8 @@ class Editor {
 					// Add line references
 					if (!variables.hasOwnProperty(word))
 						variables[word] = [];
-					variables[word].push(index);
+					if (!variables[word].includes(index))
+						variables[word].push(index);
 
 					// Load styles
 					let color;
