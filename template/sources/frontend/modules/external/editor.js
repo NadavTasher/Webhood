@@ -17,10 +17,12 @@ class Editor {
 	/**
 	 * Renders a text editor.
 	 * @param {String} view Editor view
+	 * @param {Array} lines Text lines
+	 * @param {Function} callback Click callback
 	 * @param {Object} options Keyword bindings
 	 * @returns Lines
 	 */
-	static render(view, text, callback = (type, text, line) => { }, options = {
+	static render(view, lines, callback = (type, text, index) => { }, options = {
 		"comments": {
 			"color": "#669352",
 			"prefix": "#"
@@ -43,8 +45,8 @@ class Editor {
 		// Create splitting regex
 		const regex = new RegExp(`(?=[${separators}])|(?<=[${separators}])`);
 
-		// Split text to lines
-		const lines = text.split("\n");
+		// Create variable dictionary
+		let variables = {};
 
 		// Create HTML contents
 		let elements = [];
@@ -70,6 +72,11 @@ class Editor {
 
 				// Loop over each word and parse it
 				for (const word of words) {
+					// Add line references
+					if (!variables.hasOwnProperty(word))
+						variables[word] = [];
+					variables[word].push(index);
+
 					// Load styles
 					let color;
 
@@ -101,7 +108,7 @@ class Editor {
 		view.setAttribute("contenteditable", "true");
 
 		// Return lines
-		return lines;
+		return variables;
 	}
 
 	/**
