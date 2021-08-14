@@ -112,10 +112,13 @@ div, body, html {
 [input], input {
     border-style: solid;
     border-width: 0.35vh 0;
+    border-radius: 0.75vh;
 }
 
 [button], button {
-    border-style: none;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 0.75vh;
 }
 
 [coasted] {
@@ -136,6 +139,7 @@ div, body, html {
 }
 
 [button], button {
+    border-color: var(--text);
     background-color: var(--passive);
 }
 
