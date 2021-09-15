@@ -1,5 +1,5 @@
 # Select the base image
-FROM nadavtasher/template
+FROM webhood/template
 
 # Copy sources
 COPY sources/backend backend
