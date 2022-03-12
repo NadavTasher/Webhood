@@ -4,13 +4,12 @@
  **/
 
 // Import string utilities
-import { Charset } from "./charset.mjs";
+import { charset } from "./function.mjs";
 
 /**
  * Simple class to validate different types of objects.
  */
 export class Type {
-
 	/**
 	 * Returns whether a variable is non-null.
 	 * @param variable Variable
@@ -123,7 +122,7 @@ export class Type {
 			return false;
 
 		// Make sure the variable matches the charset
-		return Charset.match(variable, "01");
+		return charset(variable, "01");
 	}
 
 	/**
@@ -141,7 +140,7 @@ export class Type {
 			return false;
 
 		// Make sure the variable matches the charset
-		return Charset.match(variable, "0123456789");
+		return charset(variable, "0123456789");
 	}
 
 	/**
@@ -159,7 +158,7 @@ export class Type {
 			return false;
 
 		// Make sure the variable matches the charset
-		return Charset.match(variable, "0123456789abcdef");
+		return charset(variable, "0123456789abcdef");
 	}
 
 	/**
@@ -177,7 +176,7 @@ export class Type {
 			return false;
 
 		// Make sure the variable matches the charset
-		return Charset.match(variable, "abcdefghijklmnopqrstuvwxyz0123456789");
+		return charset(variable, "abcdefghijklmnopqrstuvwxyz0123456789");
 	}
 
 	/**
@@ -195,14 +194,14 @@ export class Type {
 			return false;
 
 		// Make sure the variable matches the charset
-		return Charset.match(variable, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+		return charset(variable, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
 	}
 
 	/**
 	 * Returns whether a variable is a hash string.
 	 * @param variable Variable
 	 * @returns {Boolean} Is a hash string
-	 */	
+	 */
 	static isHash(variable) {
 		// Make sure the variable is not null
 		if (!Type.isNonnull(variable))
@@ -224,7 +223,7 @@ export class Type {
 	 * Returns whether a variable is an email string.
 	 * @param variable Variable
 	 * @returns {Boolean} Is an email string
-	 */	
+	 */
 	static isEmail(variable) {
 		// Make sure the variable is not null
 		if (!Type.isNonnull(variable))
@@ -251,7 +250,7 @@ export class Type {
 				return false;
 
 			// Make sure the part matches the charset
-			if (!Charset.match(part, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+/=?^_`{|}~-"))
+			if (!charset(part, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+/=?^_`{|}~-"))
 				return false;
 		}
 
@@ -265,7 +264,7 @@ export class Type {
 				return false;
 
 			// Make sure the part matches the charset
-			if (!Charset.match(part, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"))
+			if (!charset(part, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"))
 				return false;
 		}
 

@@ -4,8 +4,7 @@
  **/
 
 // Import hash for hashing
-import { Hash } from "./hash.mjs";
-import { Charset } from "./charset.mjs";
+import { hmac, random } from "./function.mjs";
 import { Validator } from "./validator.mjs";
 
 // Define constants
@@ -15,7 +14,6 @@ const DELIMITER = ":";
  * A simple class to represent tokens
  */
 export class Token {
-
 	// Identification properties
 	#id = null;
 	#hirarchy = null;
@@ -211,9 +209,11 @@ export class Token {
 		token.name(object.data.name);
 		token.contents(object.data.contents);
 
+		// Set token properties
 		token.id(object.identification.id);
 		token.hirarchy(object.identification.hirarchy)
 
+		// Set scope properties
 		token.validity(object.validation.validity);
 		token.permissions(object.validation.permissions);
 
@@ -226,7 +226,6 @@ export class Token {
  * A simple permission manager for issuing and validating user access rights.
  */
 export class Authority {
-
 	// Initialize private class members
 	#secret = null;
 
@@ -250,13 +249,15 @@ export class Authority {
 		// Create token object
 		const token = new Token();
 
-		// Set properties
-		token.id(Charset.random(10));
+		// Set base properties
+		token.id(random(10));
 		token.hirarchy([]);
 
+		// Set token properties
 		token.name(name);
 		token.contents(contents);
 
+		// Set scope properties
 		token.validity(validity);
 		token.permissions(permissions);
 
@@ -270,11 +271,11 @@ export class Authority {
 		}
 
 		// Create the token
-		const string = Buffer.from(JSON.stringify(Token.toObject(token))).toString("base64");
-		const signature = Hash.hmac(string, this.#secret, "base64");
+		const buffer = Buffer.from(JSON.stringify(Token.toObject(token))).toString("base64");
+		const signature = hmac(buffer, this.#secret, "base64");
 
 		// Join strings and return
-		return [string, signature].join(DELIMITER);
+		return [buffer, signature].join(DELIMITER);
 	}
 
 	/**
@@ -286,18 +287,14 @@ export class Authority {
 	 */
 	validate(string, permissions = [], time = new Date().getTime()) {
 		// Decompile the token into an array
-		const parts = string.split(DELIMITER);
-
-		// Make sure there are exactly 2 parts
-		if (parts.length !== 2)
-			throw new Error(`Invalid token structure`);
+		const [buffer, signature] = string.split(DELIMITER, 2);
 
 		// Make sure the signature is valid
-		if (Hash.hmac(parts[0], this.#secret, "base64") !== parts[1])
+		if (hmac(buffer, this.#secret, "base64") !== signature)
 			throw new Error(`Invalid token signature`);
 
 		// Parse the token string as Base64 then as JSON
-		const token = Token.fromObject(JSON.parse(Buffer.from(parts[0], "base64").toString()));
+		const token = Token.fromObject(JSON.parse(Buffer.from(buffer, "base64").toString()));
 
 		// Make sure the token is still valid
 		if (time > token.validity())

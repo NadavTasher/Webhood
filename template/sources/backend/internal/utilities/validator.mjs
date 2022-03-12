@@ -18,7 +18,6 @@ export class Validator {
 	 * @return {boolean} Is valid
 	 */
 	static valid(variable, validator = "nonnull") {
-		// Wrap execution with try/catch
 		try {
 			// Validate using the validation function
 			this.validate(variable, validator);
@@ -38,7 +37,6 @@ export class Validator {
 	 * @throws {Error} Validation error
 	 */
 	static validate(variable, validator = "nonnull") {
-
 		// Check whether the validator is a function
 		if (Type.isFunction(validator)) {
 			// Execute the validator
@@ -68,7 +66,6 @@ export class Validator {
 
 		// Check whether the validator is an object (scheme)
 		if (Type.isObject(validator)) {
-
 			// Loop over each of the validator's properties and validate them
 			for (let property in validator) {
 				// Make sure the property is a string

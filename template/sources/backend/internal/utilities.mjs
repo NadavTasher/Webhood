@@ -3,26 +3,23 @@
  * https://github.com/Webhood/Template/
  **/
 
-// Import all subclasses
-import { File } from "./utilities/file.mjs";
-import { Hash } from "./utilities/hash.mjs";
-import { Type } from "./utilities/type.mjs";
-import { Charset } from "./utilities/charset.mjs";
-import { Password } from "./utilities/password.mjs";
-import { Validator } from "./utilities/validator.mjs";
-import { Token, Authority } from "./utilities/authority.mjs";
+// Import all classes
+export { API } from "./utilities/api.mjs";
+export { File } from "./utilities/file.mjs";
+export { Type } from "./utilities/type.mjs";
+export { Validator } from "./utilities/validator.mjs";
+export { Token, Authority } from "./utilities/authority.mjs";
 
-// Export all subclasses
+// Import all functions
 export {
-    File,
-    Hash,
-    Type,
-    Token,
-    Charset,
-    Password,
-    Validator,
-    Authority
-};
+	charset,
+	execute,
+	hash,
+	hmac,
+	join,
+	random,
+	render
+} from "./utilities/function.mjs";
 
 // Extend classes
 Date.prototype.getEpochDay = function () { return Math.floor(this.getTime() / (1000 * 60 * 60 * 24)); };

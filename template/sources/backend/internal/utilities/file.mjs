@@ -7,11 +7,13 @@
 import Path from "path";
 import FileSystem from "fs";
 
+// Import constants for the class
+export const OUTPUT = "/opt";
+
 /**
  * A simple interface for accessing files.
  */
 export class File {
-
 	// Initialize file path
 	#path = null;
 
@@ -20,7 +22,7 @@ export class File {
 	 * @param path File path
 	 * @param root Parent directory
 	 */
-	constructor(path, root = "/opt") {
+	constructor(path, root = OUTPUT) {
 		// Initialize the file path
 		this.#path = Path.join(root, path);
 	}

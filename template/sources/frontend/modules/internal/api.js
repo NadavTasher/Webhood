@@ -31,10 +31,12 @@ class API {
                         // Reject with an error
                         reject("API response malformed");
                     }
-                }).catch((reason) => {
-                    // Reject with an error
-                    reject("API response malformed");
-                });
+                }).catch(
+                    (error) => {
+                        // Reject with an error
+                        reject("API response malformed");
+                    }
+                );
             });
         });
     }
