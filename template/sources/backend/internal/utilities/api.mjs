@@ -3,7 +3,8 @@
  * https://github.com/Webhood/Template/
  **/
 
-// Import HTTP module
+// Import HTTP modules
+import HTTP from "http";
 import HTTPS from "https";
 
 /**
@@ -23,8 +24,17 @@ export class API {
 			// Define the procotol
 			const [protocol, host] = location.split("//", 2);
 
+			// Store the type to use (HTTP by default)
+			let type = HTTP;
+
+			// Choose module to use
+			if (protocol === "http:")
+				type = HTTP;
+			else if (protocol === "https:")
+				type = HTTPS;
+
 			// Perform the request
-			const request = HTTPS.request(
+			const request = type.request(
 				{
 					// The location of the API
 					host: host,
