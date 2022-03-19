@@ -24,14 +24,11 @@ export class API {
 			// Define the procotol
 			const [protocol, host] = location.split("//", 2);
 
-			// Store the type to use (HTTP by default)
-			let type = HTTP;
-
-			// Choose module to use
-			if (protocol === "http:")
-				type = HTTP;
-			else if (protocol === "https:")
-				type = HTTPS;
+			// Choose the module to use for the protocol
+			let type = {
+				"http:": HTTP,
+				"https:": HTTPS
+			}[protocol];
 
 			// Perform the request
 			const request = type.request(
