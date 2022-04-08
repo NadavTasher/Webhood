@@ -107,3 +107,23 @@ export function execute(command) {
 		}
 	});
 };
+
+/**
+ * Executes a command asynchronously, while rendering sanitized parameters.
+ * @param command Command to execute
+ * @param parameters Parameters to render
+ * @return {Promise} Execution promise
+ */
+export function evaluate(command, parameters) {
+	// Sanitize the parameters
+	const sanitized = {};
+
+	// Loop over all parameters
+	for (const [name, value] of Object.entries(parameters)) {
+		// Sanitize the value
+		sanitized[name] = value.replace(/([\&\;\`\'\\\"\|\*\?\~\<\>\^\(\)\[\]\{\}\$\n\r\s\t])/g, "\\$1");
+	}
+
+	// Render the command with the parameters and execute
+	return execute(render(command, sanitized));
+}
