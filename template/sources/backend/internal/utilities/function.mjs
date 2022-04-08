@@ -121,7 +121,7 @@ export function evaluate(command, parameters) {
 	// Loop over all parameters
 	for (const [name, value] of Object.entries(parameters)) {
 		// Cast the value to a string
-		const string = value.toString();
+		const string = String(value);
 
 		// Sanitize the value
 		sanitized[name] = string.replace(/([\&\;\`\'\\\"\|\*\?\~\<\>\^\(\)\[\]\{\}\$\n\r\s\t])/g, "\\$1");
