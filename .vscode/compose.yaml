@@ -3,10 +3,8 @@ version: "3"
 
 # Define services
 services: 
-
     # Create template service
     application:
-    
         # Select service image
         build: template
         
