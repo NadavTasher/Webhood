@@ -1,8 +1,15 @@
+# Select compose version
 version: "3"
-services:
-  template:
-    build: template
-    ports:
-    - 8000:80
-    environment:
-    - password=Hello
+
+# Define services
+services: 
+
+    # Create template service
+    application:
+    
+        # Select service image
+        build: template
+        
+        # Expose ports
+        ports: 
+            - 8000:80
