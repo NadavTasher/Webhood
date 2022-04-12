@@ -16,7 +16,7 @@ COPY scripts/console console
 RUN chmod +x application console
 
 # Change working directory and copy sources
-WORKDIR /project
+WORKDIR /application
 
 # Copy sources
 COPY sources/backend backend
