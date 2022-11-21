@@ -1,19 +1,20 @@
 # Select the base image
-FROM webhood/base
+FROM python:2.7.18-buster
 
-# Set image metadata
-LABEL maintainer="hey@nadav.app"
-LABEL description="Application image for the Webhood template"
+# Install ipython for easy debugging
+RUN pip install ipython
 
-# Change working directory and copy scripts
-WORKDIR /bin
+# Install tlslite for encryption
+RUN pip install tlslite
 
-# Copy scripts
-COPY scripts/application application
-COPY scripts/console console
+# Copy startup scripts to bin and set permissions
+COPY scripts/application /bin/application
+COPY scripts/console /bin/console
+RUN chmod +x /bin/application /bin/console
 
-# Add execution permissions
-RUN chmod +x application console
+# Copy puppy library to packages
+WORKDIR /usr/local/lib/python2.7/site-packages
+COPY puppy/puppy puppy
 
 # Change working directory and copy sources
 WORKDIR /application
@@ -24,3 +25,5 @@ COPY sources/frontend frontend
 
 # Set default command
 CMD ["application"]
+
+RUN openssl req -new -x509 -days 365 -nodes -out /opt/cert.pem -keyout /opt/cert.pem -subj /

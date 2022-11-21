@@ -11,10 +11,10 @@ class API {
      * @param parameters Parameters
      * @return Promise
      */
-    static call(route = null, action = null, parameters = null) {
+    static call(action = null, parameters = null) {
         return new Promise((resolve, reject) => {
             // Perform the request
-            fetch(`api/${route}/${action}`, {
+            fetch(`api/${action}`, {
                 method: "post",
                 body: JSON.stringify(parameters)
             }).then((response) => {

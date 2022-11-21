@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # Launch the supervisor
-cd /etc/supervisor; /usr/bin/supervisord
+cd /application/backend; python app.py

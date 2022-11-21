@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # Launch the console
-cd /application/backend; node console.mjs
+cd /application/backend; ipython
