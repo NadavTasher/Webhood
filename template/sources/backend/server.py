@@ -43,6 +43,7 @@ def main():
 	for target in (run_http_server, run_https_server):
 		servers.append(threading.Thread(target=handler))
 		
+	# TODO: while-true sleep, finally shutdown all servers (with .shutdown())
 
 	http = run_http_server()
 	https = run_https_server()
