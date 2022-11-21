@@ -11,7 +11,6 @@ from puppy.http.server.server import HTTPSServer, HTTPServer  # NOQA
 router = APIRouter()
 router.static("../frontend", indexes=["index.htm", "index.html"])
 
-@future
 def run_http_server():
 	# Create an HTTP server
 	http_server = HTTPServer(("0.0.0.0", 80), router)
@@ -22,7 +21,6 @@ def run_http_server():
 	finally:
 		http_server.shutdown()
 
-@future
 def run_https_server():
 	# Create an HTTPs server
 	https_server = HTTPSServer(("0.0.0.0", 443), router)
@@ -38,10 +36,17 @@ def main():
 	# Set-up logging to stdout
 	logging.basicConfig(level=logging.INFO)
 
-	# Run all servers
-	run_http_server()
-	run_https_server()
+	# Create all servers
+	servers = list()
 
-	# Wait for signal
-	while True:
-		time.sleep(1)
+	# Create servers for all handlers
+	for target in (run_http_server, run_https_server):
+		servers.append(threading.Thread(target=handler))
+		
+
+	http = run_http_server()
+	https = run_https_server()
+
+	# Wait for servers to finish
+	~http
+	~https
