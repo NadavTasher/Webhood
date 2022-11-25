@@ -18,12 +18,13 @@ COPY puppy/puppy puppy
 
 # Change working directory and copy sources
 WORKDIR /application
-
-# Copy sources
 COPY sources/backend backend
 COPY sources/frontend frontend
 
-# Set default command
+# Change working directory for execution
+WORKDIR /application/backend
+# STOPSIGNAL SIGINT
+# ENTRYPOINT [ "python" ]
 CMD ["application"]
 
 RUN openssl req -new -x509 -days 365 -nodes -out /opt/cert.pem -keyout /opt/cert.pem -subj /

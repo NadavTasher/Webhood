@@ -1,53 +1,47 @@
-import ssl # NOQA
-import time # NOQA
+import ssl  # NOQA
+import time  # NOQA
 import logging  # NOQA
+import threading  # NOQA
 
-from router import APIRouter  # NOQA
-
-from puppy.thread.future import future # NOQA
 from puppy.http.server.server import HTTPSServer, HTTPServer  # NOQA
 
-# Define the router and add static files
-router = APIRouter()
-router.static("../frontend", indexes=["index.htm", "index.html"])
 
-def run_http_server():
-	# Create an HTTP server
-	http_server = HTTPServer(("0.0.0.0", 80), router)
+def create_http_server(router):
+	# Create HTTP server
+	server = HTTPServer(("0.0.0.0", 80), router)
 
-	# Serve HTTP forever
-	try:
-		http_server.serve_forever()
-	finally:
-		http_server.shutdown()
+	# Create app server from server
+	return AppServer(server)
 
-def run_https_server():
-	# Create an HTTPs server
-	https_server = HTTPSServer(("0.0.0.0", 443), router)
-	https_server.context.load_cert_chain(certfile="/opt/cert.pem", keyfile="/opt/cert.pem")
 
-	# Serve HTTP forever
-	try:
-		https_server.serve_forever()
-	finally:
-		https_server.shutdown()
+def create_https_server(router):
+	# Create HTTPS server
+	server = HTTPSServer(("0.0.0.0", 443), router)
+	server.context.load_cert_chain(certfile="/opt/cert.pem", keyfile="/opt/cert.pem")
 
-def main():
-	# Set-up logging to stdout
-	logging.basicConfig(level=logging.INFO)
+	# Create app server from server
+	return AppServer(server)
 
-	# Create all servers
-	servers = list()
 
-	# Create servers for all handlers
-	for target in (run_http_server, run_https_server):
-		servers.append(threading.Thread(target=handler))
-		
-	# TODO: while-true sleep, finally shutdown all servers (with .shutdown())
+class AppServer(threading.Thread):
+	def __init__(self, server):
+		# Initialize the thread
+		super(AppServer, self).__init__()
 
-	http = run_http_server()
-	https = run_https_server()
+		# Set internal state
+		# self.daemon = True
 
-	# Wait for servers to finish
-	~http
-	~https
+		# Set the internal server
+		self.server = server
+
+	def stop(self):
+		# Shut the server down
+		self.server.shutdown()
+
+	def run(self):
+		try:
+			# Try looping forever
+			self.server.serve_forever()
+		finally:
+			# Close the server after
+			self.server.close_server()
