@@ -107,6 +107,10 @@ div, body, html {
     width: -webkit-fill-available;
 }
 
+[maximized] {
+    min-width: max-content;
+}
+
 /* Border properties */
 
 [input], input {
