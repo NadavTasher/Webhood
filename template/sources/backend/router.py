@@ -52,16 +52,7 @@ def parse_content(request):
         yield name, value
 
 
-def create_router(indexes=["index.htm", "index.html"]):
-    # Create router from parameters
-    router = AppRouter()
-    router.static("../frontend", indexes=indexes)
-
-    # Return the created router
-    return router
-
-
-class AppRouter(HTTPRouter):
+class Router(HTTPRouter):
     def attach(self, location, *methods):
         # Create function wrapper
         def wrapper(function):
@@ -88,6 +79,15 @@ class AppRouter(HTTPRouter):
 
         # Return the wrapper
         return wrapper
+
+
+def create_router(indexes=["index.htm", "index.html"]):
+    # Create router from parameters
+    router = Router()
+    router.static("../frontend", indexes=indexes)
+
+    # Return the created router
+    return router
 
 
 # Create default router

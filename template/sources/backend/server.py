@@ -1,47 +1,29 @@
-import ssl  # NOQA
-import time  # NOQA
-import logging  # NOQA
-import threading  # NOQA
+#
 
-from puppy.http.server.server import HTTPSServer, HTTPServer  # NOQA
+import os  # NOQA
 
+from router import router  # NOQA
 
-def create_http_server(router):
-	# Create HTTP server
-	server = HTTPServer(("0.0.0.0", 80), router)
-
-	# Create app server from server
-	return AppServer(server)
+from puppy.utilities.process import execute  # NOQA
+from puppy.http.server.server import HTTPServer  # NOQA
 
 
-def create_https_server(router):
-	# Create HTTPS server
-	server = HTTPSServer(("0.0.0.0", 443), router)
-	server.context.load_cert_chain(certfile="/opt/cert.pem", keyfile="/opt/cert.pem")
+def create_server(router, path="/opt/ssl.pem"):
+    # Make sure certificate exists
+    if not os.path.exists(path):
+        # Create new certificate
+        execute(
+            "openssl req -new -x509 -days 3650 -nodes -out %s -keyout %s -subj /"
+            % (path, path)
+        )
 
-	# Create app server from server
-	return AppServer(server)
+    # Create new server
+    server = HTTPServer(router)
+    server.context.load_cert_chain(certfile=path, keyfile=path)
+
+    # Return the created server
+    return server
 
 
-class AppServer(threading.Thread):
-	def __init__(self, server):
-		# Initialize the thread
-		super(AppServer, self).__init__()
-
-		# Set internal state
-		# self.daemon = True
-
-		# Set the internal server
-		self.server = server
-
-	def stop(self):
-		# Shut the server down
-		self.server.shutdown()
-
-	def run(self):
-		try:
-			# Try looping forever
-			self.server.serve_forever()
-		finally:
-			# Close the server after
-			self.server.close_server()
+# Create the default server
+server = create_server(router)
