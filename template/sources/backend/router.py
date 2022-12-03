@@ -1,8 +1,9 @@
 import json  # NOQA
 import urllib  # NOQA
 
+from puppy.http.constants import POST  # NOQA
 from puppy.http.utilities import pathsplit  # NOQA
-from puppy.http.server.router import HTTPRouter, POST  # NOQA
+from puppy.http.server.router import HTTPRouter  # NOQA
 
 
 def parse(request):
