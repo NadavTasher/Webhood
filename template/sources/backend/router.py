@@ -54,6 +54,7 @@ def parse_content(request):
 
 
 class Router(HTTPRouter):
+
     def attach(self, location, *methods):
         # Create function wrapper
         def wrapper(function):
@@ -70,7 +71,10 @@ class Router(HTTPRouter):
                     return json.dumps({"success": True, "result": result})
                 except BaseException as exception:
                     # Return a failure string
-                    return json.dumps({"success": False, "result": str(exception)})
+                    return json.dumps({
+                        "success": False,
+                        "result": str(exception)
+                    })
 
             # Add API route to routes
             self.add(b"/api/%s" % location.lstrip(b"/"), handler, *methods)

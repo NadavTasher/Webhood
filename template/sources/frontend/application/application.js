@@ -1,2 +1,1 @@
-window.addEventListener("load", async function () {
-});
+window.addEventListener("load", async function () {});

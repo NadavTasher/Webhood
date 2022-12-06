@@ -18,27 +18,23 @@ class Progress {
 		// Check if promise is given
 		if (promise) {
 			// Wrap promise with closing function
-			return new Promise(
-				(resolve, reject) => {
-					promise.then(
-						(value) => {
-							// Remove from DOM
-							close();
+			return new Promise((resolve, reject) => {
+				promise
+					.then((value) => {
+						// Remove from DOM
+						close();
 
-							// Resolve with original value
-							resolve(value);
-						}
-					).catch(
-						(value) => {
-							// Remove from DOM
-							close();
+						// Resolve with original value
+						resolve(value);
+					})
+					.catch((value) => {
+						// Remove from DOM
+						close();
 
-							// Reject with original value
-							reject(value);
-						}
-					)
-				}
-			);
+						// Reject with original value
+						reject(value);
+					});
+			});
 		} else {
 			// Return closing function
 			return close;
@@ -67,17 +63,15 @@ class Alert {
 		document.body.appendChild(instance);
 
 		// Return a promise for resolution
-		return new Promise(
-			(resolve) => {
-				instance.find("close").addEventListener("click", () => {
-					// Remove instance from DOM
-					UI.remove(instance);
+		return new Promise((resolve) => {
+			instance.find("close").addEventListener("click", () => {
+				// Remove instance from DOM
+				UI.remove(instance);
 
-					// Resolve promise
-					resolve();
-				});
-			}
-		);
+				// Resolve promise
+				resolve();
+			});
+		});
 	}
 	static dialog(message) {
 		return Alert._alert("dialog", message);
@@ -97,27 +91,25 @@ class Prompt {
 		document.body.appendChild(instance);
 
 		// Create promise for handling button clicks
-		return new Promise(
-			(resolve, reject) => {
-				// Add approve listener
-				instance.find("approve").addEventListener("click", () => {
-					// Remove instance from DOM
-					UI.remove(instance);
+		return new Promise((resolve, reject) => {
+			// Add approve listener
+			instance.find("approve").addEventListener("click", () => {
+				// Remove instance from DOM
+				UI.remove(instance);
 
-					// Resolve dialog with input
-					resolve(UI.read(instance.find("input")));
-				});
+				// Resolve dialog with input
+				resolve(UI.read(instance.find("input")));
+			});
 
-				// Add decline listener
-				instance.find("decline").addEventListener("click", () => {
-					// Remove instance from DOM
-					UI.remove(instance);
+			// Add decline listener
+			instance.find("decline").addEventListener("click", () => {
+				// Remove instance from DOM
+				UI.remove(instance);
 
-					// Reject dialog
-					reject();
-				});
-			}
-		);
+				// Reject dialog
+				reject();
+			});
+		});
 	}
 
 	static dialog(title, placeholder = "Enter here") {

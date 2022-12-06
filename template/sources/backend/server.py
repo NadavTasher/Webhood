@@ -14,8 +14,7 @@ def create_server(router, path="/opt/ssl.pem"):
         # Create new certificate
         execute(
             "openssl req -new -x509 -days 3650 -nodes -out %s -keyout %s -subj /"
-            % (path, path)
-        )
+            % (path, path))
 
     # Create new server
     server = HTTPServer(router)

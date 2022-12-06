@@ -1,9 +1,7 @@
 class Module {
-    static load() {
-        return Promise.all(
-            Array.from(arguments).map(Module.module)
-        );
-    }
+	static load() {
+		return Promise.all(Array.from(arguments).map(Module.module));
+	}
 
 	static module(module) {
 		// Transform module name to lowercase
@@ -47,7 +45,7 @@ class Module {
 		return new Promise((resolve, reject) => {
 			// Create the resources element
 			const element = document.createElement("div");
-			element.id = `resources:${module}`;;
+			element.id = `resources:${module}`;
 
 			// Check if already exists
 			if (document.getElementById(element.id)) {
@@ -56,10 +54,11 @@ class Module {
 			}
 
 			// Try fetching the HTML resource
-			fetch(`modules/${module}.html`).then(
-				(response) => {
-					response.text().then(
-						(resources) => {
+			fetch(`modules/${module}.html`)
+				.then((response) => {
+					response
+						.text()
+						.then((resources) => {
 							// Check if already exists
 							if (document.getElementById(element.id)) {
 								resolve(`Resources for ${module} were loaded already`);
@@ -74,21 +73,21 @@ class Module {
 
 							// Resolve the promise
 							resolve(`Resources for ${module} were loaded`);
-						}
-					).catch(reject);
-				}
-			).catch(reject);
+						})
+						.catch(reject);
+				})
+				.catch(reject);
 		});
 	}
 }
 
 // Lock the viewport height to prevent keyboard resizes
 window.addEventListener("load", function () {
-    // Query viewport element
-    const element = document.querySelector(`meta[name="viewport"]`);
-    
-    // Make sure viewport exists
-    if (element !== null)
-        // Update viewport height
-        element.content = element.content.replace("device-height", Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0));
+	// Query viewport element
+	const element = document.querySelector(`meta[name="viewport"]`);
+
+	// Make sure viewport exists
+	if (element !== null)
+		// Update viewport height
+		element.content = element.content.replace("device-height", Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0));
 });
