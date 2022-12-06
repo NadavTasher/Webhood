@@ -1,16 +1,4 @@
-/**
- * Copyright (c) 2021 Nadav Tasher
- * https://github.com/Webhood/Template/
- **/
-
 class API {
-    /**
-     * Sends an API call.
-     * @param route Route (API)
-     * @param action Action (Function)
-     * @param parameters Parameters
-     * @return Promise
-     */
     static call(action = null, parameters = null) {
         return new Promise((resolve, reject) => {
             // Perform the request

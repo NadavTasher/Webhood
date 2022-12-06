@@ -1,0 +1,128 @@
+<!-- General style for all GUI elements -->
+<style>
+	/* Sizing and positioning */
+	[screen] {
+		position: fixed;
+	}
+
+	[screen] {
+		left: 0;
+		right: 0;
+		width: 100%;
+	}
+
+	[screen] {
+		top: 0;
+		bottom: 0;
+		height: 100%;
+	}
+
+	[dialog] {
+		padding: 1vh;
+	}
+
+	[drawer] {
+		padding: 1vh;
+		max-height: 30vh;
+		align-self: flex-end;
+	}
+
+	[spinner] {
+		width: 3vh;
+		height: 3vh;
+		margin: 1vh;
+		align-self: center;
+	}
+
+	[limited] {
+		min-width: 40vw;
+		max-width: 70vw;
+	}
+
+	/* Theming and styling */
+	[dimmed] {
+		background-color: #00000030;
+	}
+
+	[spinner] {
+		border-width: 1vh;
+		border-radius: 50%;
+		border-style: solid;
+		border-color: transparent;
+		border-top-color: var(--text);
+	}
+
+	[drawer] {
+		background-color: var(--passive);
+	}
+</style>
+
+<!-- Markup for all GUI elements -->
+<template id="progress-screen">
+	<div screen dimmed>
+		<div spinner spinning></div>
+		<p large center>${message}</p>
+	</div>
+</template>
+<template id="progress-dialog">
+	<div screen dimmed row>
+		<div limited>
+			<div coasted stretched dialog row>
+				<div spinner spinning></div>
+				<p medium center stretched>${message}</p>
+			</div>
+		</div>
+	</div>
+</template>
+<template id="progress-drawer">
+	<div screen dimmed row>
+		<div drawer stretched>
+			<div spinner spinning></div>
+			<p medium center stretched>${message}</p>
+		</div>
+	</div>
+</template>
+<template id="alert-dialog">
+	<div screen dimmed row>
+		<div limited>
+			<div coasted stretched dialog>
+				<p medium left>${message}</p>
+				<button medium center name="close">Close</button>
+			</div>
+		</div>
+	</div>
+</template>
+<template id="alert-drawer">
+	<div screen dimmed row>
+		<div drawer stretched>
+			<p medium left>${message}</p>
+			<button medium center name="close">Close</button>
+		</div>
+	</div>
+</template>
+<template id="prompt-dialog">
+	<div screen dimmed row>
+		<div limited>
+			<div coasted stretched dialog>
+				<p medium left>${title}</p>
+				<input medium left name="input" placeholder="${placeholder}" />
+				<div row stretch>
+					<button medium center name="decline">Cancel</button>
+					<button medium center name="approve">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+<template id="prompt-drawer">
+	<div screen dimmed row>
+		<div drawer stretched>
+			<p medium left>${title}</p>
+			<input medium left name="input" placeholder="${placeholder}" />
+			<div row stretch>
+				<button medium center name="decline">Cancel</button>
+				<button medium center name="approve">Ok</button>
+			</div>
+		</div>
+	</div>
+</template>
