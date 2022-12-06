@@ -4,15 +4,15 @@ FROM python:2.7.18-buster
 # Install ipython for easy debugging
 RUN pip install ipython
 
-# Copy puppy library to packages
-WORKDIR /usr/local/lib/python2.7/site-packages
-COPY puppy/puppy puppy
+# Copy puppy to site-packages
+COPY puppy/puppy /usr/local/lib/python2.7/site-packages/puppy
 
-# Change working directory and copy sources
-WORKDIR /application
-COPY sources/backend backend
-COPY sources/frontend frontend
+# Copy default sources
+COPY sources/backend /application/backend
+COPY sources/frontend /application/frontend
 
 # Change working directory for execution
 WORKDIR /application/backend
+
+# Set default command to run
 CMD [ "python", "app.py" ]
