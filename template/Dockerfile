@@ -1,26 +1,18 @@
 # Select the base image
-FROM webhood/base
+FROM python:2.7.18-buster
 
-# Set image metadata
-LABEL maintainer="hey@nadav.app"
-LABEL description="Application image for the Webhood template"
+# Install ipython for easy debugging
+RUN pip install ipython
 
-# Change working directory and copy scripts
-WORKDIR /bin
+# Copy puppy to site-packages
+COPY puppy/puppy /usr/local/lib/python2.7/site-packages/puppy
 
-# Copy scripts
-COPY scripts/application application
-COPY scripts/console console
+# Copy default sources
+COPY backend /application/backend
+COPY frontend /application/frontend
 
-# Add execution permissions
-RUN chmod +x application console
+# Change working directory for execution
+WORKDIR /application/backend
 
-# Change working directory and copy sources
-WORKDIR /application
-
-# Copy sources
-COPY sources/backend backend
-COPY sources/frontend frontend
-
-# Set default command
-CMD ["application"]
+# Set default command to run
+CMD [ "python", "app.py" ]

@@ -1,0 +1,10 @@
+:root {
+	--text: #707070;
+	--theme: #ffffff;
+	--active: #c0c0c0;
+	--passive: #f0f0f0;
+}
+
+body {
+	max-width: 500px;
+}
