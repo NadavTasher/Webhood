@@ -1,9 +1,15 @@
 import json
-import urllib
 
 from puppy.http.url import pathsplit
 from puppy.http.router import HTTPRouter
 from puppy.http.constants import POST
+
+try:
+    # Python 2 unquote
+    from urllib import unquote
+except:
+    # Python 3 unquote
+    from urllib.parse import unquote_to_bytes as unquote
 
 
 def parse(request):
@@ -37,7 +43,7 @@ def parse_query(request):
         name, value = name.strip(), value.strip()
 
         # Decode as url parameters
-        name, value = urllib.unquote(name), urllib.unquote(value)
+        name, value = unquote(name), unquote(value)
 
         # Yield the name and the value
         yield name, value
