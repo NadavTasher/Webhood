@@ -1,9 +1,9 @@
-import os  # NOQA
+import os
 
-from router import router  # NOQA
+from router import router
 
-from puppy.utilities.process import execute  # NOQA
-from puppy.http.server.server import HTTPServer  # NOQA
+from puppy.process import execute
+from puppy.http.server import HTTPServer
 
 
 def create_server(router, path="/opt/ssl.pem"):

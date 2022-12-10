@@ -1,7 +1,7 @@
-import logging  # NOQA
+import logging
 
-from router import router  # NOQA
-from server import server  # NOQA
+from router import router
+from server import server
 
 
 @router.get("/ping")
