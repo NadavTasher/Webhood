@@ -1,5 +1,3 @@
-#
-
 import os  # NOQA
 
 from router import router  # NOQA
@@ -12,9 +10,7 @@ def create_server(router, path="/opt/ssl.pem"):
     # Make sure certificate exists
     if not os.path.exists(path):
         # Create new certificate
-        execute(
-            "openssl req -new -x509 -days 3650 -nodes -out %s -keyout %s -subj /"
-            % (path, path))
+        execute("openssl req -new -x509 -days 3650 -nodes -out %s -keyout %s -subj /" % (path, path))
 
     # Create new server
     server = HTTPServer(router)

@@ -8,8 +8,8 @@ RUN pip install ipython
 COPY puppy/puppy /usr/local/lib/python2.7/site-packages/puppy
 
 # Copy default sources
-COPY sources/backend /application/backend
-COPY sources/frontend /application/frontend
+COPY backend /application/backend
+COPY frontend /application/frontend
 
 # Change working directory for execution
 WORKDIR /application/backend

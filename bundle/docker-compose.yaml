@@ -1,25 +1,16 @@
-# Select compose version
 version: "3"
 
-# Define services
+# Configure applcation service
 services: 
-    # Create template service
     application:
-        # Select service image
         build: application
-        
-        # Restart policy
         restart: unless-stopped
-        
-        # Expose ports
         ports: 
             - 80:80
             - 443:443
-
-        # Mount volumes
         volumes:
-            # Persistent data volume
             - data:/opt
 
+# Configure persistent data volume
 volumes:
     data:

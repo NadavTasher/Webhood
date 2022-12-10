@@ -2,5 +2,5 @@
 FROM webhood/template
 
 # Copy sources
-COPY sources/backend /application/backend
-COPY sources/frontend /application/frontend
+COPY backend /application/backend
+COPY frontend /application/frontend
