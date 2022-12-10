@@ -1,4 +1,0 @@
-#!/bin/bash
-
-# Launch the console
-cd /application/backend; node console.mjs

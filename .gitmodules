@@ -1,0 +1,4 @@
+[submodule "puppy"]
+	path = template/puppy
+	url = git@github.com:NadavTasher/Puppy.git
+	branch = master
