@@ -1,4 +1,5 @@
 import json
+import logging
 
 from puppy.http.url import pathsplit
 from puppy.http.router import HTTPRouter
@@ -61,7 +62,18 @@ def parse_content(request):
 
 class Router(HTTPRouter):
 
+    def __call__(self, request):
+        # Handle the request
+        response = super(Router, self).__call__(request)
+
+        # Log the request
+        logging.info("%s %s - %d" % (request.method.decode(), request.path.decode(), response.status))
+
     def attach(self, location, *methods):
+        # Convert location to bytes if needed
+        if not isinstance(location, bytes):
+            location = location.encode()
+
         # Create function wrapper
         def wrapper(function):
             # Create a new handler for a function
@@ -74,10 +86,10 @@ class Router(HTTPRouter):
                     result = function(request, **parameters)
 
                     # Return a success string
-                    return json.dumps({"success": True, "result": result})
+                    return json.dumps({"success": True, "result": result}).encode()
                 except BaseException as exception:
                     # Return a failure string
-                    return json.dumps({"success": False, "result": str(exception)})
+                    return json.dumps({"success": False, "result": str(exception)}).encode()
 
             # Add API route to routes
             self.add(b"/api/%s" % location.lstrip(b"/"), handler, *methods)
@@ -89,10 +101,10 @@ class Router(HTTPRouter):
         return wrapper
 
 
-def create_router(indexes=["index.htm", "index.html"]):
+def create_router():
     # Create router from parameters
     router = Router()
-    router.static("../frontend", indexes=indexes)
+    router.static(b"../frontend", [b"index.htm", b"index.html"])
 
     # Return the created router
     return router
