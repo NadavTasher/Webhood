@@ -1,11 +1,11 @@
 # Select the base image
-FROM python:3.11.1-bullseye
+FROM python:2.7.18-buster
 
 # Install ipython for easy debugging
 RUN pip install ipython
 
 # Copy puppy to site-packages
-COPY puppy/puppy /usr/local/lib/python3.11/site-packages/puppy
+COPY puppy/puppy /usr/local/lib/python2.7/site-packages/puppy
 
 # Copy default sources
 COPY backend /application/backend

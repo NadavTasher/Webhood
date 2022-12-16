@@ -1,5 +1,5 @@
 # Select the base image
-FROM webhood/template
+FROM webhood/2.7
 
 # Copy sources
 COPY backend /application/backend

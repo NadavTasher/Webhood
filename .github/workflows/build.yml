@@ -40,7 +40,7 @@ jobs:
                     echo "LATEST=latest" >> $GITHUB_ENV
 
             -
-                name: Build and push
+                name: Build and push - Python 2.7
                 uses: docker/build-push-action@v2
 
                 with:
@@ -48,7 +48,7 @@ jobs:
                     push: true
 
                     # What is out build context?
-                    file: template/Dockerfile
+                    file: template/Dockerfile-2.7
                     context: template
 
                     # What are our target platforms?
@@ -56,5 +56,25 @@ jobs:
 
                     # What are our version tags?
                     tags: |
-                        webhood/template:${{ env.DATE }}
-                        webhood/template:${{ env.LATEST }}
+                        webhood/2.7:${{ env.DATE }}
+                        webhood/2.7:${{ env.LATEST }}
+
+            -
+                name: Build and push - Python 3.8
+                uses: docker/build-push-action@v2
+
+                with:
+                    # Do we want to push the images to DockerHub?
+                    push: true
+
+                    # What is out build context?
+                    file: template/Dockerfile-3.8
+                    context: template
+
+                    # What are our target platforms?
+                    platforms: linux/amd64,linux/arm64/v8,linux/arm/v7,linux/ppc64le,linux/s390x
+
+                    # What are our version tags?
+                    tags: |
+                        webhood/3.8:${{ env.DATE }}
+                        webhood/3.8:${{ env.LATEST }}
