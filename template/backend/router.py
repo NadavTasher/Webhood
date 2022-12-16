@@ -67,7 +67,7 @@ class Router(HTTPRouter):
         response = super(Router, self).__call__(request)
 
         # Log the request
-        logging.info("%s %s - %d" % (request.method.decode(), request.path.decode(), response.status))
+        logging.info("%s %s - %d" % (request.method.decode(), request.location.decode(), response.status))
 
     def attach(self, location, *methods):
         # Convert location to bytes if needed
