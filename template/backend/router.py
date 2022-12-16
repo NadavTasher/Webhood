@@ -104,7 +104,7 @@ class Router(HTTPRouter):
 def create_router():
     # Create router from parameters
     router = Router()
-    router.static(b"../frontend", [b"index.htm", b"index.html"])
+    router.static(b"../frontend", indexes=[b"index.htm", b"index.html"])
 
     # Return the created router
     return router
