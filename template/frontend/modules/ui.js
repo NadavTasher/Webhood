@@ -105,7 +105,7 @@ class UI {
 
 	static populate(template, parameters = {}) {
 		// Find the template
-		const templateElement = UI.find(template);
+		let templateElement = UI.find(template);
 
 		// If the element is null, create one
 		if (templateElement === null) {
