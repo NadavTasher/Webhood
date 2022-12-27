@@ -114,6 +114,7 @@ class UI {
 			// Fill the contents
 			templateElement.innerHTML = template;
 		}
+
 		// Store the HTML in a temporary variable
 		let innerHTML = templateElement.innerHTML;
 
@@ -134,6 +135,7 @@ class UI {
 				if (!value.includes(search)) while (innerHTML.includes(search)) innerHTML = innerHTML.replace(search, value);
 			}
 		}
+
 		// Create a wrapper element
 		const wrapperElement = document.createElement("div");
 
@@ -155,6 +157,7 @@ class UI {
 		const state = {};
 		const elements = document.getElementsByTagName("*");
 
+		// Loop over all elements and store state
 		for (const element of elements) {
 			// Make sure element has an ID
 			if (element.id.length === 0) element.id = Math.random().toString(36).slice(2);

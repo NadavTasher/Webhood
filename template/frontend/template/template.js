@@ -3,81 +3,69 @@ class Module {
 		return Promise.all(Array.from(arguments).map(Module.module));
 	}
 
-	static module(module) {
+	static script(name) {
 		// Transform module name to lowercase
-		module = module.toLowerCase();
+		name = name.toLowerCase();
 
-		// Create import promise
 		return new Promise((resolve, reject) => {
 			// Create a script element
 			const element = document.createElement("script");
-			element.id = `module:${module}`;
-			element.src = `modules/${module}.js`;
+			element.id = `script:${name}`;
+			element.src = `modules/${name}.js`;
 
-			// Check if already exists
+			// Make sure script is not already loaded
 			if (document.getElementById(element.id)) {
-				resolve(`Module ${module} was already loaded`);
+				resolve(`Script for ${name} is already loaded`);
 				return;
 			}
 
 			// Add success and failure listeners
 			element.addEventListener("load", () => {
-				resolve(`Module "${module}" was loaded`);
+				resolve(`Script for ${name} was loaded`);
 			});
 			element.addEventListener("error", () => {
 				// Failed loading - remove element
 				document.head.removeChild(element);
 
 				// Reject the promise
-				reject(`Module "${module}" was not loaded`);
+				reject(`Script for ${name} was not loaded`);
 			});
 
-			// Append script to head
+			// Append module to head
 			document.head.appendChild(element);
 		});
 	}
 
-	static resources(module) {
+	static async module(name) {
 		// Transform module name to lowercase
-		module = module.toLowerCase();
+		name = name.toLowerCase();
 
-		// Create import promise
-		return new Promise((resolve, reject) => {
-			// Create the resources element
-			const element = document.createElement("div");
-			element.id = `resources:${module}`;
+		// Create the resources element
+		const element = document.createElement("div");
+		element.id = `resources:${name}`;
 
-			// Check if already exists
-			if (document.getElementById(element.id)) {
-				resolve(`Resources for ${module} are already loaded`);
-				return;
-			}
+		// Check if already exists
+		if (document.getElementById(element.id)) {
+			return `Module ${name} is already loaded`;
+		}
 
-			// Try fetching the HTML resource
-			fetch(`modules/${module}.html`)
-				.then((response) => {
-					response
-						.text()
-						.then((resources) => {
-							// Check if already exists
-							if (document.getElementById(element.id)) {
-								resolve(`Resources for ${module} were loaded already`);
-								return;
-							}
+		// Try fetching the HTML resource
+		const response = await fetch(`modules/${name}.html`);
+		const resources = await response.text();
 
-							// Set the content of the element
-							element.innerHTML = resources;
+		// Check if already exists
+		if (document.getElementById(element.id)) {
+			return `Module ${name} was loaded already`;
+		}
 
-							// Add the element to the head
-							document.head.appendChild(element);
+		// Set the content of the element
+		element.innerHTML = resources;
 
-							// Resolve the promise
-							resolve(`Resources for ${module} were loaded`);
-						})
-						.catch(reject);
-				})
-				.catch(reject);
-		});
+		// Load script before adding resources
+		await Module.script(name);
+
+		// Append module to head
+		document.head.appendChild(element);
 	}
 }
 

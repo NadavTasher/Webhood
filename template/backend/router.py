@@ -93,13 +93,13 @@ class Router(HTTPRouter):
                     result = function(request, **parameters)
 
                     # Return a success string
-                    return json.dumps({"success": True, "result": result}).encode()
+                    return json.dumps({"status": True, "result": result}).encode()
                 except BaseException as exception:
                     # Return a failure string
-                    return json.dumps({"success": False, "result": str(exception)}).encode()
+                    return json.dumps({"status": False, "result": str(exception)}).encode()
 
             # Add API route to routes
-            self.add(b"/api/%s" % location.lstrip(b"/"), handler, *methods)
+            self.add(b"/api/%s" % location, handler, *methods)
 
             # Return the original function
             return function

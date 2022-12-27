@@ -1,6 +1,5 @@
-// Load dependencies and resources
+// Load UI dependency
 Module.load("UI");
-Module.resources("GUI");
 
 class Progress {
 	static _progress(type, message, promise = null) {

@@ -4,7 +4,8 @@ from router import router
 from server import server
 
 
-@router.get("/ping")
+@router.get("ping")
+@router.post("ping")
 def ping(request):
     return True
 
