@@ -61,7 +61,7 @@ def parse_content(request):
 
     # Parse the content as JSON
     for name, value in json.loads(request.content).items():
-        yield name.decode(), value
+        yield name, value
 
 
 class Router(HTTPRouter):
@@ -95,7 +95,6 @@ class Router(HTTPRouter):
                     # Return a success string
                     return json.dumps({"success": True, "result": result}).encode()
                 except BaseException as exception:
-
                     # Return a failure string
                     return json.dumps({"success": False, "result": str(exception)}).encode()
 
