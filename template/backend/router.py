@@ -47,7 +47,7 @@ def parse_query(request):
         name, value = unquote(name), unquote(value)
 
         # Yield the name and the value
-        yield name.decode(), value
+        yield name.decode(), value.decode()
 
 
 def parse_content(request):
