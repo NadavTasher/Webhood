@@ -55,6 +55,10 @@ def parse_content(request):
     if request.method != POST:
         return
 
+    # Make sure content exists
+    if not request.content:
+        return
+
     # Parse the content as JSON
     for name, value in json.loads(request.content).items():
         yield name, value
