@@ -93,7 +93,7 @@ class UI {
 
 	static write(input, value) {
 		// Find element
-		const element = UI.find(v);
+		const element = UI.find(input);
 
 		// Check if element is a readble input
 		if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
