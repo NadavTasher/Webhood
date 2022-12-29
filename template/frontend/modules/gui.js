@@ -112,10 +112,10 @@ class Prompt {
 	}
 
 	static dialog(title, placeholder = "Enter here") {
-		return Dialog._prompt("dialog", title, placeholder);
+		return Prompt._prompt("dialog", title, placeholder);
 	}
 
 	static drawer(title, placeholder = "Enter here") {
-		return Dialog._prompt("drawer", title, placeholder);
+		return Prompt._prompt("drawer", title, placeholder);
 	}
 }
