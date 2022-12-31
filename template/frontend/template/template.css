@@ -25,6 +25,8 @@ input,
 div,
 body,
 html {
+	/* Sizing */
+	box-sizing: border-box;
 	/* Font */
 	font-family: sans-serif;
 	text-decoration: none;
