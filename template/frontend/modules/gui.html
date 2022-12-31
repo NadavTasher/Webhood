@@ -74,7 +74,7 @@
 
 <template id="progress-drawer">
 	<div screen dimmed row>
-		<div drawer stretched>
+		<div drawer stretched row>
 			<div spinner spinning></div>
 			<p medium center stretched>${message}</p>
 		</div>
@@ -86,7 +86,7 @@
 		<div limited>
 			<div coasted stretched dialog>
 				<p medium left>${message}</p>
-				<button medium center name="close">Close</button>
+				<button small center name="close">Close</button>
 			</div>
 		</div>
 	</div>
@@ -94,9 +94,9 @@
 
 <template id="alert-drawer">
 	<div screen dimmed row>
-		<div drawer stretched>
-			<p medium left>${message}</p>
-			<button medium center name="close">Close</button>
+		<div drawer stretched row>
+			<p medium left stretched>${message}</p>
+			<button small center maximized name="close">Close</button>
 		</div>
 	</div>
 </template>
@@ -106,10 +106,10 @@
 		<div limited>
 			<div coasted stretched dialog>
 				<p medium left>${title}</p>
-				<input medium left name="input" placeholder="${placeholder}" />
+				<input small left name="input" placeholder="${placeholder}" />
 				<div row stretch>
-					<button medium center name="decline">Cancel</button>
-					<button medium center name="approve">Ok</button>
+					<button small center name="decline">Cancel</button>
+					<button small center name="approve">Ok</button>
 				</div>
 			</div>
 		</div>
@@ -120,10 +120,10 @@
 	<div screen dimmed row>
 		<div drawer stretched>
 			<p medium left>${title}</p>
-			<input medium left name="input" placeholder="${placeholder}" />
+			<input small left name="input" placeholder="${placeholder}" />
 			<div row stretch>
-				<button medium center name="decline">Cancel</button>
-				<button medium center name="approve">Ok</button>
+				<button small center name="decline">Cancel</button>
+				<button small center name="approve">Ok</button>
 			</div>
 		</div>
 	</div>
