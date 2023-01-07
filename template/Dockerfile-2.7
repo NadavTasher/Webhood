@@ -1,6 +1,9 @@
 # Select the base image
 FROM python:2.7.18-buster
 
+# Upgrade pip for better dependencies
+RUN pip install --upgrade pip
+
 # Install ipython for easy debugging
 RUN pip install ipython
 
