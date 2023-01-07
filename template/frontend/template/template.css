@@ -44,6 +44,13 @@ html {
 	cursor: pointer;
 }
 
+[button],
+[pointer],
+button {
+	/* Not selectable */
+	user-select: none;
+}
+
 /* Flex properties */
 
 [text],
