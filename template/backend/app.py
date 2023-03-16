@@ -12,7 +12,7 @@ def ping(request):
 
 def main():
     # Set-up logging to stdout
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(threadName)s - %(levelname)-1s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
 
     try:
         # Start the server
