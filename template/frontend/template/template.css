@@ -5,6 +5,8 @@ html {
 	/* Sizing */
 	height: 100%;
 	width: 100%;
+	/* Background */
+	background-color: var(--theme);
 }
 
 body {
@@ -178,78 +180,37 @@ button {
 
 /* Color properties */
 
-[dark] {
-	background-color: var(--dark-theme);
-}
-
-[light] {
-	background-color: var(--light-theme);
-}
-
-[dark] [text],
-[dark] [button],
-[dark] [input],
-[dark] p,
-[dark] button,
-[dark] input {
-	color: var(--dark-text);
+[text],
+[button],
+[input],
+p,
+button,
+input {
+	color: var(--text);
 	background-color: transparent;
 }
 
-[light] [text],
-[light] [button],
-[light] [input],
-[light] p,
-[light] button,
-[light] input {
-	color: var(--light-text);
-	background-color: transparent;
+[input],
+input {
+	border-top-color: var(--passive);
+	border-bottom-color: var(--active);
+	background-color: var(--passive);
 }
 
-[dark] [input],
-[dark] input {
-	border-top-color: var(--dark-passive);
-	border-bottom-color: var(--dark-active);
-	background-color: var(--dark-passive);
+[button],
+button {
+	border-color: var(--text);
+	background-color: var(--passive);
 }
 
-[light] [input],
-[light] input {
-	border-top-color: var(--light-passive);
-	border-bottom-color: var(--light-active);
-	background-color: var(--light-passive);
+[button]:hover,
+button:hover {
+	background-color: var(--active);
 }
 
-[dark] [button],
-[dark] button {
-	border-color: var(--dark-text);
-	background-color: var(--dark-passive);
-}
-
-[light] [button],
-[light] button {
-	border-color: var(--light-text);
-	background-color: var(--light-passive);
-}
-
-[dark] [button]:hover,
-[dark] button:hover {
-	background-color: var(--dark-active);
-}
-
-[light] [button]:hover,
-[light] button:hover {
-	background-color: var(--light-active);
-}
-
-[dark] [coasted] {
-	filter: drop-shadow(0 0 1vh var(--dark-active));
-	background-color: var(--dark-passive);
-}
-
-[light] [coasted] {
-	filter: drop-shadow(0 0 1vh var(--light-active));
-	background-color: var(--light-passive);
+[coasted] {
+	filter: drop-shadow(0 0 1vh var(--active));
+	background-color: var(--passive);
 }
 
 /* Flex direction properties */
