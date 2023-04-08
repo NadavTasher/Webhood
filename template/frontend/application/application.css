@@ -1,4 +1,12 @@
-:root {
+:root[dark] {
+	--text: #ffffff;
+	--theme: #0f172a;
+	--active: #7674af;
+	--passive: #1e293b;
+}
+
+:root,
+:root[light] {
 	--text: #707070;
 	--theme: #ffffff;
 	--active: #c0c0c0;
