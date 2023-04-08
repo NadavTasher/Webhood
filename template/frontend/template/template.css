@@ -209,7 +209,7 @@ button:hover {
 }
 
 [coasted] {
-	filter: drop-shadow(0 0 1vh var(--active));
+	filter: drop-shadow(0 0 0.5vh var(--active));
 	background-color: var(--passive);
 }
 
