@@ -1,11 +1,8 @@
 # Select the base image
-FROM python:3.8.16-bullseye
+FROM python:3.8.16-slim-bullseye
 
-# Upgrade pip for better dependencies
-RUN pip install --upgrade pip
-
-# Install ipython for easy debugging
-RUN pip install ipython
+# Upgrade pip and install IPython for easy debugging
+RUN pip install --upgrade pip ipython
 
 # Copy puppy to site-packages
 COPY puppy/puppy /usr/local/lib/python3.8/site-packages/puppy

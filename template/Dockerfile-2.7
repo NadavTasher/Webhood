@@ -1,11 +1,8 @@
 # Select the base image
-FROM python:2.7.18-buster
+FROM python:2.7.18-slim-buster
 
-# Upgrade pip for better dependencies
-RUN pip install --upgrade pip
-
-# Install ipython for easy debugging
-RUN pip install ipython
+# Upgrade pip and install IPython for easy debugging
+RUN pip install --upgrade pip ipython
 
 # Copy puppy to site-packages
 COPY puppy/puppy /usr/local/lib/python2.7/site-packages/puppy
