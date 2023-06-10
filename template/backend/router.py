@@ -1,8 +1,10 @@
+import sys
 import json
 import logging
 
-from puppy.http.url import pathsplit
+from puppy.http.types import Response
 from puppy.http.router import HTTPRouter
+from puppy.http.utilities import split_path
 from puppy.http.constants import POST
 
 try:
@@ -27,7 +29,7 @@ def parse(request):
 
 def parse_query(request):
     # Parse the query for parameters
-    _, query, _ = pathsplit(request.location)
+    _, query, _ = split_path(request.location)
 
     # Make sure query is defined
     if not query:
@@ -66,12 +68,19 @@ def parse_content(request):
 
 class Router(HTTPRouter):
 
+    def __init__(self, logger=logging.root):
+        # Initialize parent
+        super(Router, self).__init__()
+
+        # Create logger for router
+        self.logger = logger
+
     def __call__(self, request):
         # Handle the request
         response = super(Router, self).__call__(request)
 
         # Log the request
-        logging.info("%s %s - %d" % (request.method.decode(), request.location.decode(), response.status))
+        self.logger.info("%s %s - %d" % (request.method.decode(), request.location.decode(), response.status))
 
         # Return the response
         return response
@@ -92,11 +101,18 @@ class Router(HTTPRouter):
                     # Try calling the function
                     result = function(request, **parameters)
 
-                    # Return a success string
-                    return json.dumps({"status": True, "result": result}).encode()
+                    # Check if result is a response
+                    if isinstance(result, Response):
+                        return result
+
+                    # Return the result as JSON
+                    return Response(200, b"OK", [], json.dumps(result).encode())
                 except BaseException as exception:
-                    # Return a failure string
-                    return json.dumps({"status": False, "result": str(exception)}).encode()
+                    # Log the exception
+                    self.logger.error("%s %s - ", request.method.decode(), request.location.decode(), exc_info=sys.exc_info())
+
+                    # Return the exception
+                    return Response(500, b"Internal Server Error", [], str(exception).encode())
 
             # Add API route to routes
             self.add(b"/api/%s" % location, handler, *methods)
@@ -108,14 +124,6 @@ class Router(HTTPRouter):
         return wrapper
 
 
-def create_router():
-    # Create router from parameters
-    router = Router()
-    router.static(b"../frontend", indexes=[b"index.htm", b"index.html"])
-
-    # Return the created router
-    return router
-
-
-# Create default router
-router = create_router()
+# Create router from parameters
+router = Router(logging.getLogger(__name__))
+router.static(b"../frontend", indexes=[b"index.htm", b"index.html"])
