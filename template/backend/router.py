@@ -108,8 +108,8 @@ class Router(HTTPRouter):
                     # Return the result as JSON
                     return Response(200, b"OK", [], json.dumps(result).encode())
                 except BaseException as exception:
-                    # Log the exception
-                    self.logger.error("%s %s - ", request.method.decode(), request.location.decode(), exc_info=sys.exc_info())
+                    # Log the exception to the debug log
+                    self.logger.debug("%s %s", request.method.decode(), request.location.decode(), exc_info=sys.exc_info())
 
                     # Return the exception
                     return Response(500, b"Internal Server Error", [], str(exception).encode())
