@@ -2,7 +2,7 @@
 FROM python:3.8.18-slim-bullseye
 
 # Upgrade pip and install dependencies
-RUN pip install --upgrade pip ipython flask jinja2 gunicorn runtypes
+RUN pip install --upgrade pip ipython flask jinja2 gunicorn runtypes 
 
 # Install supervisor
 RUN apt update
@@ -19,4 +19,4 @@ COPY src /application
 WORKDIR /opt
 
 # Set default command to run
-CMD [ "/usr/bin/supervisord" ]
+CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf" ]
