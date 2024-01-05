@@ -9,6 +9,7 @@ from scheduler import scheduler, lock
 def _ping():
     return "Pong"
 
+@lock("/tmp/mlock")
 def scheduled_task():
     with open("/tmp/test", "ab") as f:
         f.write(b"AAAAAAAAA\n")
