@@ -75,4 +75,4 @@ class Router(Flask):
 
 
 # Initialize the application
-app = Router(__name__)
+router = Router(__name__)
