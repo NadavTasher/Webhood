@@ -21,5 +21,8 @@ image: $(TEMPLATE_PATH)/Dockerfile
 clean:
 	$(RM) $(TEMPLATE_PATH)/Dockerfile
 
+test:
+	$(DOCKER) run --rm -p 80:80 template:$(IMAGE_TAG)
+
 $(TEMPLATE_PATH)/Dockerfile: $(TEMPLATE_PATH)/Dockerfile.template | prerequisites
 	$(PYTHON) -m jinja2cli.cli $^ -DTAG=$(BASE_TAG) > $@
