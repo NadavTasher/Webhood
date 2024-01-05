@@ -1,5 +1,5 @@
 # Select the base image
-FROM python:3.8.18-slim-bullseye
+FROM python:{{TAG}}
 
 # Upgrade pip and install dependencies
 RUN pip install --upgrade pip ipython flask jinja2 gunicorn runtypes 

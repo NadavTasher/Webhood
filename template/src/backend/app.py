@@ -1,8 +1,7 @@
 from runtypes import *
-from router import app, endpoint
+from router import app
 
 
 @app.get("/api/ping")
-@endpoint()
 def _ping():
     return "Pong"
