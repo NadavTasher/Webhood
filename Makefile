@@ -15,7 +15,7 @@ prerequisites:
 format: $(BACKEND_SOURCES) | prerequisites
 	$(PYTHON) -m yapf -i $^ --style "{based_on_style: google, column_limit: 400, indent_width: 4}"
 
-image: $(TEMPLATE_PATH)/Dockerfile | $(BACKEND_SOURCES) $(FRONTEND_SOURCES)
+image: $(TEMPLATE_PATH)/Dockerfile | format $(BACKEND_SOURCES) $(FRONTEND_SOURCES)
 	$(DOCKER) build $(TEMPLATE_PATH) -f $^ -t template:$(IMAGE_TAG)
 
 clean:
