@@ -22,10 +22,10 @@ clean:
 	$(RM) $(TEMPLATE_PATH)/Dockerfile
 
 test: image
-	$(DOCKER) run --rm -p 80:80 template:$(IMAGE_TAG)
+	$(DOCKER) run --rm -p 80:80 -p 443:443 template:$(IMAGE_TAG)
 
 test-bash: image
-	$(DOCKER) run --rm -p 80:80 -it template:$(IMAGE_TAG) bash
+	$(DOCKER) run --rm -p 80:80 -p 443:443 -it template:$(IMAGE_TAG) bash
 
 
 $(TEMPLATE_PATH)/Dockerfile: $(TEMPLATE_PATH)/Dockerfile.template | prerequisites

@@ -2,7 +2,7 @@
 FROM python:{{TAG}}
 
 # Upgrade pip and install dependencies
-RUN pip install --upgrade pip ipython flask jinja2 gunicorn runtypes apscheduler
+RUN pip install --upgrade pip ipython flask jinja2 gunicorn runtypes
 
 # Install supervisor
 RUN apt update
@@ -11,6 +11,7 @@ RUN apt -y install supervisor nginx
 # Copy default configurations
 COPY configurations/nginx.conf /etc/nginx/nginx.conf
 COPY configurations/supervisord.conf /etc/supervisor/supervisord.conf
+COPY configurations/gunicorn.conf /etc/gunicorn.conf
 
 # Copy default sources
 COPY src /application
@@ -20,3 +21,6 @@ WORKDIR /opt
 
 # Set default command to run
 CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf" ]
+
+# Create the certificate and the key
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj / -keyout /etc/ssl/private/server.key -out /etc/ssl/private/server.crt

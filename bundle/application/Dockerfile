@@ -1,6 +1,5 @@
 # Select the base image
-FROM webhood/2.7
+FROM webhood/3.8
 
 # Copy sources
-COPY backend /application/backend
-COPY frontend /application/frontend
+COPY src /application
