@@ -16,9 +16,9 @@ body {
 
 /* Base properties */
 
-[text],
-[button],
-[input],
+.text,
+.button,
+.input,
 p,
 button,
 input,
@@ -37,15 +37,15 @@ html {
 	overflow-wrap: anywhere;
 }
 
-[button],
-[input],
-[pointer] {
+.button,
+.input,
+.pointer {
 	/* Cursor type */
 	cursor: pointer;
 }
 
-[button],
-[pointer],
+.button,
+.pointer,
 button {
 	/* Not selectable */
 	user-select: none;
@@ -53,9 +53,9 @@ button {
 
 /* Flex properties */
 
-[text],
-[button],
-[input],
+.text,
+.button,
+.input,
 p,
 button,
 input,
@@ -68,9 +68,9 @@ html {
 
 /* Alignment properties */
 
-[text],
-[button],
-[input],
+.text,
+.button,
+.input,
 p,
 button,
 input {
@@ -90,19 +90,19 @@ html {
 
 /* Padding & Margin properties */
 
-[text],
+.text,
 p {
 	margin: 0.5vh;
 	padding: 0.5vh;
 }
 
-[button],
+.button,
 button {
 	margin: 1vh;
 	padding: 1vh;
 }
 
-[input],
+.input,
 input {
 	margin: 1vh;
 	padding: 0.5vh;
@@ -115,16 +115,16 @@ html {
 	margin: 0;
 }
 
-[coasted] {
+.coasted {
 	margin: 1vh;
 	padding: 1vh;
 }
 
 /* Sizing properties */
 
-[text],
-[button],
-[input],
+.text,
+.button,
+.input,
 p,
 button,
 input,
@@ -135,54 +135,54 @@ html {
 	min-height: fit-content;
 }
 
-[button],
-[input],
+.button,
+.input,
 button,
 input {
 	width: auto;
 }
 
-[input],
+.input,
 input {
 	min-width: 0;
 }
 
-[stretch] > *,
-[stretched] {
+.stretch > *,
+.stretched {
 	width: fill-available;
 	width: -moz-available;
 	width: -webkit-fill-available;
 }
 
-[maximized] {
+.maximized {
 	min-width: max-content;
 }
 
 /* Border properties */
 
-[input],
+.input,
 input {
 	border-style: solid;
 	border-width: 0.35vh 0;
 	border-radius: 0.75vh;
 }
 
-[button],
+.button,
 button {
 	border-style: solid;
 	border-width: 1px;
 	border-radius: 0.75vh;
 }
 
-[coasted] {
+.coasted {
 	border-radius: 1vh;
 }
 
 /* Color properties */
 
-[text],
-[button],
-[input],
+.text,
+.button,
+.input,
 p,
 button,
 input {
@@ -190,85 +190,85 @@ input {
 	background-color: transparent;
 }
 
-[input],
+.input,
 input {
 	border-top-color: var(--passive);
 	border-bottom-color: var(--active);
 	background-color: var(--passive);
 }
 
-[button],
+.button,
 button {
 	border-color: var(--text);
 	background-color: var(--passive);
 }
 
-[button]:hover,
+.button:hover,
 button:hover {
 	background-color: var(--active);
 }
 
-[coasted] {
+.coasted {
 	filter: drop-shadow(0 0 0.5vh var(--active));
 	background-color: var(--passive);
 }
 
 /* Flex direction properties */
 
-[row] {
+.row {
 	flex-direction: row;
 }
 
-[column] {
+.column {
 	flex-direction: column;
 }
 
 /* Text alignment properties */
 
-[center] {
+.center {
 	text-align: center;
 	text-align-last: center;
 }
 
-[left] {
+.left {
 	text-align: start;
 	text-align-last: start;
 }
 
-[right] {
+.right {
 	text-align: end;
 	text-align-last: end;
 }
 
 /* Text size properties */
 
-[tiny] {
+.tiny {
 	font-size: 1.5vh;
 }
 
-[small] {
+.small {
 	font-size: 2vh;
 }
 
-[medium] {
+.medium {
 	font-size: 2.5vh;
 }
 
-[large] {
+.large {
 	font-size: 4vh;
 }
 
-[huge] {
+.huge {
 	font-size: 5.5vh;
 }
 
-[gigantic] {
+.gigantic {
 	font-size: 6.5vh;
 }
 
 /* Animations */
 
-[breathing] {
+.breathing {
 	animation: breathing 2s ease-in-out 0s infinite alternate both;
 }
 
@@ -282,7 +282,7 @@ button:hover {
 	}
 }
 
-[spinning] {
+.spinning {
 	animation: spinning 2s linear 0s infinite normal both;
 }
 
