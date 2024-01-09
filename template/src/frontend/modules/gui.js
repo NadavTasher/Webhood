@@ -1,34 +1,6 @@
 // Load UI dependency
 Module.load("UI");
 
-class Theme {
-	static toggle() {
-		if (Theme.isDark()) {
-			Theme.setLight();
-		} else {
-			Theme.setDark();
-		}
-	}
-
-	static setDark() {
-		document.body.parentElement.removeAttribute("light");
-		document.body.parentElement.setAttribute("dark", undefined);
-	}
-
-	static setLight() {
-		document.body.parentElement.removeAttribute("dark");
-		document.body.parentElement.setAttribute("light", undefined);
-	}
-
-	static isDark() {
-		return document.body.parentElement.hasAttribute("dark");
-	}
-
-	static isLight() {
-		return !Theme.isDark();
-	}
-}
-
 class Progress {
 	static _progress(type, message, promise = null) {
 		// Create a progress instance
