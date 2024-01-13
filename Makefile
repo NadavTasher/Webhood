@@ -28,7 +28,7 @@ test: image
 test-bash: image
 	$(DOCKER) run --rm -p 80:80 -p 443:443 -it webhood/$(IMAGE_TAG) bash
 
-bundle: image
+test-bundle: image
 	$(DOCKER) compose --project-directory $(BUNDLE_PATH) up --build
 
 $(TEMPLATE_PATH)/Dockerfile: $(TEMPLATE_PATH)/Dockerfile.template | prerequisites
