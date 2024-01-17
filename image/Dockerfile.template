@@ -2,7 +2,7 @@
 FROM python:{{TAG}}
 
 # Upgrade pip and install dependencies
-RUN pip install --upgrade pip ipython flask jinja2 gunicorn runtypes fsdicts
+RUN pip install --upgrade pip ipython flask jinja2 gunicorn runtypes fsdicts guardify
 
 # Install supervisor
 RUN apt update
