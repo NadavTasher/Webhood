@@ -53,7 +53,11 @@ class Router(Flask):
                     # Get the result
                     result = function(**kwargs)
 
-                    # Provide all parameters to function
+                    # Check if the result is a response
+                    if isinstance(result, self.response_class):
+                        return result
+
+                    # Create JSON response from result
                     return jsonify(result), 200
                 except BaseException as exception:
                     # If debug mode is enabled, return stack
