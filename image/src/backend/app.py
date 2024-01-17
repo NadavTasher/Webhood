@@ -12,6 +12,6 @@ from router import router
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 
-@router.get("/api/ping")
+@router.post("/api/ping")
 def _ping():
     return "Pong"
