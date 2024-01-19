@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <!--
-    Copyright (c) 2023 Nadav Tasher
-    https://github.com/Webhood/Template/
+    Copyright (c) 2024 Nadav Tasher
+    https://github.com/NadavTasher/Webhood
 -->
-<html row stretch lang="en">
+<html class="row stretch" lang="en">
 	<head>
 		<!-- Charset -->
 		<meta charset="UTF-8" />
@@ -15,7 +15,7 @@
 		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=5, user-scalable=yes, minimal-ui" />
 
 		<!-- Mobile -->
-		<meta name="theme-color" content="#FFFFFF" />
+		<meta name=”color-scheme” content="light dark" />
 		<meta name="mobile-web-app-capable" content="yes" />
 
 		<!-- Mobile Safari -->
@@ -29,9 +29,11 @@
 
 		<!-- Stylesheets -->
 		<link rel="stylesheet" href="template/template.css" />
+		<link rel="stylesheet" href="application/application.css" />
 
 		<!-- Scripts  -->
 		<script type="text/javascript" src="template/template.js"></script>
+		<script type="text/javascript" src="application/application.js"></script>
 
 		<!-- App Title -->
 		<title>AppName</title>
@@ -39,37 +41,10 @@
 		<!-- No Script -->
 		<noscript></noscript>
 
-		<!-- Application stylesheet -->
-		<style>
-			:root[dark] {
-				--text: #ffffff;
-				--theme: #0f172a;
-				--active: #7674af;
-				--passive: #1e293b;
-			}
-
-			:root,
-			:root[light] {
-				--text: #707070;
-				--theme: #ffffff;
-				--active: #c0c0c0;
-				--passive: #f0f0f0;
-			}
-
-			body {
-				max-width: 500px;
-			}
-		</style>
-
-		<!-- Application script -->
-		<script type="text/javascript">
-			window.addEventListener("load", async function () {});
-		</script>
-
 		<!-- Additional -->
 	</head>
 
-	<body column>
+	<body class="column">
 		<!--App Layout-->
 	</body>
 </html>

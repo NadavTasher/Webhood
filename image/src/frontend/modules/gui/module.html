@@ -1,0 +1,130 @@
+<style>
+	.screen {
+		position: fixed;
+	}
+
+	.screen {
+		left: 0;
+		right: 0;
+		width: 100%;
+	}
+
+	.screen {
+		top: 0;
+		bottom: 0;
+		height: 100%;
+	}
+
+	.dialog {
+		padding: 1vh;
+	}
+
+	.drawer {
+		padding: 1vh;
+		max-height: 30vh;
+		align-self: flex-end;
+	}
+
+	.spinner {
+		width: 5vh;
+		height: 5vh;
+		margin: 1vh;
+		align-self: center;
+	}
+
+	.limited {
+		min-width: 40vw;
+		max-width: 70vw;
+	}
+
+	.dimmed {
+		background-color: #00000030;
+	}
+
+	.spinner {
+		border-width: 1vh;
+		border-radius: 50%;
+		border-style: solid;
+		border-color: transparent;
+		border-top-color: var(--text);
+	}
+
+	.drawer {
+		background-color: var(--passive);
+	}
+</style>
+
+<template id="progress-screen">
+	<div class="screen dimmed">
+		<div class="spinner spinning"></div>
+		<p class="large center">${message}</p>
+	</div>
+</template>
+
+<template id="progress-dialog">
+	<div class="screen dimmed row">
+		<div class="limited">
+			<div class="coasted stretched dialog row">
+				<div class="spinner spinning"></div>
+				<p class="medium center stretched">${message}</p>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template id="progress-drawer">
+	<div class="screen dimmed row">
+		<div class="drawer stretched row">
+			<div class="spinner spinning"></div>
+			<p class="medium center stretched">${message}</p>
+		</div>
+	</div>
+</template>
+
+<template id="alert-dialog">
+	<div class="screen dimmed row">
+		<div class="limited">
+			<div class="coasted stretched dialog">
+				<p class="medium left">${message}</p>
+				<button class="small center" name="close">Close</button>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template id="alert-drawer">
+	<div class="screen dimmed row">
+		<div class="drawer stretched row">
+			<p class="medium left stretched">${message}</p>
+			<button class="small center maximized" name="close">Close</button>
+		</div>
+	</div>
+</template>
+
+<template id="prompt-dialog">
+	<div class="screen dimmed row">
+		<div class="limited">
+			<div class="coasted stretched dialog">
+				<p class="medium left">${title}</p>
+				<input class="small left" name="input" placeholder="${placeholder}" />
+				<div class="row stretch">
+					<button class="small center" name="decline">Cancel</button>
+					<button class="small center" name="approve">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template id="prompt-drawer">
+	<div class="screen dimmed row">
+		<div class="drawer stretched">
+			<p class="medium left">${title}</p>
+			<input class="small left" name="input" placeholder="${placeholder}" />
+			<div class="row stretch">
+				<button class="small center" name="decline">Cancel</button>
+				<button class="small center" name="approve">Ok</button>
+			</div>
+		</div>
+	</div>
+</template>
