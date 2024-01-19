@@ -1,5 +1,10 @@
-BASE_TAG ?= 3.8.18-slim-bullseye
+BASE_IMAGE ?= python:3.8.18-slim-bullseye
+
 IMAGE_TAG ?= 3.8
+IMAGE_NAME ?= webhood
+
+IMAGE_DATE_TAG ?= $(IMAGE_TAG):$(shell date +%Y.%m.%d)
+IMAGE_LATEST_TAG ?= $(IMAGE_TAG):latest
 
 COPY ?= $(shell which cp)
 MKDIR ?= $(shell which mkdir)
@@ -24,16 +29,18 @@ format: $(wildcard $(BACKEND_PATH)/*.py) | prerequisites
 	$(PYTHON) -m yapf -i $^ --style "{based_on_style: google, column_limit: 400, indent_width: 4}"
 
 image: $(IMAGE_PATH)/Dockerfile | format $(IMAGE_SOURCES)
-	$(DOCKER) build $(IMAGE_PATH) -f $^ -t webhood/$(IMAGE_TAG)
+	$(DOCKER) build $(IMAGE_PATH) -f $^ -t $(IMAGE_NAME)/$(IMAGE_TAG)
+	$(DOCKER) tag $(IMAGE_NAME)/$(IMAGE_TAG) $(IMAGE_NAME)/$(IMAGE_DATE_TAG)
+	$(DOCKER) tag $(IMAGE_NAME)/$(IMAGE_TAG) $(IMAGE_NAME)/$(IMAGE_LATEST_TAG)
 
 clean:
 	$(RM) $(IMAGE_PATH)/Dockerfile
 
 test: image
-	$(DOCKER) run --rm -p 80:80 -p 443:443 webhood/$(IMAGE_TAG)
+	$(DOCKER) run --rm -p 80:80 -p 443:443 $(IMAGE_NAME)/$(IMAGE_TAG)
 
 test-bash: image
-	$(DOCKER) run --rm -p 80:80 -p 443:443 -it webhood/$(IMAGE_TAG) bash
+	$(DOCKER) run --rm -p 80:80 -p 443:443 -it $(IMAGE_NAME)/$(IMAGE_TAG) bash
 
 test-bundle: bundle
 	$(DOCKER) compose --project-directory $(BUNDLE_PATH) up --build
@@ -54,4 +61,4 @@ $(BUNDLE_FRONTEND_PATH)/application/application.%: $(FRONTEND_PATH)/application/
 
 $(IMAGE_PATH)/Dockerfile: $(IMAGE_PATH)/Dockerfile.template | prerequisites
 	$(MKDIR) -p $(@D)
-	$(PYTHON) -m jinja2cli.cli $^ -DTAG=$(BASE_TAG) > $@
+	$(PYTHON) -m jinja2cli.cli $^ -DBASE_IMAGE=$(BASE_IMAGE) > $@

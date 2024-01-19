@@ -1,5 +1,5 @@
 # Select the base image
-FROM python:{{TAG}}
+FROM {{BASE_IMAGE}}
 
 # Upgrade pip and install dependencies
 RUN pip install --upgrade pip ipython flask jinja2 gunicorn runtypes fsdicts guardify
