@@ -30,6 +30,9 @@ jobs:
             - name: Build and push - Python 2.7
               run: BASE_IMAGE=python:2.7-slim-buster IMAGE_TAG=2.7 make buildx
 
+            - name: Build and push - Python 3.7
+              run: BASE_IMAGE=python:3.7-slim-bullseye IMAGE_TAG=3.7 make buildx
+
             - name: Build and push - Python 3.8
               run: BASE_IMAGE=python:3.8-slim-bullseye IMAGE_TAG=3.8 make buildx
 
