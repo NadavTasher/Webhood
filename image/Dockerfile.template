@@ -16,9 +16,6 @@ COPY configurations/gunicorn.conf /etc/gunicorn.conf
 # Copy default sources
 COPY src /application
 
-# Change working directory for execution
-WORKDIR /opt
-
 # Set default command to run
 CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf" ]
 
