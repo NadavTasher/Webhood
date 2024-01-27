@@ -2,8 +2,11 @@ class API {
 	static async call(action, parameters = {}) {
 		// Execute request using fetch
 		const response = await fetch(`api/${action}`, {
-			method: "post",
+			method: "POST",
 			body: JSON.stringify(parameters),
+			headers: {
+				"Content-Type": "application/json",
+			},
 		});
 
 		// Check response status code

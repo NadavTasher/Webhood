@@ -67,8 +67,10 @@ class Router(Flask):
                     # Create error response from exception
                     return str(exception), 500
 
+            # Decide the endpoint name
+            endpoint = options.pop("endpoint", rule + repr(options.get("methods")))
+
             # Register the wrapper function
-            endpoint = options.pop("endpoint", None)
             self.add_url_rule(rule, endpoint, wrapper, **options)
 
             # Return the original function
