@@ -11,7 +11,7 @@ class Module {
 			// Create a script element
 			const element = document.createElement("script");
 			element.id = `script:${name}`;
-			element.src = `modules/${name}/module.js`;
+			element.src = `/modules/${name}/module.js`;
 
 			// Make sure script is not already loaded
 			if (document.getElementById(element.id)) {
@@ -50,7 +50,7 @@ class Module {
 		}
 
 		// Try fetching the HTML resource
-		const response = await fetch(`modules/${name}/module.html`);
+		const response = await fetch(`/modules/${name}/module.html`);
 		const resources = await response.text();
 
 		// Check if already exists

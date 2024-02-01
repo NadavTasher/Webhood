@@ -1,7 +1,7 @@
 class API {
 	static async call(action, parameters = {}) {
 		// Execute request using fetch
-		const response = await fetch(`api/${action}`, {
+		const response = await fetch(`/api/${action}`, {
 			method: "POST",
 			body: JSON.stringify(parameters),
 			headers: {
