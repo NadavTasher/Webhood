@@ -45,8 +45,15 @@ class Router(Flask):
 
                     # Validate all the parameters
                     for key, value_type in types.items():
-                        # Convert the value using the type
-                        kwargs[key] = value_type(kwargs.get(key))
+                        # Fetch the value from the kwargs
+                        value = kwargs.get(key)
+
+                        try:
+                            # Try casting into the value type
+                            kwargs[key] = value_type(value)
+                        except BaseException as exception:
+                            # Re-raise type error with variable name
+                            raise TypeError("Argument %r: %s" % (key, str(exception)))
 
                     # Get the result
                     result = function(**kwargs)
@@ -60,10 +67,11 @@ class Router(Flask):
                 except BaseException as exception:
                     # If debug mode is enabled, return stack
                     if DEBUG:
-                        return traceback.format_exc(), 500
+                        # Log the exception
+                        logging.exception("Exception in %s:", rule)
 
-                    # Log the exception
-                    logging.exception("Exception in %s:", rule)
+                        # Return the full traceback
+                        return traceback.format_exc(), 500
 
                     # Create error response from exception
                     return str(exception), 500
