@@ -2,7 +2,7 @@
 FROM {{BASE_IMAGE}}
 
 # Upgrade pip and install dependencies
-RUN pip install --upgrade pip ipython flask jinja2 gunicorn fsdicts runtypes guardify
+RUN pip install --upgrade pip ipython configparser flask jinja2 gunicorn fsdicts runtypes guardify
 
 # Install NGINX
 RUN apt update

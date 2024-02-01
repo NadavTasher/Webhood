@@ -35,9 +35,13 @@ if configuration.has_section("include"):
     configuration.pop("include")
 
 # Create list of processes
+devnull = None
 processes = dict()
 
 try:
+    # Open devnull for reading as stdin for subprocesses
+    devnull = os.open(os.devnull, os.O_RDONLY)
+
     # Loop over sections and parse them
     for name in configuration.sections():
         # Fetch the configuration
@@ -46,7 +50,7 @@ try:
         # Create the processes
         for worker in range(int(program_configuration.get("replication", 1))):
             # Create the process using the values
-            process = subprocess.Popen(shlex.split(program_configuration["command"]), stdin=subprocess.DEVNULL, cwd=program_configuration.get("directory"))
+            process = subprocess.Popen(shlex.split(program_configuration["command"]), stdin=devnull, cwd=program_configuration.get("directory"))
 
             # Add the process to the dictionary
             processes[process.pid] = ("%s_%d" % (name, worker + 1), process)
@@ -83,3 +87,7 @@ finally:
 
         # Wait for termination
         process.wait()
+
+    # Close the devnull
+    if devnull is not None:
+        os.close(devnull)

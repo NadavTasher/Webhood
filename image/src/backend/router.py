@@ -3,7 +3,6 @@ import traceback
 
 # Import flask utilities
 from flask import Flask, request, jsonify
-from flask.sansio.scaffold import setupmethod
 
 # Initialize debug mode
 DEBUG = int(os.environ.get("DEBUG", "0"))
@@ -14,10 +13,8 @@ PREFIX = "type_"
 
 class Router(Flask):
 
-    @setupmethod
     def route(self, rule, **options):
-
-        # Fetch all the types
+        # Fetch all of the types
         types = {
             # Create a key: value without prefix
             key[len(PREFIX):]: options.pop(key)

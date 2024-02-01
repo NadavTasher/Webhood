@@ -14,7 +14,6 @@ DOCKER ?= $(shell which docker)
 IMAGE_PATH := image
 BUNDLE_PATH := bundle
 
-
 BACKEND_PATH := $(IMAGE_PATH)/src/backend
 FRONTEND_PATH := $(IMAGE_PATH)/src/frontend
 ENTRYPOINT_PATH := $(IMAGE_PATH)/src/entrypoint.py
