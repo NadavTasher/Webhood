@@ -61,6 +61,11 @@ try:
     # Wait for any process to finish
     stopped_process_id, stopped_process_exit_code = os.wait()
 
+    # Loop until the stopped process is one of our processes
+    while stopped_process_id not in processes:
+        # Wait for any process to finish
+        stopped_process_id, stopped_process_exit_code = os.wait()
+
     # Find the stopped process
     stopped_process_name, _ = processes[stopped_process_id]
 
