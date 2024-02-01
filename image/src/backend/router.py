@@ -9,20 +9,31 @@ from flask import Flask, request, jsonify
 DEBUG = int(os.environ.get("DEBUG", "0"))
 
 # Type checking prefix
-PREFIX = "type_"
+PREFIX_TYPE = "type_"
+PREFIX_OPTIONAL = "optional_"
 
 
 class Router(Flask):
 
     def route(self, rule, **options):
-        # Fetch all of the types
-        types = {
+        # Fetch all of the must-have types
+        must_have_types = {
             # Create a key: value without prefix
-            key[len(PREFIX):]: options.pop(key)
+            key[len(PREFIX_TYPE):]: options.pop(key)
             # For all keys in options
             for key in list(options)
             # That start with the prefix
-            if key.startswith(PREFIX)
+            if key.startswith(PREFIX_TYPE)
+        }
+
+        # Fetch all
+        optional_types = {
+            # Create a key: value without prefix
+            key[len(PREFIX_OPTIONAL):]: options.pop(key)
+            # For all keys in options
+            for key in list(options)
+            # That start with the prefix
+            if key.startswith(PREFIX_OPTIONAL)
         }
 
         # Create wrapper for route that will get all arguments from request
@@ -43,20 +54,29 @@ class Router(Flask):
                     if request.args:
                         kwargs.update(request.args)
 
-                    # Validate all the parameters
-                    for key, value_type in types.items():
-                        # Fetch the value from the kwargs
-                        value = kwargs.get(key)
+                    # Create the actual parameters
+                    arguments = dict()
 
-                        try:
-                            # Try casting into the value type
-                            kwargs[key] = value_type(value)
-                        except BaseException as exception:
-                            # Re-raise type error with variable name
-                            raise TypeError("Argument %r: %s" % (key, str(exception)))
+                    # Validate must-have arguments
+                    for key, value_type in must_have_types.items():
+                        # Make sure the required argument exists
+                        if key not in kwargs:
+                            raise KeyError("Argument %r is missing" % key)
+
+                        # Try casting into the value type
+                        arguments[key] = value_type(kwargs[key])
+
+                    # Validate optional arguments
+                    for key, value_type in optional_types.items():
+                        # Check whether the argument exists
+                        if key not in kwargs:
+                            continue
+
+                        # Try casting into the value type
+                        arguments[key] = value_type(kwargs[key])
 
                     # Get the result
-                    result = function(**kwargs)
+                    result = function(**arguments)
 
                     # Check if the result is a response
                     if isinstance(result, self.response_class):
