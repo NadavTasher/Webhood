@@ -14,8 +14,10 @@ DOCKER ?= $(shell which docker)
 IMAGE_PATH := image
 BUNDLE_PATH := bundle
 
+
 BACKEND_PATH := $(IMAGE_PATH)/src/backend
 FRONTEND_PATH := $(IMAGE_PATH)/src/frontend
+ENTRYPOINT_PATH := $(IMAGE_PATH)/src/entrypoint.py
 
 BUNDLE_BACKEND_PATH := $(BUNDLE_PATH)/application/src/backend
 BUNDLE_FRONTEND_PATH := $(BUNDLE_PATH)/application/src/frontend
@@ -25,7 +27,7 @@ IMAGE_SOURCES := $(shell find $(IMAGE_PATH) -type f)
 prerequisites:
 	$(PYTHON) -m pip install jinja2-cli yapf
 
-format: $(wildcard $(BACKEND_PATH)/*.py) | prerequisites
+format: $(wildcard $(BACKEND_PATH)/*.py) $(ENTRYPOINT_PATH) | prerequisites
 	$(PYTHON) -m yapf -i $^ --style "{based_on_style: google, column_limit: 400, indent_width: 4}"
 
 image: $(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG) | format $(IMAGE_SOURCES)
