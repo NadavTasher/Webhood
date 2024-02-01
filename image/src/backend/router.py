@@ -1,4 +1,5 @@
 import os
+import logging
 import traceback
 
 # Import flask utilities
@@ -60,6 +61,9 @@ class Router(Flask):
                     # If debug mode is enabled, return stack
                     if DEBUG:
                         return traceback.format_exc(), 500
+
+                    # Log the exception
+                    logging.exception("Exception in %s:", rule)
 
                     # Create error response from exception
                     return str(exception), 500
