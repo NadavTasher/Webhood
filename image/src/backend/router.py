@@ -26,7 +26,7 @@ class Router(Flask):
             if key.startswith(PREFIX_REQUIRED)
         }
 
-        # Fetch all
+        # Fetch all of the optional types
         optional_types = {
             # Create a key: value without prefix
             key[len(PREFIX_OPTIONAL):]: options.pop(key)
@@ -39,44 +39,43 @@ class Router(Flask):
         # Create wrapper for route that will get all arguments from request
         def decorator(function):
             # Create the wrapper function
-            def wrapper(**kwargs):
+            def wrapper(**flask_kwargs):
                 try:
                     # Update the kwargs with JSON parameters
                     if request.is_json:
-                        # Update with JSON content
-                        kwargs.update(request.json)
+                        flask_kwargs.update(request.json)
 
                     # Update the kwargs with form parameters
                     if request.form:
-                        kwargs.update(request.form)
+                        flask_kwargs.update(request.form)
 
                     # Update the kwargs with URL parameters
                     if request.args:
-                        kwargs.update(request.args)
+                        flask_kwargs.update(request.args)
 
                     # Create the actual parameters
-                    arguments = dict()
+                    function_kwargs = dict()
 
                     # Validate must-have arguments
                     for key, value_type in required_types.items():
                         # Make sure the required argument exists
-                        if key not in kwargs:
+                        if key not in flask_kwargs:
                             raise KeyError("Argument %r is missing" % key)
 
                         # Try casting into the value type
-                        arguments[key] = value_type(kwargs[key])
+                        function_kwargs[key] = value_type(flask_kwargs[key])
 
                     # Validate optional arguments
                     for key, value_type in optional_types.items():
                         # Check whether the argument exists
-                        if key not in kwargs:
+                        if key not in flask_kwargs:
                             continue
 
                         # Try casting into the value type
-                        arguments[key] = value_type(kwargs[key])
+                        function_kwargs[key] = value_type(flask_kwargs[key])
 
                     # Get the result
-                    result = function(**arguments)
+                    result = function(**function_kwargs)
 
                     # Check if the result is a response
                     if isinstance(result, self.response_class):
