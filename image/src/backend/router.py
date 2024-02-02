@@ -9,21 +9,21 @@ from flask import Flask, request, jsonify
 DEBUG = int(os.environ.get("DEBUG", "0"))
 
 # Type checking prefix
-PREFIX_TYPE = "type_"
+PREFIX_REQUIRED = "type_"
 PREFIX_OPTIONAL = "optional_"
 
 
 class Router(Flask):
 
     def route(self, rule, **options):
-        # Fetch all of the must-have types
-        must_have_types = {
+        # Fetch all of the required types
+        required_types = {
             # Create a key: value without prefix
-            key[len(PREFIX_TYPE):]: options.pop(key)
+            key[len(PREFIX_REQUIRED):]: options.pop(key)
             # For all keys in options
             for key in list(options)
             # That start with the prefix
-            if key.startswith(PREFIX_TYPE)
+            if key.startswith(PREFIX_REQUIRED)
         }
 
         # Fetch all
@@ -58,7 +58,7 @@ class Router(Flask):
                     arguments = dict()
 
                     # Validate must-have arguments
-                    for key, value_type in must_have_types.items():
+                    for key, value_type in required_types.items():
                         # Make sure the required argument exists
                         if key not in kwargs:
                             raise KeyError("Argument %r is missing" % key)
