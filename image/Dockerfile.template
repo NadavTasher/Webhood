@@ -17,13 +17,13 @@ COPY configurations/gunicorn.conf /etc/gunicorn.conf
 COPY src /application
 
 # Change working directory to application
-WORKDIR /application
+WORKDIR /application/backend
 
 # Specify stop signal
 STOPSIGNAL SIGINT
 
 # Set default command to run
-CMD [ "/usr/local/bin/python", "entrypoint.py" ]
+CMD [ "/usr/local/bin/python", "/application/entrypoint.py" ]
 
 # Create the certificate and the key
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj / -keyout /etc/ssl/private/server.key -out /etc/ssl/private/server.crt
