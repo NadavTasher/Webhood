@@ -96,11 +96,8 @@ class Router(Flask):
                 # Return the error response
                 return response, 500
 
-        # Update the function name
-        view_func_wrapper.__name__ = view_func.__name__ + "_" + repr(options.get("methods"))
-
         # Add the url rule using the parent
-        return super(Router, self).add_url_rule(rule, endpoint, view_func_wrapper, provide_automatic_options, **options)
+        return super(Router, self).add_url_rule(rule, endpoint or view_func.__name__ + "_" + repr(options.get("methods")), view_func_wrapper if view_func else view_func, provide_automatic_options, **options)
 
 
 # Initialize the application
