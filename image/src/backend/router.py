@@ -3,7 +3,7 @@ import logging
 import traceback
 
 # Import flask utilities
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 
 # Get debug state
 DEBUG = bool(int(os.environ.get("DEBUG", 0)))
@@ -43,13 +43,9 @@ class Router(Flask):
                 if request.is_json:
                     flask_kwargs.update(request.json)
 
-                # Update the kwargs with form parameters
-                if request.form:
-                    flask_kwargs.update(request.form)
-
-                # Update the kwargs with URL parameters
-                if request.args:
-                    flask_kwargs.update(request.args)
+                # Update the kwargs with form and URL parameters
+                if request.values:
+                    flask_kwargs.update(request.values.to_dict())
 
                 # Create the actual parameters
                 function_kwargs = dict()
@@ -88,10 +84,17 @@ class Router(Flask):
                     logging.exception("Exception in %s:", rule)
 
                     # Return the full traceback
-                    return traceback.format_exc(), 500
+                    error = traceback.format_exc()
+                else:
+                    # Create the error from the exception
+                    error = str(exception)
 
                 # Create error response from exception
-                return str(exception), 500
+                response = make_response(error)
+                response.mimetype = "text/plain"
+
+                # Return the error response
+                return response, 500
 
         # Update the function name
         view_func_wrapper.__name__ = view_func.__name__ + "_" + repr(options.get("methods"))
