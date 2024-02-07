@@ -15,7 +15,7 @@ PREFIX_OPTIONAL = "optional_"
 
 class Router(Flask):
 
-    def add_url_rule(self, rule, endpoint=None, view_func=None, provide_automatic_options=None, **options):
+    def add_url_rule(self, rule, endpoint=None, view_func=None, **options):
         # Fetch all of the required types
         required_types = {
             # Create a key: value without prefix
@@ -37,7 +37,7 @@ class Router(Flask):
         }
 
         # Create wrapper function
-        def view_func_wrapper(**flask_kwargs):
+        def wrapper(**flask_kwargs):
             try:
                 # Update the kwargs with JSON parameters
                 if request.is_json:
@@ -96,8 +96,11 @@ class Router(Flask):
                 # Return the error response
                 return response, 500
 
+        # Create the endpoint name
+        endpoint = endpoint or rule + repr(options.get("methods", []))
+
         # Add the url rule using the parent
-        return super(Router, self).add_url_rule(rule, endpoint or view_func.__name__ + "_" + repr(options.get("methods")), view_func_wrapper if view_func else view_func, provide_automatic_options, **options)
+        return super(Router, self).add_url_rule(rule, endpoint, wrapper if view_func else view_func, **options)
 
 
 # Initialize the application
