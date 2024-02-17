@@ -1,274 +1,225 @@
 html {
-	/* Scrolling */
-	overflow-x: hidden;
-	overflow-y: scroll;
-	/* Sizing */
+	/* Sizing properties */
 	height: 100%;
 	width: 100%;
-	/* Background */
+
+	/* Overflow properties */
+	overflow-x: hidden;
+	overflow-y: scroll;
+
+	/* Theming properties */
 	background-color: var(--theme);
 }
 
 body {
-	/* Alignment */
 	margin: auto !important;
 }
 
-/* Base properties */
+.text, .button, .input, p, button, input, div, body, html {
+	/* Display properties */
+	display: flex;
+	flex-direction: column;
 
-.text,
-.button,
-.input,
-p,
-button,
-input,
-div,
-body,
-html {
-	/* Sizing */
+	/* Sizing properties */
 	box-sizing: border-box;
-	/* Font */
-	font-family: sans-serif;
+
+	/* Font properties */
+	font-family: monospace;
 	text-decoration: none;
-	/* Transition and Outline */
-	outline: none;
-	transition-duration: 0.5s;
-	/* Overflow */
 	overflow-wrap: anywhere;
+
+	/* Transition properties */
+	transition-duration: 0.5s;
+
+	/* Other properties */
+	outline: none;
 }
 
-.button,
-.input,
-.pointer {
-	/* Cursor type */
+.button, .pointer, button {
+	/* User interaction properties */
 	cursor: pointer;
-}
-
-.button,
-.pointer,
-button {
-	/* Not selectable */
 	user-select: none;
 }
 
-/* Flex properties */
-
-.text,
-.button,
-.input,
-p,
-button,
-input,
-div,
-body,
-html {
-	display: flex;
-	flex-direction: column;
-}
-
-/* Alignment properties */
-
-.text,
-.button,
-.input,
-p,
-button,
-input {
+.text, .button, .input, p, button, input {
+	/* Alignment properties */
 	justify-content: center;
 	justify-items: center;
 	align-content: center;
 	align-items: stretch;
 }
 
-div,
-body,
-html {
+div, body, html {
+	/* Alignment properties */
 	justify-content: center;
 	align-content: center;
 	align-items: stretch;
 }
 
-/* Padding & Margin properties */
-
-.text,
-p {
+.text, p {
+	/* Sizing properties */
 	margin: 0.5vh;
 	padding: 0.5vh;
 }
 
-.button,
-button {
+.button, button {
+	/* Sizing properties */
 	margin: 1vh;
 	padding: 1vh;
 }
 
-.input,
-input {
+.input, input {
+	/* Sizing properties */
 	margin: 1vh;
 	padding: 0.5vh;
 }
 
-div,
-body,
-html {
+div, body, html {
+	/* Sizing properties */
 	padding: 0;
 	margin: 0;
 }
 
 .coasted {
+	/* Sizing properties */
 	margin: 1vh;
 	padding: 1vh;
 }
 
-/* Sizing properties */
-
-.text,
-.button,
-.input,
-p,
-button,
-input,
-div,
-body,
-html {
+.text, .button, .input, p, button, input, div, body, html {
+	/* Font properties */
 	line-height: 100%;
+
+	/* Sizing properties */
 	min-height: fit-content;
 }
 
-.button,
-.input,
-button,
-input {
+.button, .input, button, input {
+	/* Sizing properties */
 	width: auto;
 }
 
-.input,
-input {
+.input, input {
+	/* Sizing properties */
 	min-width: 0;
 }
 
-.stretch > *,
-.stretched {
+.stretch>*, .stretched {
+	/* Sizing properties */
 	width: fill-available;
 	width: -moz-available;
 	width: -webkit-fill-available;
 }
 
 .maximized {
+	/* Sizing properties */
 	min-width: max-content;
 }
 
-/* Border properties */
-
-.input,
-input {
+.input, input {
+	/* Border properties */
 	border-style: solid;
 	border-width: 0.35vh 0;
 	border-radius: 0.75vh;
 }
 
-.button,
-button {
+.button, button {
+	/* Border properties */
 	border-style: solid;
 	border-width: 1px;
 	border-radius: 0.75vh;
 }
 
 .coasted {
+	/* Border properties */
 	border-radius: 1vh;
 }
 
-/* Color properties */
-
-.text,
-.button,
-.input,
-p,
-button,
-input {
+.text, .button, .input, p, button, input {
+	/* Theming properties */
 	color: var(--text);
 	background-color: transparent;
 }
 
-.input,
-input {
+.input, input {
+	/* Theming properties */
 	border-top-color: var(--passive);
 	border-bottom-color: var(--active);
 	background-color: var(--passive);
 }
 
-.button,
-button {
+.button, button {
+	/* Theming properties */
 	border-color: var(--text);
 	background-color: var(--passive);
 }
 
-.button:hover,
-button:hover {
+.button:hover, button:hover {
+	/* Theming properties */
 	background-color: var(--active);
 }
 
 .coasted {
+	/* Theming properties */
 	filter: drop-shadow(0 0 0.5vh var(--active));
 	background-color: var(--passive);
 }
 
-/* Flex direction properties */
-
 .row {
+	/* Layout properties */
 	flex-direction: row;
 }
 
 .column {
+	/* Layout properties */
 	flex-direction: column;
 }
 
-/* Text alignment properties */
-
 .center {
+	/* Alignment properties */
 	text-align: center;
 	text-align-last: center;
 }
 
 .left {
+	/* Alignment properties */
 	text-align: start;
 	text-align-last: start;
 }
 
 .right {
+	/* Alignment properties */
 	text-align: end;
 	text-align-last: end;
 }
 
-/* Text size properties */
-
 .tiny {
-	font-size: 1.5vh;
+	/* Font properties */
+	font-size: 1vh;
 }
 
 .small {
-	font-size: 2vh;
+	/* Font properties */
+	font-size: 1.5vh;
 }
 
 .medium {
-	font-size: 2.5vh;
+	/* Font properties */
+	font-size: 2vh;
 }
 
 .large {
+	/* Font properties */
 	font-size: 4vh;
 }
 
 .huge {
+	/* Font properties */
 	font-size: 5.5vh;
 }
 
-.gigantic {
-	font-size: 6.5vh;
-}
-
-/* Animations */
-
 .breathing {
+	/* Animation properties */
 	animation: breathing 2s ease-in-out 0s infinite alternate both;
 }
 
@@ -283,6 +234,7 @@ button:hover {
 }
 
 .spinning {
+	/* Animation properties */
 	animation: spinning 2s linear 0s infinite normal both;
 }
 
@@ -296,12 +248,7 @@ button:hover {
 	}
 }
 
-/* Additional properties */
-
-[hidden] {
-	display: none !important;
-}
-
-*::-webkit-scrollbar {
+[hidden], .hidden, *::-webkit-scrollbar {
+	/* Layout properties */
 	display: none !important;
 }
