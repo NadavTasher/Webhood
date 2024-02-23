@@ -1,8 +1,4 @@
 html {
-	/* Sizing properties */
-	height: 100%;
-	width: 100%;
-
 	/* Overflow properties */
 	overflow-x: hidden;
 	overflow-y: scroll;
@@ -11,19 +7,13 @@ html {
 	background-color: var(--theme);
 }
 
-body {
-	margin: auto !important;
-}
-
 .text, .button, .input, p, button, input, div, body, html {
-	/* Display properties */
-	display: flex;
-	flex-direction: column;
-
 	/* Sizing properties */
 	box-sizing: border-box;
+	min-height: fit-content;
 
 	/* Font properties */
+	line-height: 100%;
 	font-family: monospace;
 	text-decoration: none;
 	overflow-wrap: anywhere;
@@ -35,25 +25,22 @@ body {
 	outline: none;
 }
 
-.button, .pointer, button {
-	/* User interaction properties */
-	cursor: pointer;
-	user-select: none;
-}
-
 .text, .button, .input, p, button, input {
 	/* Alignment properties */
 	justify-content: center;
 	justify-items: center;
 	align-content: center;
 	align-items: stretch;
+
+	/* Theming properties */
+	color: var(--text);
+	background-color: transparent;
 }
 
-div, body, html {
-	/* Alignment properties */
-	justify-content: center;
-	align-content: center;
-	align-items: stretch;
+.button, .pointer, button {
+	/* User interaction properties */
+	cursor: pointer;
+	user-select: none;
 }
 
 .text, p {
@@ -66,89 +53,12 @@ div, body, html {
 	/* Sizing properties */
 	margin: 1vh;
 	padding: 1vh;
-}
 
-.input, input {
-	/* Sizing properties */
-	margin: 1vh;
-	padding: 0.5vh;
-}
-
-div, body, html {
-	/* Sizing properties */
-	padding: 0;
-	margin: 0;
-}
-
-.coasted {
-	/* Sizing properties */
-	margin: 1vh;
-	padding: 1vh;
-}
-
-.text, .button, .input, p, button, input, div, body, html {
-	/* Font properties */
-	line-height: 100%;
-
-	/* Sizing properties */
-	min-height: fit-content;
-}
-
-.button, .input, button, input {
-	/* Sizing properties */
-	width: auto;
-}
-
-.input, input {
-	/* Sizing properties */
-	min-width: 0;
-}
-
-.stretch>*, .stretched {
-	/* Sizing properties */
-	width: fill-available;
-	width: -moz-available;
-	width: -webkit-fill-available;
-}
-
-.maximized {
-	/* Sizing properties */
-	min-width: max-content;
-}
-
-.input, input {
-	/* Border properties */
-	border-style: solid;
-	border-width: 0.35vh 0;
-	border-radius: 0.75vh;
-}
-
-.button, button {
 	/* Border properties */
 	border-style: solid;
 	border-width: 1px;
 	border-radius: 0.75vh;
-}
 
-.coasted {
-	/* Border properties */
-	border-radius: 1vh;
-}
-
-.text, .button, .input, p, button, input {
-	/* Theming properties */
-	color: var(--text);
-	background-color: transparent;
-}
-
-.input, input {
-	/* Theming properties */
-	border-top-color: var(--passive);
-	border-bottom-color: var(--active);
-	background-color: var(--passive);
-}
-
-.button, button {
 	/* Theming properties */
 	border-color: var(--text);
 	background-color: var(--passive);
@@ -159,20 +69,33 @@ div, body, html {
 	background-color: var(--active);
 }
 
-.coasted {
+.input, input {
+	/* Sizing properties */
+	margin: 1vh;
+	padding: 0.5vh;
+
+	/* Border properties */
+	border-style: solid;
+	border-width: 0.35vh 0;
+	border-radius: 0.75vh;
+
 	/* Theming properties */
-	filter: drop-shadow(0 0 0.5vh var(--active));
+	border-top-color: var(--passive);
+	border-bottom-color: var(--active);
 	background-color: var(--passive);
 }
 
-.row {
-	/* Layout properties */
-	flex-direction: row;
-}
+.coasted {
+	/* Sizing properties */
+	margin: 1vh;
+	padding: 1vh;
 
-.column {
-	/* Layout properties */
-	flex-direction: column;
+	/* Border properties */
+	border-radius: 1vh;
+
+	/* Theming properties */
+	filter: drop-shadow(0 0 0.5vh var(--active));
+	background-color: var(--passive);
 }
 
 .center {

@@ -1,0 +1,58 @@
+html {
+	/* Sizing properties */
+	height: 100%;
+	width: 100%;
+
+}
+
+body {
+	/* Sizing properties */
+	margin: auto !important;
+}
+
+div, body, html {
+	/* Display properties */
+	display: flex;
+	flex-direction: column;
+
+	/* Alignment properties */
+	justify-content: center;
+	align-content: center;
+	align-items: stretch;
+
+	/* Sizing properties */
+	padding: 0;
+	margin: 0;
+}
+
+.button, .input, button, input {
+	/* Sizing properties */
+	width: auto;
+}
+
+.input, input {
+	/* Sizing properties */
+	min-width: 0;
+}
+
+.stretch>*, .stretched {
+	/* Sizing properties */
+	width: fill-available;
+	width: -moz-available;
+	width: -webkit-fill-available;
+}
+
+.maximized {
+	/* Sizing properties */
+	min-width: max-content;
+}
+
+.row {
+	/* Layout properties */
+	flex-direction: row;
+}
+
+.column {
+	/* Layout properties */
+	flex-direction: column;
+}
