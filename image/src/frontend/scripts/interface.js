@@ -1,21 +1,117 @@
-// Lock the viewport height to prevent keyboard resizes
-window.addEventListener("load", function () {
-	// Query viewport element
-	const element = document.querySelector(`meta[name="viewport"]`);
+function $(selector) {
+	// Returns the found element
+	return document.querySelector(selector);
+}
 
-	// Make sure viewport exists
-	if (element !== null)
-		// Update viewport height
-		element.content = element.content.replace("device-height", Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0));
-});
+function $$(selector) {
+	return document.querySelectorAll(selector);
+}
 
-// Register a popstate listener to restore states.
-window.addEventListener("popstate", (event) => {
-	_restore(event.state);
-});
+// Extend string prototype for easy selections
+String.prototype.find = function () {
+	return $(this);
+};
 
-// History preservation function
-function _preserve() {
+String.prototype.findAll = function () {
+	return $$(this);
+};
+
+// Extend string prototype for string interpolation
+String.prototype.interpolate = function (parameters) {
+	// Make sure string does not contain backticks
+	if (this.includes("`")) throw new Error("String contains invalid characters");
+
+	// Generate a new function that formats the string using ES6 template strings
+	return new Function(...Object.keys(parameters), "return `" + this + "`")(...Object.values(parameters));
+};
+
+// Extend element prototype
+HTMLElement.prototype.hide = function () {
+	this.setAttribute("hidden", "true");
+};
+
+HTMLElement.prototype.show = function () {
+	this.removeAttribute("hidden");
+};
+
+HTMLElement.prototype.clear = function () {
+	this.innerHTML = "";
+};
+
+HTMLElement.prototype.remove = function () {
+	// Find the parent
+	const parent = this.parentNode;
+
+	// Remove child from parent
+	parent.removeChild(this);
+};
+
+HTMLElement.prototype.view = function (history = true) {
+	// Replace history state
+	window.history.replaceState(preserveState(), document.title);
+
+	// Hide all siblings
+	for (const child of this.parentNode.children) {
+		child.hide();
+	}
+
+	// Show focused view
+	this.show();
+
+	// Add new history state
+	if (history) window.history.pushState(preserveState(), document.title);
+};
+
+HTMLElement.prototype.read = function () {
+	// Check if element is a readble input
+	if (this instanceof HTMLInputElement || this instanceof HTMLTextAreaElement || this instanceof HTMLSelectElement) {
+		return this.value;
+	} else {
+		return this.innerText;
+	}
+};
+
+HTMLElement.prototype.write = function (value) {
+	// Check if element is a readble input
+	if (this instanceof HTMLInputElement || this instanceof HTMLTextAreaElement || this instanceof HTMLSelectElement) {
+		this.value = value;
+	} else {
+		this.innerText = value;
+	}
+};
+
+HTMLElement.prototype.populate = function (parameters = {}) {
+	// Sanitize value using the default HTML sanitiser of the target browser
+	const sanitizer = document.createElement("p");
+
+	// Sanitize parameters
+	for (const key in parameters) {
+		if (key in parameters) {
+			// Set the internal value as text
+			sanitizer.innerText = parameters[key].toString();
+
+			// Extract sanitized value
+			parameters[key] = sanitizer.innerHTML;
+		}
+	}
+
+	// Create a wrapper element
+	const wrapperElement = document.createElement("div");
+
+	// Append HTML to wrapper element
+	wrapperElement.innerHTML = this.innerHTML.interpolate(parameters);
+
+	// Add functions to the wrapper
+	wrapperElement.find = (elementName) => {
+		// Return element
+		return wrapperElement.querySelector(`[name=${elementName}]`);
+	};
+
+	// Return created wrapper
+	return wrapperElement;
+};
+
+function preserveState() {
 	// Initialize state map and elements
 	const state = {};
 	const elements = document.getElementsByTagName("*");
@@ -31,167 +127,37 @@ function _preserve() {
 	return state;
 }
 
-// History restoration function
-function _restore(state = {}) {
+function restoreState(state = {}) {
 	// Restore state map
 	for (const [id, hidden] of Object.entries(state)) {
-		if (hidden) {
-			hide(id);
-		} else {
-			show(id);
+		try {
+			// Fetch the element
+			const element = document.getElementById(id);
+
+			// Hide or show (from state)
+			if (hidden) {
+				element.hide();
+			} else {
+				element.show();
+			}
+		} catch (ignored) {
+			// Log the error
+			console.error(`Failed restoring state of element ${id}`);
 		}
 	}
 }
 
-function find(input) {
-	if (typeof String() === typeof input) {
-		if (document.getElementById(input) !== null) {
-			return document.getElementById(input);
-		}
-		return null;
-	}
-	return input;
-}
+window.addEventListener("popstate", (event) => {
+	// Restore state from event
+	restoreState(event.state);
+});
 
-function hide(input) {
-	find(input).setAttribute("hidden", "true");
-}
+window.addEventListener("load", () => {
+	// Query viewport element
+	const element = document.querySelector(`meta[name="viewport"]`);
 
-function show(input) {
-	find(input).removeAttribute("hidden");
-}
-
-function clear(input) {
-	find(input).innerHTML = "";
-}
-
-function remove(input) {
-	// Find element and parent
-	const element = find(input);
-	const parent = element.parentNode;
-
-	// Remove child from parent
-	parent.removeChild(element);
-}
-
-function view(input, history = true) {
-	// Replace history state
-	window.history.replaceState(_preserve(), document.title);
-
-	// Find element and parent
-	const element = find(input);
-	const parent = element.parentNode;
-
-	// Hide all siblings
-	for (const child of parent.children) {
-		hide(child);
-	}
-
-	// Show focused view
-	show(element);
-
-	// Add new history state
-	if (history) window.history.pushState(_preserve(), document.title);
-}
-
-function read(input) {
-	// Find element
-	const element = find(input);
-
-	// Check if element is a readble input
-	if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
-		return element.value;
-	} else {
-		return element.innerText;
-	}
-}
-
-function write(input, value) {
-	// Find element
-	const element = find(input);
-
-	// Check if element is a readble input
-	if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
-		element.value = value;
-	} else {
-		element.innerText = value;
-	}
-}
-
-function populate(template, parameters = {}) {
-	// Find the template
-	let templateElement = find(template);
-
-	// If the element is null, create one
-	if (templateElement === null) {
-		templateElement = document.createElement("template");
-
-		// Fill the contents
-		templateElement.innerHTML = template;
-	}
-
-	// Store the HTML in a temporary variable
-	let innerHTML = templateElement.innerHTML;
-
-	// Replace parameters
-	for (const key in parameters) {
-		if (key in parameters) {
-			// Create the searching values
-			const search = "${" + key + "}";
-
-			// Sanitize value using the default HTML sanitiser of the target browser
-			const sanitizer = document.createElement("p");
-			sanitizer.innerText = parameters[key];
-
-			// Extract sanitized value
-			const value = sanitizer.innerHTML;
-
-			// Make sure the replacement value does not contain the original search value and replace occurences
-			if (!value.includes(search)) while (innerHTML.includes(search)) innerHTML = innerHTML.replace(search, value);
-		}
-	}
-
-	// Create a wrapper element
-	const wrapperElement = document.createElement("div");
-
-	// Append HTML to wrapper element
-	wrapperElement.innerHTML = innerHTML;
-
-	// Add functions to the wrapper
-	wrapperElement.find = (elementName) => {
-		// Return element
-		return wrapperElement.querySelector(`[name=${elementName}]`);
-	};
-
-	// Return created wrapper
-	return wrapperElement;
-}
-
-// Extend string prototype
-String.prototype.find = function () {
-	return find(this.toString());
-};
-String.prototype.hide = function () {
-	return hide(this.toString());
-};
-String.prototype.show = function () {
-	return show(this.toString());
-};
-String.prototype.clear = function () {
-	return clear(this.toString());
-};
-String.prototype.remove = function () {
-	return remove(this.toString());
-};
-String.prototype.view = function (history = true) {
-	return view(this.toString(), history);
-};
-String.prototype.read = function () {
-	return read(this.toString());
-};
-String.prototype.write = function (value) {
-	return write(this.toString(), value);
-};
-String.prototype.populate = function (parameters = {}) {
-	return populate(this.toString(), parameters);
-};
+	// Make sure viewport exists
+	if (element !== null)
+		// Update viewport height to lock the viewport height (prevents keyboard resizes)
+		element.content = element.content.replace("device-height", Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0));
+});
