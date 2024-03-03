@@ -141,36 +141,6 @@ html {
 	font-size: 5.5vh;
 }
 
-.breathing {
-	/* Animation properties */
-	animation: breathing 2s ease-in-out 0s infinite alternate both;
-}
-
-@keyframes breathing {
-	0% {
-		transform: scale(1);
-	}
-
-	100% {
-		transform: scale(1.025);
-	}
-}
-
-.spinning {
-	/* Animation properties */
-	animation: spinning 2s linear 0s infinite normal both;
-}
-
-@keyframes spinning {
-	0% {
-		transform: rotate(0deg);
-	}
-
-	100% {
-		transform: rotate(360deg);
-	}
-}
-
 [hidden], .hidden, *::-webkit-scrollbar {
 	/* Layout properties */
 	display: none !important;

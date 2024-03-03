@@ -1,61 +1,33 @@
-function createScreen(...children) {
-	// Create a new screen div element
-	const screenElement = document.createElement("div");
+function makeElement(type, classes = [], children = []) {
+	// Create requested element
+	const element = document.createElement(type);
 
-	// Add the required style classes
-	screenElement.classList.add("screen");
+	// Add the requested classes
+	element.classList.add(...classes);
 
-	// Append the childred
-	for (const child of children) {
-		screenElement.appendChild(child);
-	}
+	// Add the requested children
+	for (const child of children)
+		element.appendChild(child);
 
-	// Return the screen element
-	return screenElement;
+	// Return the element
+	return element;
+}
+function makeOverlay(children) {
+	return makeElement("div", classes=["screen"], children=children);
 }
 
-function createDialog(...children) {
-	// Create a div for the dialog
-	const dialogContainer = document.createElement("div");
-
-	// Add the limited class to the container
-	dialogContainer.classList.add("limited-container");
-
-	// Create the dialog element
-	const dialogElement = document.createElement("div");
-
-	// Make the dialog look like a dialog
-	dialogElement.classList.add("coasted", "dialog-container");
-
-	// Append the children
-	for (const child of children) {
-		dialogElement.appendChild(child);
-	}
-
-	// Add the dialog to the container
-	dialogContainer.appendChild(dialogElement);
-
-	// Return the container
-	return dialogContainer;
+function makePopup(children) {
+	return makeElement("div", classes=["limited"], children=[
+		// Create popup container
+		makeElement("div", classes=["coasted", "popup"], children=children)
+	]);
 }
 
-function createDrawer(...children) {
-	// Create the drawer element
-	const drawerElement = document.createElement("div");
-
-	// Make the drawer look like a drawer
-	drawerElement.classList.add("drawer-container");
-
-	// Append the children
-	for (const child of children) {
-		drawerElement.appendChild(child);
-	}
-
-	// Return the drawer
-	return drawerElement;
+function makeDrawer(children) {
+	return makeElement("div", classes=["drawer"], children=children)
 }
 
-function createContainer(...children) {
+function makeContainer(...children) {
 	// Create the container element
 	const containerElement = document.createElement("div");
 
@@ -71,39 +43,24 @@ function createContainer(...children) {
 	return containerElement;
 }
 
-function createAlert(message, containerGenerator, closeText, closeCallback = undefined) {
+function makeAlert(message, closeText, closeCallback) {
 	// Create the alert message
-	const messageParagraph = document.createElement("p");
+	const messageParagraph = makeElement("p", classes=["medium", "left"]);
 
-	// Add some styling to the message
-	messageParagraph.classList.add("medium", "left");
+	// Write the message to the element
+	messageParagraph.write(message);
 
-	// Set the message's text
-	messageParagraph.innerText = message;
-
-	// Create the alert button
-	const closeButton = document.createElement("button");
-
-	// Add some styling to the button
-	closeButton.classList.add("small", "center");
-
-	// Set the button's text
-	closeButton.innerText = closeText;
-
-	// Create the screen
-	const screenElement = createScreen(containerGenerator(messageParagraph, closeButton));
+	// Create the close button
+	const closeButton = makeElement("button", classes=["small", "center"]);
+	
+	// Add the button text
+	closeButton.write(closeText)
 
 	// Add a click listener for the button
-	closeButton.addEventListener("click", () => {
-		// Remove the screen from the body
-		screenElement.parentNode.removeChild(screenElement);
+	closeButton.addEventListener("click", closeCallback);
 
-		// Call the additional callback
-		if (closeCallback) closeCallback();
-	});
-
-	// Add the alert to display
-	document.body.appendChild(screenElement);
+	// Return the children
+	return [messageParagraph, closeButton];
 }
 
 function createPrompt(title, placeholder, inputType, containerGenerator, approveText, declineText, approveCallback = undefined, declineCallback = undefined) {
@@ -147,7 +104,7 @@ function createPrompt(title, placeholder, inputType, containerGenerator, approve
 	buttonContainer.appendChild(declineButton);
 
 	// Create the screen
-	const screenElement = createScreen(containerGenerator(titleParagraph, inputElement, buttonContainer));
+	const screenElement = makeOverlay(containerGenerator(titleParagraph, inputElement, buttonContainer));
 
 	// Add a click listener for the approve button
 	approveButton.addEventListener("click", () => {
@@ -191,14 +148,14 @@ function createLoading(message, containerGenerator) {
 	const loadingContainer = document.createElement("div");
 
 	// Add some styling to the container
-	loadingContainer.classList.add("loading-container");
+	loadingContainer.classList.add("loader");
 
 	// Append spinner and message to container
 	loadingContainer.appendChild(spinnerElement);
 	loadingContainer.appendChild(messageParagraph);
 
 	// Create the screen
-	const screenElement = createScreen(containerGenerator(loadingContainer));
+	const screenElement = makeOverlay(containerGenerator(loadingContainer));
 
 	// Add the alert to display
 	document.body.appendChild(screenElement);
@@ -212,7 +169,7 @@ function createLoading(message, containerGenerator) {
 
 function loadingScreen(message, promise = undefined) {
 	// Create the loading screen
-	const removeCallback = createLoading(message, createContainer);
+	const removeCallback = createLoading(message, makeContainer);
 
 	// If no promise is defined, just return the callback
 	if (!promise) return removeCallback;
@@ -239,7 +196,7 @@ function loadingScreen(message, promise = undefined) {
 
 function loadingDrawer(message, promise = undefined) {
 	// Create the loading screen
-	const removeCallback = createLoading(message, createDrawer);
+	const removeCallback = createLoading(message, makeDrawer);
 
 	// If no promise is defined, just return the callback
 	if (!promise) return removeCallback;
@@ -268,7 +225,7 @@ function alertDialog(message, closeText = "Close") {
 	// Return a promise for resolution
 	return new Promise((resolve) => {
 		// Create the alert dialog
-		createAlert(message, createDialog, closeText, resolve);
+		makeAlert(message, makePopup, closeText, resolve);
 	});
 }
 
@@ -276,7 +233,7 @@ function alertDrawer(message, closeText = "Close") {
 	// Return a promise for resolution
 	return new Promise((resolve) => {
 		// Create the alert dialog
-		createAlert(message, createDrawer, closeText, resolve);
+		makeAlert(message, makeDrawer, closeText, resolve);
 	});
 }
 
@@ -284,7 +241,7 @@ function promptDialog(title, placeholder = "Enter here", inputType = "text", app
 	// Return a promise for resolution
 	return new Promise((resolve, reject) => {
 		// Create the prompt dialog
-		createPrompt(title, placeholder, inputType, createDialog, approveText, declineText, resolve, reject);
+		createPrompt(title, placeholder, inputType, makePopup, approveText, declineText, resolve, reject);
 	});
 }
 
@@ -292,6 +249,6 @@ function promptDrawer(title, placeholder = "Enter here", inputType = "text", app
 	// Return a promise for resolution
 	return new Promise((resolve, reject) => {
 		// Create the prompt dialog
-		createPrompt(title, placeholder, inputType, createDrawer, approveText, declineText, resolve, reject);
+		createPrompt(title, placeholder, inputType, makeDrawer, approveText, declineText, resolve, reject);
 	});
 }
