@@ -1,6 +1,9 @@
-function makeElement(type, classes = [], children = []) {
+function makeElement(type, id = undefined, classes = [], children = []) {
 	// Create requested element
 	const element = document.createElement(type);
+
+	// Set the requested ID
+	element.id = id;
 
 	// Add the requested classes
 	element.classList.add(...classes);
@@ -23,26 +26,6 @@ function makePopup(children) {
 	]);
 }
 
-function makeDrawer(children) {
-	return makeElement("div", classes=["drawer"], children=children)
-}
-
-function makeContainer(...children) {
-	// Create the container element
-	const containerElement = document.createElement("div");
-
-	// Add some styling to the container
-	containerElement.classList.add("default-container");
-
-	// Append the children
-	for (const child of children) {
-		containerElement.appendChild(child);
-	}
-
-	// Return the container
-	return containerElement;
-}
-
 function makeAlert(message, closeText, closeCallback) {
 	// Create the alert message
 	const messageParagraph = makeElement("p", classes=["medium", "left"]);
@@ -57,39 +40,22 @@ function makeAlert(message, closeText, closeCallback) {
 	closeButton.write(closeText)
 
 	// Add a click listener for the button
-	closeButton.addEventListener("click", closeCallback);
+	closeButton.addEventListener("click", () => closeCallback());
 
 	// Return the children
 	return [messageParagraph, closeButton];
 }
 
-function createPrompt(title, placeholder, inputType, containerGenerator, approveText, declineText, approveCallback = undefined, declineCallback = undefined) {
+function makeConfirm(title, approveText, declineText, approveCallback, declineCallback) {
 	// Create the prompt title
-	const titleParagraph = document.createElement("p");
-
-	// Add some styling to the title
-	titleParagraph.classList.add("medium", "left");
+	const titleParagraph = makeElement("p", classes=["medium", "left"]);
 
 	// Set the title's text
-	titleParagraph.innerText = title;
-
-	// Create the prompt input
-	const inputElement = document.createElement("input");
-
-	// Add some styling to the input
-	inputElement.type = inputType;
-	inputElement.placeholder = placeholder;
-	inputElement.classList.add("small", "left");
-
-	// Create buttons container
-	const buttonContainer = document.createElement("div");
-
-	// Add some styling to the container
-	buttonContainer.classList.add("buttons-container");
+	titleParagraph.write(title);
 
 	// Create the approve and decline buttons
-	const approveButton = document.createElement("button");
-	const declineButton = document.createElement("button");
+	const approveButton = makeElement("button", classes=["small", "center"]);
+	const declineButton = makeElement("button", classes=["small", "center"]);
 
 	// Add some styling to the buttons
 	approveButton.classList.add("small", "center");
@@ -99,33 +65,55 @@ function createPrompt(title, placeholder, inputType, containerGenerator, approve
 	approveButton.innerText = approveText;
 	declineButton.innerText = declineText;
 
-	// Add buttons to container
-	buttonContainer.appendChild(approveButton);
-	buttonContainer.appendChild(declineButton);
+	// Add a click listener for the approve and decline buttons
+	approveButton.addEventListener("click", () => approveCallback());
+	declineButton.addEventListener("click", () => declineCallback());
 
-	// Create the screen
-	const screenElement = makeOverlay(containerGenerator(titleParagraph, inputElement, buttonContainer));
+	// Create buttons container
+	return [titleParagraph, makeElement("div", classes=["buttons-container"], children=[declineButton, approveButton])];
+}
 
-	// Add a click listener for the approve button
-	approveButton.addEventListener("click", () => {
-		// Remove the screen from the body
-		screenElement.parentNode.removeChild(screenElement);
+function makePrompt(title, placeholder, inputType, approveText, declineText, approveCallback, declineCallback) {
+	// Create the prompt title
+	const titleParagraph = makeElement("p", classes=["medium", "left"]);
 
-		// Call the additional callback
-		if (approveCallback) approveCallback(inputElement.value);
-	});
+	// Set the title's text
+	titleParagraph.write(title);
 
-	// Add a click listener for the decline button
-	declineButton.addEventListener("click", () => {
-		// Remove the screen from the body
-		screenElement.parentNode.removeChild(screenElement);
+	// Create the prompt input
+	const inputElement = makeElement("input", classes=["small", "left"]);
 
-		// Call the additional callback
-		if (declineCallback) declineCallback();
-	});
+	// Add some styling to the input
+	inputElement.type = inputType;
+	inputElement.placeholder = placeholder;
 
-	// Add the prompt to display
-	document.body.appendChild(screenElement);
+	// Create the approve and decline buttons
+	const approveButton = makeElement("button", classes=["small", "center"]);
+	const declineButton = makeElement("button", classes=["small", "center"]);
+
+	// Add some styling to the buttons
+	approveButton.classList.add("small", "center");
+	declineButton.classList.add("small", "center");
+
+	// Add some text to the buttons
+	approveButton.innerText = approveText;
+	declineButton.innerText = declineText;
+
+	// Add a click listener for the approve and decline buttons
+	approveButton.addEventListener("click", () => approveCallback(inputElement.value));
+	declineButton.addEventListener("click", () => declineCallback());
+
+	// Create buttons container
+	return [titleParagraph, inputElement, makeElement("div", classes=["buttons-container"], children=[declineButton, approveButton])];
+}
+
+function makeLoadingBar(message) {
+	return makeElement("div", classes=["drawer"], children=[
+		makeElement("div", classes=["loader"], children=[
+			makeElement("div", classes=["spinner", "spinning"]),
+			make
+		])
+	]);
 }
 
 function createLoading(message, containerGenerator) {
