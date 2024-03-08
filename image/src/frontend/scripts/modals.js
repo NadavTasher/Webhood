@@ -1,242 +1,138 @@
-function makeElement(type, id = undefined, classes = [], children = []) {
+function make(type, classes = [], children = []) {
 	// Create requested element
 	const element = document.createElement(type);
 
-	// Set the requested ID
-	element.id = id;
-
 	// Add the requested classes
-	element.classList.add(...classes);
+	for (const item of classes) {
+		element.classList.add(item);
+	}
 
 	// Add the requested children
-	for (const child of children)
-		element.appendChild(child);
+	for (const child of children) element.appendChild(child);
 
 	// Return the element
 	return element;
 }
+
 function makeOverlay(children) {
-	return makeElement("div", classes=["screen"], children=children);
+	return make("div", ["overlay"], children);
 }
 
-function makePopup(children) {
-	return makeElement("div", classes=["limited"], children=[
-		// Create popup container
-		makeElement("div", classes=["coasted", "popup"], children=children)
-	]);
+function makePopup(children, buttons) {
+	return make("div", ["limited", "coasted"], [...children, make("div", ["buttons"], buttons)]);
 }
 
-function makeAlert(message, closeText, closeCallback) {
+function progressScreen(message, promise = undefined) {
+	// Create the progress screen
+	const overlay = makeOverlay([make("div", ["spinner", "spinning"]), make("p", ["large", "center"]).write(message)]);
+
+	// Add the overlay to the screen
+	document.body.appendChild(overlay);
+
+	// If no promise is defined, just return the callback
+	if (!promise) return () => overlay.remove();
+
+	// Wrap promise with closing function
+	return new Promise((resolve, reject) => {
+		promise
+			.then((value) => {
+				// Remove from DOM
+				overlay.remove();
+
+				// Resolve with original value
+				resolve(value);
+			})
+			.catch((error) => {
+				// Remove from DOM
+				overlay.remove();
+
+				// Reject with original error
+				reject(error);
+			});
+	});
+}
+
+function alertDialog(message, closeText = "Ok") {
 	// Create the alert message
-	const messageParagraph = makeElement("p", classes=["medium", "left"]);
-
-	// Write the message to the element
-	messageParagraph.write(message);
+	const messageParagraph = make("p", ["medium", "left"]).write(message);
 
 	// Create the close button
-	const closeButton = makeElement("button", classes=["small", "center"]);
-	
-	// Add the button text
-	closeButton.write(closeText)
+	const closeButton = make("button", ["small", "center"]).write(closeText);
+
+	// Create overlay
+	const overlay = makeOverlay([makePopup([messageParagraph], [closeButton])]);
 
 	// Add a click listener for the button
-	closeButton.addEventListener("click", () => closeCallback());
+	closeButton.addEventListener("click", () => overlay.remove());
 
-	// Return the children
-	return [messageParagraph, closeButton];
+	// Add the overlay to the screen
+	document.body.appendChild(overlay);
+
+	// Return a promise for resolution
+	return new Promise((resolve) => {
+		// Add a click listener for the button
+		closeButton.addEventListener("click", () => {
+			// Call the resolve callback
+			resolve();
+		});
+	});
 }
 
-function makeConfirm(title, approveText, declineText, approveCallback, declineCallback) {
+function confirmDialog(message, approveText = "Ok", declineText = "Cancel") {
 	// Create the prompt title
-	const titleParagraph = makeElement("p", classes=["medium", "left"]);
-
-	// Set the title's text
-	titleParagraph.write(title);
+	const titleParagraph = make("p", ["medium", "left"]).write(message);
 
 	// Create the approve and decline buttons
-	const approveButton = makeElement("button", classes=["small", "center"]);
-	const declineButton = makeElement("button", classes=["small", "center"]);
+	const approveButton = make("button", ["small", "center"]).write(approveText);
+	const declineButton = make("button", ["small", "center"]).write(declineText);
 
-	// Add some styling to the buttons
-	approveButton.classList.add("small", "center");
-	declineButton.classList.add("small", "center");
-
-	// Add some text to the buttons
-	approveButton.innerText = approveText;
-	declineButton.innerText = declineText;
+	// Create overlay
+	const overlay = makeOverlay([makePopup([titleParagraph], [declineButton, approveButton])]);
 
 	// Add a click listener for the approve and decline buttons
-	approveButton.addEventListener("click", () => approveCallback());
-	declineButton.addEventListener("click", () => declineCallback());
+	approveButton.addEventListener("click", () => overlay.remove());
+	declineButton.addEventListener("click", () => overlay.remove());
 
-	// Create buttons container
-	return [titleParagraph, makeElement("div", classes=["buttons-container"], children=[declineButton, approveButton])];
+	// Add the overlay to the screen
+	document.body.appendChild(overlay);
+
+	// Return a promise for resolution
+	return new Promise((resolve, reject) => {
+		// Add a click listener for the approve and decline buttons
+		approveButton.addEventListener("click", () => resolve());
+		declineButton.addEventListener("click", () => reject(`User clicked ${declineText}`));
+	});
 }
 
-function makePrompt(title, placeholder, inputType, approveText, declineText, approveCallback, declineCallback) {
+function promptDialog(title, placeholder = "Enter here", inputType = "text", approveText = "Ok", declineText = "Cancel") {
 	// Create the prompt title
-	const titleParagraph = makeElement("p", classes=["medium", "left"]);
-
-	// Set the title's text
-	titleParagraph.write(title);
+	const titleParagraph = make("p", ["medium", "left"]).write(title);
 
 	// Create the prompt input
-	const inputElement = makeElement("input", classes=["small", "left"]);
+	const inputElement = make("input", ["small", "left"]);
 
 	// Add some styling to the input
 	inputElement.type = inputType;
 	inputElement.placeholder = placeholder;
 
 	// Create the approve and decline buttons
-	const approveButton = makeElement("button", classes=["small", "center"]);
-	const declineButton = makeElement("button", classes=["small", "center"]);
+	const approveButton = make("button", ["small", "center"]).write(approveText);
+	const declineButton = make("button", ["small", "center"]).write(declineText);
 
-	// Add some styling to the buttons
-	approveButton.classList.add("small", "center");
-	declineButton.classList.add("small", "center");
-
-	// Add some text to the buttons
-	approveButton.innerText = approveText;
-	declineButton.innerText = declineText;
+	// Create overlay
+	const overlay = makeOverlay([makePopup([titleParagraph, inputElement], [declineButton, approveButton])]);
 
 	// Add a click listener for the approve and decline buttons
-	approveButton.addEventListener("click", () => approveCallback(inputElement.value));
-	declineButton.addEventListener("click", () => declineCallback());
+	approveButton.addEventListener("click", () => overlay.remove());
+	declineButton.addEventListener("click", () => overlay.remove());
 
-	// Create buttons container
-	return [titleParagraph, inputElement, makeElement("div", classes=["buttons-container"], children=[declineButton, approveButton])];
-}
+	// Add the overlay to the screen
+	document.body.appendChild(overlay);
 
-function makeLoadingBar(message) {
-	return makeElement("div", classes=["drawer"], children=[
-		makeElement("div", classes=["loader"], children=[
-			makeElement("div", classes=["spinner", "spinning"]),
-			make
-		])
-	]);
-}
-
-function createLoading(message, containerGenerator) {
-	// Create the spinner element
-	const spinnerElement = document.createElement("div");
-
-	// Add some styling to the spinner
-	spinnerElement.classList.add("spinner", "spinning");
-
-	// Create the alert message
-	const messageParagraph = document.createElement("p");
-
-	// Add some styling to the message
-	messageParagraph.classList.add("medium", "center");
-
-	// Set the message's text
-	messageParagraph.innerText = message;
-
-	// Create the container element
-	const loadingContainer = document.createElement("div");
-
-	// Add some styling to the container
-	loadingContainer.classList.add("loader");
-
-	// Append spinner and message to container
-	loadingContainer.appendChild(spinnerElement);
-	loadingContainer.appendChild(messageParagraph);
-
-	// Create the screen
-	const screenElement = makeOverlay(containerGenerator(loadingContainer));
-
-	// Add the alert to display
-	document.body.appendChild(screenElement);
-
-	// Return a closing callback
-	return () => {
-		// Remove the screen from the body
-		screenElement.parentNode.removeChild(screenElement);
-	};
-}
-
-function loadingScreen(message, promise = undefined) {
-	// Create the loading screen
-	const removeCallback = createLoading(message, makeContainer);
-
-	// If no promise is defined, just return the callback
-	if (!promise) return removeCallback;
-
-	// Wrap promise with closing function
-	return new Promise((resolve, reject) => {
-		promise
-			.then((value) => {
-				// Remove from DOM
-				removeCallback();
-
-				// Resolve with original value
-				resolve(value);
-			})
-			.catch((error) => {
-				// Remove from DOM
-				removeCallback();
-
-				// Reject with original error
-				reject(error);
-			});
-	});
-}
-
-function loadingDrawer(message, promise = undefined) {
-	// Create the loading screen
-	const removeCallback = createLoading(message, makeDrawer);
-
-	// If no promise is defined, just return the callback
-	if (!promise) return removeCallback;
-
-	// Wrap promise with closing function
-	return new Promise((resolve, reject) => {
-		promise
-			.then((value) => {
-				// Remove from DOM
-				removeCallback();
-
-				// Resolve with original value
-				resolve(value);
-			})
-			.catch((error) => {
-				// Remove from DOM
-				removeCallback();
-
-				// Reject with original error
-				reject(error);
-			});
-	});
-}
-
-function alertDialog(message, closeText = "Close") {
-	// Return a promise for resolution
-	return new Promise((resolve) => {
-		// Create the alert dialog
-		makeAlert(message, makePopup, closeText, resolve);
-	});
-}
-
-function alertDrawer(message, closeText = "Close") {
-	// Return a promise for resolution
-	return new Promise((resolve) => {
-		// Create the alert dialog
-		makeAlert(message, makeDrawer, closeText, resolve);
-	});
-}
-
-function promptDialog(title, placeholder = "Enter here", inputType = "text", approveText = "Ok", declineText = "Cancel") {
 	// Return a promise for resolution
 	return new Promise((resolve, reject) => {
-		// Create the prompt dialog
-		createPrompt(title, placeholder, inputType, makePopup, approveText, declineText, resolve, reject);
-	});
-}
-
-function promptDrawer(title, placeholder = "Enter here", inputType = "text", approveText = "Ok", declineText = "Cancel") {
-	// Return a promise for resolution
-	return new Promise((resolve, reject) => {
-		// Create the prompt dialog
-		createPrompt(title, placeholder, inputType, makeDrawer, approveText, declineText, resolve, reject);
+		// Add a click listener for the approve and decline buttons
+		approveButton.addEventListener("click", () => resolve(inputElement.value));
+		declineButton.addEventListener("click", () => reject(`User clicked ${declineText}`));
 	});
 }

@@ -26,6 +26,10 @@ html {
 }
 
 .text, .button, .input, p, button, input {
+	/* Display properties */
+	display: flex;
+	flex-direction: column;
+
 	/* Alignment properties */
 	justify-content: center;
 	justify-items: center;
@@ -133,12 +137,12 @@ html {
 
 .large {
 	/* Font properties */
-	font-size: 4vh;
+	font-size: 3vh;
 }
 
 .huge {
 	/* Font properties */
-	font-size: 5.5vh;
+	font-size: 4.5vh;
 }
 
 [hidden], .hidden, *::-webkit-scrollbar {

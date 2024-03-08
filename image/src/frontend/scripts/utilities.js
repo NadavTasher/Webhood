@@ -7,24 +7,6 @@ function $$(selector) {
 	return document.querySelectorAll(selector);
 }
 
-function make(type, id = undefined, classes = [], children = []) {
-	// Create requested element
-	const element = document.createElement(type);
-
-	// Set the requested ID
-	element.id = id;
-
-	// Add the requested classes
-	element.classList.add(...classes);
-
-	// Add the requested children
-	for (const child of children)
-		element.appendChild(child);
-
-	// Return the element
-	return element;
-}
-
 // Extend string prototype for easy selections
 String.prototype.find = function () {
 	return $(this);

@@ -1,4 +1,9 @@
-.screen {
+.overlay, .overlay * {
+	/* Display properties */
+	display: flex;
+}
+
+.overlay {
 	/* Positioning properties */
 	position: fixed;
 
@@ -13,11 +18,32 @@
 	height: 100%;
 
 	/* Display properties */
-	display: flex;
-	flex-direction: row;
+	align-items: center;
+	justify-content: center;
 
 	/* Theming properties */
 	background-color: #00000030;
+}
+
+.overlay, .limited {
+	/* Display properties */
+	flex-direction: column;
+}
+
+.buttons {
+	/* Display properties */
+	display: flex;
+	flex-direction: row;
+
+	* {
+		width: 100%;
+	}
+}
+
+.limited {
+	/* Sizing properties */
+	min-width: 40vw;
+	max-width: 70vw;
 }
 
 .spinner {
@@ -25,9 +51,9 @@
 	align-self: center;
 
 	/* Sizing properties */
-	margin: 1vh;
-	width: 5vh;
-	height: 5vh;
+	margin: 2vh;
+	width: 6vh;
+	height: 6vh;
 
 	/* Border properties */
 	border-width: 1vh;
@@ -37,77 +63,9 @@
 
 	/* Theming properties */
 	border-top-color: var(--text);
-}
 
-.popup {
-	/* Sizing properties */
-	padding: 1vh;
-}
-
-.drawer {
-	/* Alignment properties */
-	align-self: flex-end;
-
-	/* Sizing properties */
-	padding: 1vh;
-	width: 100vw;
-	max-height: 30vh;
-
-	/* Theming properties */
-	background-color: var(--passive);
-}
-
-.loader {
-	/* Display properties */
-	display: flex;
-	flex-direction: column;
-}
-
-.loader>* {
-	/* Sizing properties */
-	margin: 2vh;
-}
-
-.loader>p {
-	/* Sizing properties */
-	width: 100%;
-}
-
-.drawer>.loader {
-	/* Display properties */
-	flex-direction: row;
-}
-
-.buttons-container {
-	/* Display properties */
-	display: grid;
-	grid-template-columns: 50% 50%;
-}
-
-.limited {
-	/* Sizing properties */
-	min-width: 40vw;
-	max-width: 70vw;
-}
-
-.breathing {
 	/* Animation properties */
-	animation: breathing 2s ease-in-out 0s infinite alternate both;
-}
-
-@keyframes breathing {
-	0% {
-		transform: scale(1);
-	}
-
-	100% {
-		transform: scale(1.025);
-	}
-}
-
-.spinning {
-	/* Animation properties */
-	animation: spinning 2s linear 0s infinite normal both;
+	animation: spinning 1.5s linear 0s infinite normal both;
 }
 
 @keyframes spinning {
