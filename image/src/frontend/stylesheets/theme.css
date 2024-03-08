@@ -26,6 +26,10 @@ html {
 }
 
 .text, .button, .input, p, button, input {
+	/* Display properties */
+	display: flex;
+	flex-direction: column;
+
 	/* Alignment properties */
 	justify-content: center;
 	justify-items: center;
@@ -133,42 +137,12 @@ html {
 
 .large {
 	/* Font properties */
-	font-size: 4vh;
+	font-size: 3vh;
 }
 
 .huge {
 	/* Font properties */
-	font-size: 5.5vh;
-}
-
-.breathing {
-	/* Animation properties */
-	animation: breathing 2s ease-in-out 0s infinite alternate both;
-}
-
-@keyframes breathing {
-	0% {
-		transform: scale(1);
-	}
-
-	100% {
-		transform: scale(1.025);
-	}
-}
-
-.spinning {
-	/* Animation properties */
-	animation: spinning 2s linear 0s infinite normal both;
-}
-
-@keyframes spinning {
-	0% {
-		transform: rotate(0deg);
-	}
-
-	100% {
-		transform: rotate(360deg);
-	}
+	font-size: 4.5vh;
 }
 
 [hidden], .hidden, *::-webkit-scrollbar {

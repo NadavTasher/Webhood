@@ -25,43 +25,6 @@ String.prototype.interpolate = function (parameters) {
 	return new Function(...Object.keys(parameters), "return `" + this + "`")(...Object.values(parameters));
 };
 
-// Extend element prototype
-HTMLElement.prototype.hide = function () {
-	this.setAttribute("hidden", "true");
-};
-
-HTMLElement.prototype.show = function () {
-	this.removeAttribute("hidden");
-};
-
-HTMLElement.prototype.clear = function () {
-	this.innerHTML = "";
-};
-
-HTMLElement.prototype.remove = function () {
-	// Find the parent
-	const parent = this.parentNode;
-
-	// Remove child from parent
-	parent.removeChild(this);
-};
-
-HTMLElement.prototype.view = function (history = true) {
-	// Replace history state
-	window.history.replaceState(preserveState(), document.title);
-
-	// Hide all siblings
-	for (const child of this.parentNode.children) {
-		child.hide();
-	}
-
-	// Show focused view
-	this.show();
-
-	// Add new history state
-	if (history) window.history.pushState(preserveState(), document.title);
-};
-
 HTMLElement.prototype.read = function () {
 	// Check if element is a readble input
 	if (this instanceof HTMLInputElement || this instanceof HTMLTextAreaElement || this instanceof HTMLSelectElement) {
@@ -78,6 +41,64 @@ HTMLElement.prototype.write = function (value) {
 	} else {
 		this.innerText = value;
 	}
+
+	// Return the element
+	return this;
+};
+
+// Extend element prototype
+HTMLElement.prototype.hide = function () {
+	// Set the hidden attribute
+	this.setAttribute("hidden", "true");
+
+	// Return the element
+	return this;
+};
+
+HTMLElement.prototype.show = function () {
+	// Remove the hiding attribute
+	this.removeAttribute("hidden");
+
+	// Return the element
+	return this;
+};
+
+HTMLElement.prototype.clear = function () {
+	// Clear the element
+	this.innerHTML = "";
+
+	// Return the element
+	return this;
+};
+
+HTMLElement.prototype.remove = function () {
+	// Find the parent
+	const parent = this.parentNode;
+
+	// Remove child from parent
+	parent.removeChild(this);
+
+	// Return the element
+	return this;
+};
+
+HTMLElement.prototype.view = function (history = true) {
+	// Replace history state
+	window.history.replaceState(preserveState(), document.title);
+
+	// Hide all siblings
+	for (const child of this.parentNode.children) {
+		child.hide();
+	}
+
+	// Show focused view
+	this.show();
+
+	// Add new history state
+	if (history) window.history.pushState(preserveState(), document.title);
+
+	// Return the element
+	return this;
 };
 
 HTMLElement.prototype.populate = function (parameters = {}) {

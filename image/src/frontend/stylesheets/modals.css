@@ -1,0 +1,79 @@
+.overlay, .overlay * {
+	/* Display properties */
+	display: flex;
+}
+
+.overlay {
+	/* Positioning properties */
+	position: fixed;
+
+	/* Allignment properties */
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+
+	/* Sizing properties */
+	width: 100%;
+	height: 100%;
+
+	/* Display properties */
+	align-items: center;
+	justify-content: center;
+
+	/* Theming properties */
+	background-color: #00000030;
+}
+
+.overlay, .limited {
+	/* Display properties */
+	flex-direction: column;
+}
+
+.buttons {
+	/* Display properties */
+	display: flex;
+	flex-direction: row;
+
+	* {
+		width: 100%;
+	}
+}
+
+.limited {
+	/* Sizing properties */
+	min-width: 40vw;
+	max-width: 70vw;
+}
+
+.spinner {
+	/* Alignment properties */
+	align-self: center;
+
+	/* Sizing properties */
+	margin: 2vh;
+	width: 6vh;
+	height: 6vh;
+
+	/* Border properties */
+	border-width: 1vh;
+	border-radius: 50%;
+	border-style: solid;
+	border-color: transparent;
+
+	/* Theming properties */
+	border-top-color: var(--text);
+
+	/* Animation properties */
+	animation: spinning 1.5s linear 0s infinite normal both;
+}
+
+@keyframes spinning {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
