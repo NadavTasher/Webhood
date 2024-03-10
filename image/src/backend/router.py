@@ -4,7 +4,6 @@ import traceback
 
 # Import flask utilities
 from flask import Flask, request, jsonify, make_response
-from flask_sock import Sock
 
 # Get debug state
 DEBUG = bool(int(os.environ.get("DEBUG", 0)))
@@ -16,7 +15,7 @@ PREFIX_OPTIONAL = "optional_"
 
 class Router(Flask):
 
-    def add_url_rule(self, rule, endpoint=None, view_func=None, encode=True, **options):
+    def add_url_rule(self, rule, endpoint=None, view_func=None, **options):
         # Fetch all of the required types
         required_types = {
             # Create a key: value without prefix
@@ -72,11 +71,6 @@ class Router(Flask):
                 # Get the result
                 result = view_func(**function_kwargs)
 
-                # If the result should not be encoded, return
-                if not encode:
-                    # Return the result as-is
-                    return result
-
                 # Check if the result is a response
                 if isinstance(result, self.response_class):
                     return result
@@ -112,6 +106,3 @@ class Router(Flask):
 # Initialize the application
 router = Router(__name__)
 router.debug = DEBUG
-
-# Initialize the sockets object
-sockets = Sock(router)

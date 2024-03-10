@@ -1,8 +1,8 @@
 # Select the base image
-FROM {{ BASE_IMAGE }}
+FROM {{BASE_IMAGE}}
 
 # Upgrade pip and install dependencies
-RUN pip install --upgrade pip ipython configparser flask flask-sock jinja2 gunicorn eventlet fsdicts runtypes guardify
+RUN pip install --upgrade pip ipython configparser flask jinja2 gunicorn fsdicts runtypes guardify
 
 # Make the debian frontend non-interactive for apt installations
 ENV DEBIAN_FRONTEND=noninteractive
