@@ -26,14 +26,11 @@ jobs:
             username: ${{ secrets.NAME }}
             password: ${{ secrets.TOKEN }}
 
-      - name: Build and push - Python 2.7
-        run: BASE_IMAGE=python:2.7-slim-buster IMAGE_TAG=2.7 make buildx
-
-      - name: Build and push - Python 3.7
-        run: BASE_IMAGE=python:3.7-slim-bullseye IMAGE_TAG=3.7 make buildx
-
       - name: Build and push - Python 3.8
         run: BASE_IMAGE=python:3.8-slim-bullseye IMAGE_TAG=3.8 make buildx
 
       - name: Build and push - Python 3.10
         run: BASE_IMAGE=python:3.10-slim-bookworm IMAGE_TAG=3.10 make buildx
+
+      - name: Build and push - Python 3.12
+        run: BASE_IMAGE=python:3.12-slim-bookworm IMAGE_TAG=3.12 make buildx
