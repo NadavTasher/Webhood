@@ -8,9 +8,6 @@ from guardify import *
 # Import the router
 from router import router, initialize
 
-# Setup the logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-
 
 @router.post("/api/ping", type_echo=Text)
 def ping_request(echo):

@@ -1,6 +1,7 @@
 import os
 import json
 import inspect
+import logging
 import contextlib
 
 # Import typing utilities
@@ -196,5 +197,15 @@ router = Router()
 
 # Create the initialization function
 def initialize():
+    # Create the logging formatter
+    formatter = logging.Formatter("[%(asctime)s] [%(process)d] [%(levelname)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S %z")
+
+    # Loop over the loggers
+    for logger in ["root", "gunicorn.error"]:
+        # Loop over all of the logging handlers
+        for handler in logging.getLogger(logger).handlers:
+            # Set the new logging formatter
+            handler.setFormatter(formatter)
+
     # Initialize the starlette application
     return Starlette(debug=DEBUG, routes=router.routes)
