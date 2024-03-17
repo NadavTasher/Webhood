@@ -1,9 +1,18 @@
 import os
+import json
+import inspect
 import logging
-import traceback
+import contextlib
 
-# Import flask utilities
-from flask import Flask, request, jsonify, make_response
+# Import typing utilities
+from typing import Union
+
+# Import starlette utilities
+from starlette.routing import Route, WebSocketRoute
+from starlette.requests import Request
+from starlette.responses import Response, JSONResponse
+from starlette.websockets import WebSocket
+from starlette.applications import Starlette
 
 # Get debug state
 DEBUG = bool(int(os.environ.get("DEBUG", 0)))
@@ -13,96 +22,190 @@ PREFIX_REQUIRED = "type_"
 PREFIX_OPTIONAL = "optional_"
 
 
-class Router(Flask):
+def gather_types(types: dict):
+    # Fetch all of the required types
+    required_types = {
+        # Create a key: value without prefix
+        key[len(PREFIX_REQUIRED):]: types.pop(key)
+        # For all keys in options
+        for key in list(types)
+        # That start with the prefix
+        if key.startswith(PREFIX_REQUIRED)
+    }
 
-    def add_url_rule(self, rule, endpoint=None, view_func=None, **options):
+    # Fetch all of the optional types
+    optional_types = {
+        # Create a key: value without prefix
+        key[len(PREFIX_OPTIONAL):]: types.pop(key)
+        # For all keys in options
+        for key in list(types)
+        # That start with the prefix
+        if key.startswith(PREFIX_OPTIONAL)
+    }
+
+    # Return the type dicts and the remaining types
+    return required_types, optional_types, types
+
+
+async def gather_parameters(request_or_websocket: Union[Request, WebSocket]):
+    # Create a dictionary to store all of the paremters
+    parameters = dict()
+
+    # Update the request parameters using the path parameters
+    for key, value in request_or_websocket.path_params.items():
+        parameters.setdefault(key, value)
+
+    # Update the request parameters using the query paramters
+    for key, value in request_or_websocket.query_params.items():
+        parameters.setdefault(key, value)
+
+    # Only parse data if request was provided
+    if not isinstance(request_or_websocket, Request):
+        return parameters
+
+    # Update the request parameters using the form body
+    for key, value in (await request_or_websocket.form()).items():
+        parameters.setdefault(key, value)
+
+    # Update the request parameters using the JSON body
+    with contextlib.suppress(json.JSONDecodeError):
+        for key, value in (await request_or_websocket.json()).items():
+            parameters.setdefault(key, value)
+
+    # Return the parsed parameters
+    return parameters
+
+
+def process_parameters(required_types, optional_types, parameters):
+    # Validate must-have arguments
+    for key, value_type in required_types.items():
+        # Make sure the required argument exists
+        if key not in parameters:
+            raise KeyError("Parameter %r is missing" % key)
+
+        # Try casting into the value type
+        parameters[key] = value_type(parameters[key])
+
+    # Validate optional arguments
+    for key, value_type in optional_types.items():
+        # Check whether the argument exists
+        if key not in parameters:
+            continue
+
+        # Try casting into the value type
+        parameters[key] = value_type(parameters[key])
+
+    # Return the parameters
+    return parameters
+
+
+class Router(object):
+
+    def __init__(self):
+        # Initialize internals
+        self.routes = list()
+
+    def socket(self, path, **types):
         # Fetch all of the required types
-        required_types = {
-            # Create a key: value without prefix
-            key[len(PREFIX_REQUIRED):]: options.pop(key)
-            # For all keys in options
-            for key in list(options)
-            # That start with the prefix
-            if key.startswith(PREFIX_REQUIRED)
-        }
+        required_types, optional_types, types = gather_types(types)
 
-        # Fetch all of the optional types
-        optional_types = {
-            # Create a key: value without prefix
-            key[len(PREFIX_OPTIONAL):]: options.pop(key)
-            # For all keys in options
-            for key in list(options)
-            # That start with the prefix
-            if key.startswith(PREFIX_OPTIONAL)
-        }
+        # Create a decorator function
+        def decorator(function):
+            # Make sure the function is a coroutine function
+            assert inspect.iscoroutinefunction(function), "Socket routes must be async"
 
-        # Create wrapper function
-        def wrapper(**flask_kwargs):
-            try:
-                # Update the kwargs with JSON parameters
-                if request.is_json:
-                    flask_kwargs.update(request.json)
+            # Create the request endpoint function
+            async def endpoint(websocket):
+                # Create a dictionary to store all of the paremters
+                parameters = await gather_parameters(websocket)
 
-                # Update the kwargs with form and URL parameters
-                if request.values:
-                    flask_kwargs.update(request.values.to_dict())
+                # Process the parameters
+                parameters = process_parameters(required_types, optional_types, parameters)
 
-                # Create the actual parameters
-                function_kwargs = dict()
+                # Accept the websocket
+                await websocket.accept()
 
-                # Validate must-have arguments
-                for key, value_type in required_types.items():
-                    # Make sure the required argument exists
-                    if key not in flask_kwargs:
-                        raise KeyError("Argument %r is missing" % key)
+                try:
+                    # Call the function
+                    await function(websocket, **parameters)
+                finally:
+                    # Close the websocket
+                    await websocket.close()
 
-                    # Try casting into the value type
-                    function_kwargs[key] = value_type(flask_kwargs[key])
+            # Append the route
+            self.routes.append(WebSocketRoute(path, endpoint=endpoint, name=function.__name__))
 
-                # Validate optional arguments
-                for key, value_type in optional_types.items():
-                    # Check whether the argument exists
-                    if key not in flask_kwargs:
-                        continue
+            # Return the original function
+            return function
 
-                    # Try casting into the value type
-                    function_kwargs[key] = value_type(flask_kwargs[key])
+        # Return the decorator
+        return decorator
 
-                # Get the result
-                result = view_func(**function_kwargs)
+    def route(self, path, methods, **types):
+        # Fetch all of the required types
+        required_types, optional_types, types = gather_types(types)
+
+        # Create a decorator function
+        def decorator(function):
+
+            # Create the request endpoint function
+            async def endpoint(request):
+                # Create a dictionary to store all of the paremters
+                parameters = await gather_parameters(request)
+
+                # Process the parameters
+                parameters = process_parameters(required_types, optional_types, parameters)
+
+                # Call the function
+                if inspect.iscoroutinefunction(function):
+                    result = await function(**parameters)
+                else:
+                    result = function(**parameters)
 
                 # Check if the result is a response
-                if isinstance(result, self.response_class):
+                if isinstance(result, Response):
                     return result
 
-                # Create JSON response from result
-                return jsonify(result), 200
-            except BaseException as exception:
-                # If debug mode is enabled, return stack
-                if self.debug:
-                    # Log the exception
-                    logging.exception("Exception in %s:", rule)
+                # Return a JSON response
+                return JSONResponse(result)
 
-                    # Return the full traceback
-                    error = traceback.format_exc()
-                else:
-                    # Create the error from the exception
-                    error = str(exception)
+            # Append the route
+            self.routes.append(Route(path, endpoint=endpoint, methods=methods, name=function.__name__ + repr(methods)))
 
-                # Create error response from exception
-                response = make_response(error)
-                response.mimetype = "text/plain"
+            # Return the original function
+            return function
 
-                # Return the error response
-                return response, 500
+        # Return the decorator
+        return decorator
 
-        # Create the endpoint name
-        endpoint = endpoint or rule + repr(options.get("methods", []))
+    def get(self, path, **types):
+        return self.route(path, methods=["GET"], **types)
 
-        # Add the url rule using the parent
-        return super(Router, self).add_url_rule(rule, endpoint, wrapper if view_func else view_func, **options)
+    def post(self, path, **types):
+        return self.route(path, methods=["POST"], **types)
+
+    def put(self, path, **types):
+        return self.route(path, methods=["PUT"], **types)
+
+    def delete(self, path, **types):
+        return self.route(path, methods=["DELETE"], **types)
 
 
-# Initialize the application
-router = Router(__name__)
-router.debug = DEBUG
+# Initialize the router
+router = Router()
+
+
+# Create the initialization function
+def initialize():
+    # Create the logging formatter
+    formatter = logging.Formatter("[%(asctime)s] [%(process)d] [%(levelname)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S %z")
+
+    # Loop over the loggers
+    for logger in ["root", "gunicorn.error"]:
+        # Loop over all of the logging handlers
+        for handler in logging.getLogger(logger).handlers:
+            # Set the new logging formatter
+            handler.setFormatter(formatter)
+
+    # Initialize the starlette application
+    return Starlette(debug=DEBUG, routes=router.routes)

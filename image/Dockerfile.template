@@ -2,7 +2,7 @@
 FROM {{BASE_IMAGE}}
 
 # Upgrade pip and install dependencies
-RUN pip install --upgrade pip ipython configparser flask jinja2 gunicorn fsdicts runtypes guardify
+RUN pip install --upgrade pip ipython starlette websockets uvicorn gunicorn python-multipart jinja2 fsdicts runtypes guardify
 
 # Make the debian frontend non-interactive for apt installations
 ENV DEBIAN_FRONTEND=noninteractive
@@ -15,7 +15,6 @@ RUN apt update && \
 # Copy default configurations
 COPY configurations/nginx.conf /etc/nginx/nginx.conf
 COPY configurations/entrypoint.conf /etc/entrypoint/entrypoint.conf
-COPY configurations/gunicorn.conf /etc/gunicorn.conf
 
 # Copy default sources
 COPY src /application
