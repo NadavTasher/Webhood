@@ -21,6 +21,12 @@ DEBUG = bool(int(os.environ.get("DEBUG", 0)))
 PREFIX_REQUIRED = "type_"
 PREFIX_OPTIONAL = "optional_"
 
+# Mime-types for content parsing
+MIMETYPE_JSON = "application/json"
+MIMETYPE_DEFAULT = "application/octet-stream"
+MIMETYPE_SIMPLE_FORM = "application/x-www-form-urlencoded"
+MIMETYPE_MULTIPART_FORM = "multipart/form-data"
+
 
 def gather_types(types: dict):
     # Fetch all of the required types
@@ -63,14 +69,38 @@ async def gather_parameters(request_or_websocket: Union[Request, WebSocket]):
     if not isinstance(request_or_websocket, Request):
         return parameters
 
-    # Update the request parameters using the form body
-    for key, value in (await request_or_websocket.form()).items():
-        parameters.setdefault(key, value)
+    # Fetch the request content type
+    content_type = request_or_websocket.headers.get("Content-Type", MIMETYPE_DEFAULT)
 
-    # Update the request parameters using the JSON body
-    with contextlib.suppress(json.JSONDecodeError):
-        for key, value in (await request_or_websocket.json()).items():
+    # If the content is a form body, parse it
+    if content_type == MIMETYPE_SIMPLE_FORM or content_type.startswith(MIMETYPE_MULTIPART_FORM):
+        # Fetch the form body
+        form_object = await request_or_websocket.form()
+
+        # Make sure form object is a dictionary
+        if not isinstance(form_object, dict):
+            raise TypeError("Form body must be a dictionary")
+
+        # Update the request parameters using the form body
+        for key, value in form_object.items():
             parameters.setdefault(key, value)
+    elif content_type == MIMETYPE_JSON:
+        # Fetch the JSON body
+        json_object = await request_or_websocket.json()
+
+        # Make sure JSON object is a dictionary
+        if not isinstance(json_object, dict):
+            raise TypeError("JSON body must be a dictionary")
+
+        # Update the request parameters using the JSON body
+        for key, value in json_object.items():
+            parameters.setdefault(key, value)
+    else:
+        # Fetch the content data
+        content_data = await request_or_websocket.body()
+
+        # Provide the content parameters
+        parameters.update(content_type=content_type, content_data=content_data)
 
     # Return the parsed parameters
     return parameters
