@@ -7,9 +7,9 @@ from guardify import *
 from router import router, initialize
 
 
-@router.post("/api/ping", type_echo=Text)
-def ping_request(echo):
-    return "Ping %s" % echo
+@router.post("/api/ping", optional_echo=Text, optional_content_type=Text, optional_content_data=Bytes)
+def ping_request(echo=None, content_type=None, content_data=None):
+    return "Ping %r" % (echo or content_data)
 
 
 @router.socket("/socket/ping", optional_initial=Text)
