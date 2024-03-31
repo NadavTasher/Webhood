@@ -1,8 +1,7 @@
 import os
-import json
 import inspect
 import logging
-import contextlib
+import traceback
 
 # Import typing utilities
 from typing import Union
@@ -10,7 +9,7 @@ from typing import Union
 # Import starlette utilities
 from starlette.routing import Route, WebSocketRoute
 from starlette.requests import Request
-from starlette.responses import Response, JSONResponse
+from starlette.responses import Response, JSONResponse, PlainTextResponse
 from starlette.websockets import WebSocket
 from starlette.applications import Starlette
 
@@ -237,5 +236,11 @@ def initialize():
             # Set the new logging formatter
             handler.setFormatter(formatter)
 
+    # Create exception handler
+    exception_handlers = {
+        # When any exception occurs, return an exception string
+        Exception: lambda request, exception: PlainTextResponse(str(exception), 500)
+    }
+
     # Initialize the starlette application
-    return Starlette(debug=DEBUG, routes=router.routes)
+    return Starlette(debug=DEBUG, routes=router.routes, exception_handlers=exception_handlers)

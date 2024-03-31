@@ -38,6 +38,9 @@ clean:
 test: image
 	$(DOCKER) run --rm -p 80:80 -p 443:443 -e DEBUG=1 $(IMAGE_NAME)/$(IMAGE_TAG)
 
+test-release: image
+	$(DOCKER) run --rm -p 80:80 -p 443:443 $(IMAGE_NAME)/$(IMAGE_TAG)
+
 test-bash: image
 	$(DOCKER) run --rm -p 80:80 -p 443:443 -e DEBUG=1 -it $(IMAGE_NAME)/$(IMAGE_TAG) bash
 
