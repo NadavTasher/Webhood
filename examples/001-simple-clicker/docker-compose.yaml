@@ -1,0 +1,16 @@
+version: "3"
+
+# Configure applcation service
+services: 
+    application:
+        build: application
+        restart: unless-stopped
+        ports: 
+            - 80:80
+            - 443:443
+        volumes:
+            - data:/opt
+
+# Configure persistent data volume
+volumes:
+    data:
