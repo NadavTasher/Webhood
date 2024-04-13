@@ -1,7 +1,6 @@
 import os
 import inspect
 import logging
-import traceback
 
 # Import typing utilities
 from typing import Union
