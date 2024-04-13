@@ -20,6 +20,9 @@ DEBUG = bool(int(os.environ.get("DEBUG", 0)))
 PREFIX_REQUIRED = "type_"
 PREFIX_OPTIONAL = "optional_"
 
+# Header for content parsing
+HEADER_CONTENT_TYPE = "Content-Type"
+
 # Mime-types for content parsing
 MIMETYPE_JSON = "application/json"
 MIMETYPE_DEFAULT = "application/octet-stream"
@@ -68,8 +71,12 @@ async def gather_parameters(request_or_websocket: Union[Request, WebSocket]):
     if not isinstance(request_or_websocket, Request):
         return parameters
 
+    # Only parse data if content-type header was provided
+    if HEADER_CONTENT_TYPE not in request_or_websocket.headers:
+        return parameters
+
     # Fetch the request content type
-    content_type = request_or_websocket.headers.get("Content-Type", MIMETYPE_DEFAULT)
+    content_type = request_or_websocket.headers.get(HEADER_CONTENT_TYPE, MIMETYPE_DEFAULT)
 
     # If the content is a form body, parse it
     if content_type == MIMETYPE_SIMPLE_FORM or content_type.startswith(MIMETYPE_MULTIPART_FORM):

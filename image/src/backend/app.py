@@ -4,7 +4,27 @@ from runtypes import *
 from guardify import *
 
 # Import the router
-from router import router, initialize
+from router import PlainTextResponse, router, initialize
+
+
+@router.get("/api/code", optional_head=int)
+def code_request(head=None):
+    # Read the uptime
+    with open(__file__, "r") as code_file:
+        code = code_file.read()
+
+    # If all data is to be returned, return all
+    if head is None:
+        return PlainTextResponse(code)
+
+    # Split code to lines
+    lines = code.splitlines(keepends=True)
+
+    # Take only specific lines
+    assert 0 < head <= len(lines), "Head range invalid"
+
+    # Take just the first "head" lines
+    return PlainTextResponse(str().join(lines[:head]))
 
 
 @router.post("/api/ping", optional_echo=Text, optional_content_type=Text, optional_content_data=Bytes)
