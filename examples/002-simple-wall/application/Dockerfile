@@ -1,5 +1,5 @@
 # Select the base image
-FROM webhood/3.8:2024.03.31
+FROM webhood/3.8:2024.04.13
 
 # Copy configurations
 COPY configurations/nginx.conf /etc/nginx/conf.d/nginx.conf
