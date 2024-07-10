@@ -1,3 +1,32 @@
+window.addEventListener("keypress", (event) => {
+	// Check if the event is an enter key
+	if (event.keyCode !== 13)
+		return;
+
+	// Find all overlays
+	const overlays = $$(".overlay");
+	
+	// If no overlays are defined, return
+	if (!overlays.length) return;
+
+	// Find the top-most overlay
+	const overlay = overlays[overlays.length - 1];
+
+	console.log(overlay);
+
+	// Make sure overlay is the last element of the body
+	if (document.body.children[document.body.children.length] !== overlay) return;
+
+	// Find the approve button
+	const button = overlay.querySelector(".approve");
+
+	// If button is not defined, return
+	if (!button) return;
+
+	// Click the button!
+	button.click();
+});
+
 function make(type, classes = [], children = []) {
 	// Create requested element
 	const element = document.createElement(type);
@@ -57,7 +86,7 @@ function alertDialog(message, closeText = "Ok") {
 	const messageParagraph = make("p", ["medium", "left"]).write(message);
 
 	// Create the close button
-	const closeButton = make("button", ["small", "center"]).write(closeText);
+	const closeButton = make("button", ["small", "center", "approve"]).write(closeText);
 
 	// Create overlay
 	const overlay = makeOverlay([makePopup([messageParagraph], [closeButton])]);
@@ -83,8 +112,8 @@ function confirmDialog(message, approveText = "Ok", declineText = "Cancel") {
 	const titleParagraph = make("p", ["medium", "left"]).write(message);
 
 	// Create the approve and decline buttons
-	const approveButton = make("button", ["small", "center"]).write(approveText);
-	const declineButton = make("button", ["small", "center"]).write(declineText);
+	const approveButton = make("button", ["small", "center", "approve"]).write(approveText);
+	const declineButton = make("button", ["small", "center", "decline"]).write(declineText);
 
 	// Create overlay
 	const overlay = makeOverlay([makePopup([titleParagraph], [declineButton, approveButton])]);
@@ -116,8 +145,8 @@ function promptDialog(title, placeholder = "Enter here", inputType = "text", app
 	inputElement.placeholder = placeholder;
 
 	// Create the approve and decline buttons
-	const approveButton = make("button", ["small", "center"]).write(approveText);
-	const declineButton = make("button", ["small", "center"]).write(declineText);
+	const approveButton = make("button", ["small", "center", "approve"]).write(approveText);
+	const declineButton = make("button", ["small", "center", "decline"]).write(declineText);
 
 	// Create overlay
 	const overlay = makeOverlay([makePopup([titleParagraph, inputElement], [declineButton, approveButton])]);
