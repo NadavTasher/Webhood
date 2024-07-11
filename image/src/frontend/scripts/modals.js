@@ -1,24 +1,26 @@
-window.addEventListener("keypress", (event) => {
-	// Check if the event is an enter key
-	if (event.keyCode !== 13)
-		return;
+const KEY_TO_CLASS = {
+	Enter: "approve",
+	Escape: "decline",
+};
 
+window.addEventListener("keyup", (event) => {
 	// Find all overlays
 	const overlays = $$(".overlay");
-	
+
 	// If no overlays are defined, return
 	if (!overlays.length) return;
 
 	// Find the top-most overlay
 	const overlay = overlays[overlays.length - 1];
 
-	console.log(overlay);
-
 	// Make sure overlay is the last element of the body
-	if (document.body.children[document.body.children.length] !== overlay) return;
+	if (document.body.childNodes[document.body.childNodes.length - 1] !== overlay) return;
 
-	// Find the approve button
-	const button = overlay.querySelector(".approve");
+	// Check if the event is supported
+	if (!(event.key in KEY_TO_CLASS)) return;
+
+	// Find the button for the pressed keycode
+	const button = overlay.querySelector(`.${KEY_TO_CLASS[event.key]}`);
 
 	// If button is not defined, return
 	if (!button) return;
@@ -86,7 +88,7 @@ function alertDialog(message, closeText = "Ok") {
 	const messageParagraph = make("p", ["medium", "left"]).write(message);
 
 	// Create the close button
-	const closeButton = make("button", ["small", "center", "approve"]).write(closeText);
+	const closeButton = make("button", ["small", "center", "approve", "decline"]).write(closeText);
 
 	// Create overlay
 	const overlay = makeOverlay([makePopup([messageParagraph], [closeButton])]);
