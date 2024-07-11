@@ -39,6 +39,9 @@ clean:
 test: image
 	$(DOCKER) run --rm -p 80:80 -p 443:443 -e DEBUG=1 $(IMAGE_NAME)/$(IMAGE_TAG)
 
+test-page: image
+	$(DOCKER) run --rm -p 80:80 -p 443:443 -e DEBUG=1 -v ./resources/tests/frontend/test-page.html:/application/frontend/index.html $(IMAGE_NAME)/$(IMAGE_TAG)
+
 test-release: image
 	$(DOCKER) run --rm -p 80:80 -p 443:443 $(IMAGE_NAME)/$(IMAGE_TAG)
 

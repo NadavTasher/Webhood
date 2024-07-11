@@ -23,6 +23,10 @@ div, body, html {
 	/* Sizing properties */
 	padding: 0;
 	margin: 0;
+
+	.stretched {
+		flex-grow: 1;
+	}
 }
 
 .button, .input, button, input {
@@ -37,14 +41,7 @@ div, body, html {
 
 .stretch>*, .stretched {
 	/* Sizing properties */
-	width: fill-available;
-	width: -moz-available;
-	width: -webkit-fill-available;
-}
-
-.maximized {
-	/* Sizing properties */
-	min-width: max-content;
+	flex-grow: 1;
 }
 
 .row {
