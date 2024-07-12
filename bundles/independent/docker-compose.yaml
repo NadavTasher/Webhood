@@ -9,6 +9,7 @@ services:
             - 80:80
             - 443:443
         volumes:
+            # Data volume path
             - data:/opt
 
 # Configure persistent data volume

@@ -1,0 +1,23 @@
+version: "3"
+
+# Configure applcation service
+services: 
+    application:
+        image: webhood/3.8
+        restart: unless-stopped
+        ports: 
+            - 80:80
+            - 443:443
+        volumes:
+            # Sources mounts
+            - ./src/backend:/application/backend:ro
+            - ./src/frontend:/application/frontend:ro
+            # Configuration mounts
+            - ./configurations/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
+            - ./configurations/entrypoint.conf:/etc/entrypoint/conf.d/entrypoint.conf:ro
+            # Data volume path
+            - data:/opt
+
+# Configure persistent data volume
+volumes:
+    data:
