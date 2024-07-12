@@ -60,6 +60,9 @@ function progressScreen(message, promise = undefined) {
 	// Add the overlay to the screen
 	document.body.appendChild(overlay);
 
+	// Unfocus all elements
+	for (const element of $$("*")) element.blur();
+
 	// If no promise is defined, just return the callback
 	if (!promise) return () => overlay.remove();
 
@@ -102,6 +105,9 @@ function alertDialog(message, closeText = "Ok") {
 	// Add the overlay to the screen
 	document.body.appendChild(overlay);
 
+	// Focus on the close button
+	closeButton.focus();
+
 	// Return a promise for resolution
 	return new Promise((resolve) => {
 		// Add a click listener for the button
@@ -132,6 +138,9 @@ function confirmDialog(message, approveText = "Ok", declineText = "Cancel") {
 
 	// Add the overlay to the screen
 	document.body.appendChild(overlay);
+
+	// Focus on the approve button
+	approveButton.focus();
 
 	// Return a promise for resolution
 	return new Promise((resolve, reject) => {
@@ -168,6 +177,9 @@ function promptDialog(title, placeholder = "Enter here", inputType = "text", app
 
 	// Add the overlay to the screen
 	document.body.appendChild(overlay);
+
+	// Focus on the input element
+	inputElement.focus();
 
 	// Return a promise for resolution
 	return new Promise((resolve, reject) => {
