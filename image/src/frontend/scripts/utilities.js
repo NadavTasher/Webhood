@@ -131,6 +131,10 @@ HTMLElement.prototype.populate = function (parameters = {}) {
 	return wrapperElement;
 };
 
+function sleep(milliseconds) {
+	return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
 function preserveState() {
 	// Initialize state map and elements
 	const state = {};
