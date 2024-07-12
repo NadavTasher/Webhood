@@ -30,7 +30,7 @@ html:has(.overlay) {
 	justify-content: center;
 
 	/* Make the background a transparent-ish black */
-	background-color: #00000030;
+	background-color: #00000060;
 }
 
 .overlay, .modal {
