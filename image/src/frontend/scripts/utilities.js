@@ -178,6 +178,6 @@ window.addEventListener("load", () => {
 
 	// Make sure viewport exists
 	if (element !== null)
-		// Update viewport height to lock the viewport height (prevents keyboard resizes)
+		// Update viewport height to lock the viewport height (prevents mobile keyboard resizes)
 		element.content = element.content.replace("device-height", Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0));
 });
