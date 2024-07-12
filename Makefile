@@ -34,7 +34,7 @@ image: $(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG) | format $(IMAGE_SOURCES)
 	$(DOCKER) build $(IMAGE_PATH) -f $^ -t $(IMAGE_NAME)/$(IMAGE_TAG) -t $(IMAGE_NAME)/$(IMAGE_DATE_TAG) -t $(IMAGE_NAME)/$(IMAGE_LATEST_TAG)
 
 clean:
-	$(RM) $(IMAGE_PATH)/*.Dockerfile
+	$(RM) $(IMAGE_PATH)/Dockerfile-*
 
 test: image
 	$(DOCKER) run --rm -p 80:80 -p 443:443 -e DEBUG=1 -v ./resources/tests/test-page.html:/application/frontend/index.html:ro $(IMAGE_NAME)/$(IMAGE_TAG)
