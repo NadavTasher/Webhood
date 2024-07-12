@@ -37,10 +37,10 @@ clean:
 	$(RM) $(IMAGE_PATH)/*.Dockerfile
 
 test: image
-	$(DOCKER) run --rm -p 80:80 -p 443:443 -e DEBUG=1 -v ./resources/tests/frontend/test-page.html:/application/frontend/index.html:ro $(IMAGE_NAME)/$(IMAGE_TAG)
+	$(DOCKER) run --rm -p 80:80 -p 443:443 -e DEBUG=1 -v ./resources/tests/test-page.html:/application/frontend/index.html:ro $(IMAGE_NAME)/$(IMAGE_TAG)
 
 test-bash: image
-	$(DOCKER) run --rm -p 80:80 -p 443:443 -e DEBUG=1 -v ./resources/tests/frontend/test-page.html:/application/frontend/index.html:ro -it $(IMAGE_NAME)/$(IMAGE_TAG) bash
+	$(DOCKER) run --rm -p 80:80 -p 443:443 -e DEBUG=1 -v ./resources/tests/test-page.html:/application/frontend/index.html:ro -it $(IMAGE_NAME)/$(IMAGE_TAG) bash
 
 test-image: image
 	$(DOCKER) run --rm -p 80:80 -p 443:443 $(IMAGE_NAME)/$(IMAGE_TAG)
