@@ -38,25 +38,26 @@ INDEPENDENT_BUNDLE_BACKEND_PATH := $(INDEPENDENT_BUNDLE_PATH)/application/src/ba
 INDEPENDENT_BUNDLE_FRONTEND_PATH := $(INDEPENDENT_BUNDLE_PATH)/application/src/frontend
 
 IMAGE_SOURCES := $(shell find $(IMAGE_PATH) -type f)
+PYTHON_SOURCES := $(wildcard $(BACKEND_PATH)/*.py) $(ENTRYPOINT_PATH) $(wildcard $(EXAMPLES_PATH)/*/application/src/backend/*.py) $(wildcard $(SCRIPTS_PATH)/*.py)
 
 all: bundles image
 
 prerequisites:
 	$(PYTHON) -m pip install jinja2 yapf
 
-format: $(wildcard $(BACKEND_PATH)/*.py) $(ENTRYPOINT_PATH) $(wildcard $(EXAMPLES_PATH)/*/application/src/backend/*.py) $(wildcard $(SCRIPTS_PATH)/*.py) | prerequisites
-	$(PYTHON) -m yapf -i $^ --style "{based_on_style: google, column_limit: 400, indent_width: 4}"
+format: prerequisites $(PYTHON_SOURCES)
+	$(PYTHON) -m yapf -i $(PYTHON_SOURCES) --style "{based_on_style: google, column_limit: 400, indent_width: 4}"
 
-$(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG): $(IMAGE_PATH)/Dockerfile.template | format $(SCRIPTS_PATH)/create_dockerfile.py
+$(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG): $(SCRIPTS_PATH)/create_dockerfile.py $(IMAGE_PATH)/Dockerfile.template
 	$(MKDIR) -p $(@D)
-	$(PYTHON) $(SCRIPTS_PATH)/create_dockerfile.py --base-image $(BASE_IMAGE) < $^ > $@
+	$(PYTHON) $(SCRIPTS_PATH)/create_dockerfile.py --base-image $(BASE_IMAGE) < $(IMAGE_PATH)/Dockerfile.template > $@
 
-image: $(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG) | format $(IMAGE_SOURCES)
-	$(DOCKER) build $(IMAGE_PATH) -f $^ -t $(IMAGE_NAME)/$(IMAGE_TAG) -t $(IMAGE_NAME)/$(IMAGE_DATE_TAG) -t $(IMAGE_NAME)/$(IMAGE_LATEST_TAG)
+image: format $(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG) $(IMAGE_SOURCES)
+	$(DOCKER) build $(IMAGE_PATH) -f $(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG) -t $(IMAGE_NAME)/$(IMAGE_TAG) -t $(IMAGE_NAME)/$(IMAGE_DATE_TAG) -t $(IMAGE_NAME)/$(IMAGE_LATEST_TAG)
 
-buildx: $(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG) | format $(IMAGE_SOURCES)
+buildx: format $(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG) $(IMAGE_SOURCES)
 	$(DOCKER) buildx create --use
-	$(DOCKER) buildx build $(IMAGE_PATH) --push --platform linux/386,linux/amd64,linux/arm/v5,linux/arm/v7,linux/arm64/v8 -f $^ -t $(IMAGE_NAME)/$(IMAGE_DATE_TAG) -t $(IMAGE_NAME)/$(IMAGE_LATEST_TAG)
+	$(DOCKER) buildx build $(IMAGE_PATH) --push --platform linux/386,linux/amd64,linux/arm/v5,linux/arm/v7,linux/arm64/v8 -f $(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG) -t $(IMAGE_NAME)/$(IMAGE_DATE_TAG) -t $(IMAGE_NAME)/$(IMAGE_LATEST_TAG)
 
 clean:
 	$(RM) $(IMAGE_PATH)/Dockerfile-*
@@ -93,11 +94,11 @@ $(BUILDLESS_BUNDLE_FRONTEND_PATH)/application/application.%: $(FRONTEND_PATH)/ap
 	$(MKDIR) -p $(@D)
 	$(COPY) $^ $@
 
-$(HEADLESS_BUNDLE_INDEX_PATH): $(FRONTEND_PATH)/index.html $(IMAGE_SOURCES) $(SCRIPTS_PATH)/create_headless_page.py | format
+$(HEADLESS_BUNDLE_INDEX_PATH): $(FRONTEND_PATH)/index.html $(SCRIPTS_PATH)/create_headless_page.py $(IMAGE_SOURCES)
 	$(MKDIR) -p $(@D)
 	$(PYTHON) $(SCRIPTS_PATH)/create_headless_page.py --base-directory $(FRONTEND_PATH) < $(FRONTEND_PATH)/index.html > $@
 
-$(HEADLESS_BUNDLE_TEST_PAGE_PATH): $(TESTS_PATH)/test-page.html $(IMAGE_SOURCES) $(SCRIPTS_PATH)/create_headless_page.py | format
+$(HEADLESS_BUNDLE_TEST_PAGE_PATH): $(TESTS_PATH)/test-page.html $(SCRIPTS_PATH)/create_headless_page.py $(IMAGE_SOURCES)
 	$(MKDIR) -p $(@D)
 	$(PYTHON) $(SCRIPTS_PATH)/create_headless_page.py --base-directory $(FRONTEND_PATH) < $(TESTS_PATH)/test-page.html > $@
 
