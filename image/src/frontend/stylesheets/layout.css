@@ -23,18 +23,9 @@ div, body, html {
 	/* Sizing properties */
 	padding: 0;
 	margin: 0;
-
-	.stretched {
-		flex-grow: 1;
-	}
 }
 
-.button, .input, button, input {
-	/* Sizing properties */
-	width: auto;
-}
-
-.input, input {
+.input, input, select, textarea {
 	/* Sizing properties */
 	min-width: 0;
 }
