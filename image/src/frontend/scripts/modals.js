@@ -97,7 +97,7 @@ function alertDialog(message, closeText = "Ok") {
 	closeButton.addEventListener("click", () => overlay.remove());
 
 	// Add a click listener for the overlay
-	overlay.addEventListener("click", () => closeButton.click());
+	overlay.addEventListener("click", (event) => event.target === overlay && closeButton.click());
 
 	// Add the overlay to the screen
 	document.body.appendChild(overlay);
@@ -128,7 +128,7 @@ function confirmDialog(message, approveText = "Ok", declineText = "Cancel") {
 	declineButton.addEventListener("click", () => overlay.remove());
 
 	// Add a click listener for the overlay
-	overlay.addEventListener("click", () => declineButton.click());
+	overlay.addEventListener("click", (event) => event.target === overlay && declineButton.click());
 
 	// Add the overlay to the screen
 	document.body.appendChild(overlay);
@@ -164,7 +164,7 @@ function promptDialog(title, placeholder = "Enter here", inputType = "text", app
 	declineButton.addEventListener("click", () => overlay.remove());
 
 	// Add a click listener for the overlay
-	overlay.addEventListener("click", () => declineButton.click());
+	overlay.addEventListener("click", (event) => event.target === overlay && declineButton.click());
 
 	// Add the overlay to the screen
 	document.body.appendChild(overlay);
