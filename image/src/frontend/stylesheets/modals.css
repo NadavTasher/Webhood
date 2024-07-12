@@ -4,7 +4,7 @@ html:has(.overlay) {
 }
 
 .overlay, .overlay * {
-	/* Display properties */
+	/* Make overlays flex */
 	display: flex;
 
 	/* Don't allow users to select anything */
@@ -12,67 +12,67 @@ html:has(.overlay) {
 }
 
 .overlay {
-	/* Positioning properties */
+	/* Position out of regular layout */
 	position: fixed;
 
-	/* Allignment properties */
+	/* Align to all sides */
 	left: 0;
 	right: 0;
 	top: 0;
 	bottom: 0;
 
-	/* Sizing properties */
+	/* Maximize width and height to cover whole screen */
 	width: 100%;
 	height: 100%;
 
-	/* Display properties */
+	/* Center by default */
 	align-items: center;
 	justify-content: center;
 
-	/* Theming properties */
+	/* Make the background a transparent-ish black */
 	background-color: #00000030;
 }
 
-.overlay, .limited {
-	/* Display properties */
+.overlay, .modal {
+	/* Make the element a column */
 	flex-direction: column;
 }
 
 .buttons {
-	/* Display properties */
+	/* Make the element a flex row */
 	display: flex;
 	flex-direction: row;
 
+	/* Make all children capture the same width to fill the space */
 	* {
 		flex: 1;
 	}
 }
 
-.limited {
-	/* Sizing properties */
+.modal {
+	/* Limit the width of the modal */
 	min-width: 40vw;
 	max-width: 70vw;
 }
 
 .spinner {
-	/* Alignment properties */
-	align-self: center;
-
-	/* Sizing properties */
+	/* Add some margins to the spinner */
 	margin: 2vh;
+
+	/* Explicitly set the spinner's dimensions */
 	width: 6vh;
 	height: 6vh;
 
-	/* Border properties */
+	/* Style the spinner - this is the actual graphics */
 	border-width: 1vh;
 	border-radius: 50%;
 	border-style: solid;
 	border-color: transparent;
 
-	/* Theming properties */
+	/* Color the spinner */
 	border-top-color: var(--text);
 
-	/* Animation properties */
+	/* Animate the spinner */
 	animation: spinning 1.5s linear 0s infinite normal both;
 }
 

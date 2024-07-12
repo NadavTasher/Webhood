@@ -49,8 +49,8 @@ function makeOverlay(children) {
 	return make("div", ["overlay"], children);
 }
 
-function makePopup(children, buttons) {
-	return make("div", ["limited", "coasted"], [...children, make("div", ["buttons"], buttons)]);
+function makeModal(children, buttons) {
+	return make("div", ["modal", "coasted"], [...children, make("div", ["buttons"], buttons)]);
 }
 
 function progressScreen(message, promise = undefined) {
@@ -91,7 +91,7 @@ function alertDialog(message, closeText = "Ok") {
 	const closeButton = make("button", ["small", "center", "approve", "decline"]).write(closeText);
 
 	// Create overlay
-	const overlay = makeOverlay([makePopup([messageParagraph], [closeButton])]);
+	const overlay = makeOverlay([makeModal([messageParagraph], [closeButton])]);
 
 	// Add a click listener for the button
 	closeButton.addEventListener("click", () => overlay.remove());
@@ -121,7 +121,7 @@ function confirmDialog(message, approveText = "Ok", declineText = "Cancel") {
 	const declineButton = make("button", ["small", "center", "decline"]).write(declineText);
 
 	// Create overlay
-	const overlay = makeOverlay([makePopup([titleParagraph], [declineButton, approveButton])]);
+	const overlay = makeOverlay([makeModal([titleParagraph], [declineButton, approveButton])]);
 
 	// Add a click listener for the approve and decline buttons
 	approveButton.addEventListener("click", () => overlay.remove());
@@ -157,7 +157,7 @@ function promptDialog(title, placeholder = "Enter here", inputType = "text", app
 	const declineButton = make("button", ["small", "center", "decline"]).write(declineText);
 
 	// Create overlay
-	const overlay = makeOverlay([makePopup([titleParagraph, inputElement], [declineButton, approveButton])]);
+	const overlay = makeOverlay([makeModal([titleParagraph, inputElement], [declineButton, approveButton])]);
 
 	// Add a click listener for the approve and decline buttons
 	approveButton.addEventListener("click", () => overlay.remove());
