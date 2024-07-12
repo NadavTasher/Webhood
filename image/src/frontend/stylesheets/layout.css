@@ -41,7 +41,12 @@ div, body, html {
 
 .stretch>*, .stretched {
 	/* Sizing properties */
-	flex-grow: 1;
+	flex: 1;
+}
+
+.stubborn {
+	/* Make the element stubborn about it's minimal width */
+	min-width: max-content;
 }
 
 .row {
