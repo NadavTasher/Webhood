@@ -1,4 +1,23 @@
-async function call(action, parameters = {}) {
+async function GET(action, parameters = {}) {
+	// Create URL builder
+	const builder = new URLSearchParams();
+
+	// Generate URL from all parameters
+	for (const [key, value] of Object.entries(parameters)) builder.set(key, value);
+
+	// Execute request using fetch
+	const response = await fetch(builder.size ? `${action}?${builder}` : action, {
+		method: "GET",
+	});
+
+	// Check response status code
+	if (response.status !== 200) throw new Error(await response.text());
+
+	// Return the result
+	return await response.json();
+}
+
+async function POST(action, parameters = {}) {
 	// Execute request using fetch
 	const response = await fetch(action, {
 		method: "POST",
@@ -28,3 +47,5 @@ function socket(action, callback) {
 	// Return the object
 	return object;
 }
+
+const call = POST;

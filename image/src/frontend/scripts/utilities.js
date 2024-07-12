@@ -1,10 +1,6 @@
-function $(selector) {
-	return document.querySelector(selector);
-}
-
-function $$(selector) {
-	return document.querySelectorAll(selector);
-}
+// Define $ and $$ selector functions
+$ = (selector) => document.querySelector(selector);
+$$ = (selector) => document.querySelectorAll(selector);
 
 // Extend string prototype for easy selections
 String.prototype.find = function () {
@@ -181,7 +177,8 @@ window.addEventListener("load", () => {
 	const element = document.querySelector(`meta[name="viewport"]`);
 
 	// Make sure viewport exists
-	if (element !== null)
-		// Update viewport height to lock the viewport height (prevents mobile keyboard resizes)
-		element.content = element.content.replace("device-height", Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0));
+	if (!element) return;
+
+	// Update viewport height to lock the viewport height (prevents mobile keyboard resizes)
+	element.content = element.content.replace("device-height", Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0));
 });
