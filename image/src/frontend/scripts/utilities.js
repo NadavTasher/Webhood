@@ -83,7 +83,7 @@ HTMLElement.prototype.remove = function () {
 
 HTMLElement.prototype.view = function (history = true) {
 	// Replace history state
-	window.history.replaceState(preserveState(), document.title);
+	window.history.replaceState(preserve(), document.title);
 
 	// Hide all siblings
 	for (const child of this.parentNode.children) {
@@ -94,7 +94,7 @@ HTMLElement.prototype.view = function (history = true) {
 	this.show();
 
 	// Add new history state
-	if (history) window.history.pushState(preserveState(), document.title);
+	if (history) window.history.pushState(preserve(), document.title);
 
 	// Return the element
 	return this;
@@ -135,7 +135,7 @@ function sleep(milliseconds) {
 	return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
-function preserveState() {
+function preserve() {
 	// Initialize state map and elements
 	const state = {};
 	const elements = document.getElementsByTagName("*");
@@ -151,7 +151,7 @@ function preserveState() {
 	return state;
 }
 
-function restoreState(state = {}) {
+function restore(state = {}) {
 	// Restore state map
 	for (const [id, hidden] of Object.entries(state)) {
 		try {
@@ -173,7 +173,7 @@ function restoreState(state = {}) {
 
 window.addEventListener("popstate", (event) => {
 	// Restore state from event
-	restoreState(event.state);
+	restore(event.state);
 });
 
 window.addEventListener("load", () => {
