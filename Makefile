@@ -110,8 +110,8 @@ test-bash: image
 test-image: image
 	$(DOCKER) run --rm -p 80:80 -p 443:443 $(IMAGE_NAME)/$(IMAGE_TAG)
 
-test-buildless: bundle
+test-buildless: buildless
 	$(DOCKER) compose --project-directory $(BUILDLESS_BUNDLE_PATH) up
 
-test-independent: bundle
+test-independent: independent
 	$(DOCKER) compose --project-directory $(INDEPENDENT_BUNDLE_PATH) up --build

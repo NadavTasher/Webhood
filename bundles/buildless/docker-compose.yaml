@@ -10,8 +10,10 @@ services:
             - 443:443
         volumes:
             # Sources mounts
-            - ./src/backend:/application/backend:ro
-            - ./src/frontend:/application/frontend:ro
+            - ./src/backend/app.py:/application/backend/app.py:ro
+            - ./src/backend/worker.py:/application/backend/worker.py:ro
+            - ./src/frontend/index.html:/application/frontend/index.html:ro
+            - ./src/frontend/application:/application/frontend/application:ro
             # Configuration mounts
             - ./configurations/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
             - ./configurations/entrypoint.conf:/etc/entrypoint/conf.d/entrypoint.conf:ro
