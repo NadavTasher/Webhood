@@ -73,14 +73,14 @@ $(BUNDLE_FRONTEND_PATH)/application/application.%: $(FRONTEND_PATH)/application/
 	$(MKDIR) -p $(@D)
 	$(COPY) $^ $@
 
-$(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG): $(IMAGE_PATH)/Dockerfile.template | prerequisites
+$(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG): $(IMAGE_PATH)/Dockerfile.template | format $(SCRIPTS_PATH)/create_dockerfile.py
 	$(MKDIR) -p $(@D)
-	$(PYTHON) -m jinja2cli.cli $^ -DBASE_IMAGE=$(BASE_IMAGE) > $@
+	$(PYTHON) $(SCRIPTS_PATH)/create_dockerfile.py --base-image $(BASE_IMAGE) < $^ > $@
 
-$(BUILD_PATH)/index-headless.html: $(IMAGE_SOURCES) | format $(FRONTEND_PATH)/index.html $(SCRIPTS_PATH)/create_headless_page.py
+$(BUILD_PATH)/index-headless.html: $(FRONTEND_PATH)/index.html | format $(IMAGE_SOURCES) $(SCRIPTS_PATH)/create_headless_page.py
 	$(MKDIR) -p $(@D)
-	$(PYTHON) $(SCRIPTS_PATH)/create_headless_page.py --base-directory $(FRONTEND_PATH) < $(FRONTEND_PATH)/index.html > $@
+	$(PYTHON) $(SCRIPTS_PATH)/create_headless_page.py --base-directory $(FRONTEND_PATH) < $^ > $@
 
-$(BUILD_PATH)/test-page-headless.html: $(IMAGE_SOURCES) | format $(TESTS_PATH)/test-page.html $(SCRIPTS_PATH)/create_headless_page.py
+$(BUILD_PATH)/test-page-headless.html: $(TESTS_PATH)/test-page.html | format $(IMAGE_SOURCES) $(SCRIPTS_PATH)/create_headless_page.py
 	$(MKDIR) -p $(@D)
-	$(PYTHON) $(SCRIPTS_PATH)/create_headless_page.py --base-directory $(FRONTEND_PATH) < $(TESTS_PATH)/test-page.html > $@
+	$(PYTHON) $(SCRIPTS_PATH)/create_headless_page.py --base-directory $(FRONTEND_PATH) < $^ > $@
