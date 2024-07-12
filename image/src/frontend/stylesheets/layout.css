@@ -51,3 +51,18 @@ div, body, html {
 	/* Make the element a flex column */
 	flex-direction: column;
 }
+
+.center {
+	/* Align items to the center */
+	justify-content: center;
+}
+
+.left {
+	/* Align items to the left */
+	justify-content: left;
+}
+
+.right {
+	/* Align items to the right */
+	justify-content: right;
+}
