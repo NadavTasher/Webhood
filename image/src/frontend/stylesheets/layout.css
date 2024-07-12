@@ -1,8 +1,7 @@
 html {
-	/* Sizing properties */
+	/* Make the HTML element fill the screen */
 	height: 100%;
 	width: 100%;
-
 }
 
 body {
@@ -11,48 +10,44 @@ body {
 }
 
 div, body, html {
-	/* Display properties */
+	/* Make the element a flex column by default */
 	display: flex;
 	flex-direction: column;
 
-	/* Alignment properties */
+	/* Make center as the default alignment */
 	justify-content: center;
 	align-content: center;
+
+	/* Make all items' widths stretched by default */
 	align-items: stretch;
 
-	/* Sizing properties */
+	/* Disable padding and margin (causes sizing bugs) */
 	padding: 0;
 	margin: 0;
 }
 
-.button, .input, button, input {
-	/* Sizing properties */
-	width: auto;
-}
-
-.input, input {
-	/* Sizing properties */
+.input, input, select, textarea {
+	/* Allow inputs to be narrower then the placeholder */
 	min-width: 0;
 }
 
 .stretch>*, .stretched {
-	/* Sizing properties */
-	width: fill-available;
-	width: -moz-available;
-	width: -webkit-fill-available;
+	/* Fill as much space as possible */
+	/* Note that if a specific child has the flex property set elsewhere, this would not make them the same width as the other children. */
+	flex: 1;
 }
 
-.maximized {
-	/* Sizing properties */
+.stubborn {
+	/* Make the element stubborn about it's minimal width */
 	min-width: max-content;
 }
 
 .row {
-	/* Layout properties */
+	/* Make the element a flex row */
 	flex-direction: row;
 }
 
 .column {
-	/* Layout properties */
+	/* Make the element a flex column */
 	flex-direction: column;
 }

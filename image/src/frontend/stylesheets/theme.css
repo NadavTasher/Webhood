@@ -7,13 +7,13 @@ html {
 	background-color: var(--theme);
 }
 
-.text, .button, .input, p, button, input, div, body, html {
+.text, .button, .input, p, button, input, select, textarea, div, body, html {
 	/* Sizing properties */
 	box-sizing: border-box;
 	min-height: fit-content;
 
 	/* Font properties */
-	white-space: pre;
+	white-space: pre-wrap;
 	line-height: 100%;
 	font-family: monospace;
 	text-decoration: none;
@@ -26,7 +26,7 @@ html {
 	outline: none;
 }
 
-.text, .button, .input, p, button, input {
+.text, .button, .input, p, button, input, select, textarea {
 	/* Display properties */
 	display: flex;
 	flex-direction: column;
@@ -42,7 +42,7 @@ html {
 	background-color: transparent;
 }
 
-.button, .pointer, button {
+.button, .pointer, button, select {
 	/* User interaction properties */
 	cursor: pointer;
 	user-select: none;
@@ -74,7 +74,7 @@ html {
 	background-color: var(--active);
 }
 
-.input, input {
+.input, input, select, textarea {
 	/* Sizing properties */
 	margin: 1vh;
 	padding: 0.5vh;

@@ -1,5 +1,4 @@
 function $(selector) {
-	// Returns the found element
 	return document.querySelector(selector);
 }
 
