@@ -9,7 +9,7 @@
 		<meta charset="UTF-8" />
 
 		<!-- App Description -->
-		<meta name="description" content="Simple Clicker" />
+		<meta name="description" content="Webhood Test Page" />
 
 		<!-- Viewport -->
 		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=5, user-scalable=yes, minimal-ui" />
@@ -20,7 +20,7 @@
 
 		<!-- Mobile Safari -->
 		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-title" content="Simple Clicker" />
+		<meta name="apple-mobile-web-app-title" content="Test Page" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
 		<!-- Icons -->
@@ -44,7 +44,7 @@
 		<script type="text/javascript" src="/application/application.js"></script>
 
 		<!-- App Title -->
-		<title>Simple Clicker</title>
+		<title>Test Page</title>
 
 		<!-- No Script -->
 		<noscript></noscript>
@@ -54,27 +54,58 @@
 
 	<body class="column">
 		<div>
+			<!-- Generic titles -->
 			<p class="large left">Webhood // Test Page</p>
-			<p class="tiny left">This is a test. check out the buttons</p>
-			<div class="coasted">
-				<p class="tiny left">Some items:</p>
-				<button class="small left">Hello</button>
-			</div>
+			<p class="small left">This is a test.</p>
 			<div class="row">
-				<button class="small left">Hello</button>
-				<button class="small right">World</button>
+				<button class="small center"></button>
 			</div>
+			<!-- Coaster test -->
+			<p class="small left">This is a coasted div.</p>
+			<div class="coasted">
+				<button class="small left">Option 1</button>
+				<button class="small left">Option 2</button>
+				<button class="small left">Option 3</button>
+			</div>
+			<!-- Text alignments -->
+			<p class="small left">This is a coasted div with texts inside.</p>
+			<div class="coasted">
+				<p class="tiny left">This is a tiny text aligned to the left</p>
+				<p class="small center">This is a small text aligned to the center</p>
+				<p class="medium right">This is a medium text aligned to the right</p>
+				<p class="large center">This is a large text aligned to the center</p>
+				<p class="huge left">This is a huge text aligned to the right</p>
+			</div>
+			<!-- Row test -->
+			<p class="small left">This is a row div without any special child treatment.</p>
+			<div class="row">
+				<button class="small left">Option 1</button>
+				<button class="small right">Option 2</button>
+			</div>
+			<!-- Stretch row test -->
+			<p class="small left">This is a row div where all children are stretched.</p>
 			<div class="row stretch">
-				<button class="small left">Hello</button>
-				<button class="small right">World</button>
+				<button class="small left">Option 1</button>
+				<button class="small right">Option 2</button>
 			</div>
+			<!-- Maximize test -->
+			<p class="small left">This is a row div where only one child is maximized.</p>
 			<div class="row">
 				<input class="small left maximized">
-				<button class="small right">Click</button>
+				<button class="small right">Option 1</button>
 			</div>
+			<!-- Stretched test -->
+			<p class="small left">This is a row div where only one child is stretched.</p>
 			<div class="row">
 				<input class="small left stretched">
-				<button class="small right">Click</button>
+				<button class="small right">Option 1</button>
+			</div>
+			<!-- Modal tests -->
+			<div class="row stretch">
+				<button class="small left" onclick="alertDialog('This is an alert dialog')">Spawn alert dialog</button>
+				<button class="small left" onclick="promptDialog('This is a prompt dialog', 'This is a custom hint')">Spawn prompt dialog</button>
+				<button class="small left" onclick="confirmDialog('This is a confirm dialog', 'This is a custom message')">Spawn confirm dialog</button>
+				<button class="small left">Spawn loading screen</button>
 			</div>
 		</div>
 	</body>
