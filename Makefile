@@ -93,13 +93,13 @@ $(BUILDLESS_BUNDLE_FRONTEND_PATH)/application/application.%: $(FRONTEND_PATH)/ap
 	$(MKDIR) -p $(@D)
 	$(COPY) $^ $@
 
-$(HEADLESS_BUNDLE_INDEX_PATH): $(FRONTEND_PATH)/index.html | format $(IMAGE_SOURCES) $(SCRIPTS_PATH)/create_headless_page.py
+$(HEADLESS_BUNDLE_INDEX_PATH): $(FRONTEND_PATH)/index.html $(IMAGE_SOURCES) $(SCRIPTS_PATH)/create_headless_page.py | format
 	$(MKDIR) -p $(@D)
-	$(PYTHON) $(SCRIPTS_PATH)/create_headless_page.py --base-directory $(FRONTEND_PATH) < $^ > $@
+	$(PYTHON) $(SCRIPTS_PATH)/create_headless_page.py --base-directory $(FRONTEND_PATH) < $(FRONTEND_PATH)/index.html > $@
 
-$(HEADLESS_BUNDLE_TEST_PAGE_PATH): $(TESTS_PATH)/test-page.html | format $(IMAGE_SOURCES) $(SCRIPTS_PATH)/create_headless_page.py
+$(HEADLESS_BUNDLE_TEST_PAGE_PATH): $(TESTS_PATH)/test-page.html $(IMAGE_SOURCES) $(SCRIPTS_PATH)/create_headless_page.py | format
 	$(MKDIR) -p $(@D)
-	$(PYTHON) $(SCRIPTS_PATH)/create_headless_page.py --base-directory $(FRONTEND_PATH) < $^ > $@
+	$(PYTHON) $(SCRIPTS_PATH)/create_headless_page.py --base-directory $(FRONTEND_PATH) < $(TESTS_PATH)/test-page.html > $@
 
 test: image
 	$(DOCKER) run --rm -p 80:80 -p 443:443 -e DEBUG=1 -v $(abspath $(TESTS_PATH)/test-page.html):/application/frontend/index.html:ro $(IMAGE_NAME)/$(IMAGE_TAG)
