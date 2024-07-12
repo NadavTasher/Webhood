@@ -103,24 +103,6 @@ html {
 	background-color: var(--passive);
 }
 
-.center {
-	/* Alignment properties */
-	text-align: center;
-	text-align-last: center;
-}
-
-.left {
-	/* Alignment properties */
-	text-align: start;
-	text-align-last: start;
-}
-
-.right {
-	/* Alignment properties */
-	text-align: end;
-	text-align-last: end;
-}
-
 .tiny {
 	/* Font properties */
 	font-size: 1vh;

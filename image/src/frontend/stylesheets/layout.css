@@ -53,16 +53,28 @@ div, body, html {
 }
 
 .center {
-	/* Align items to the center */
+	/* Align text to the center */
+	text-align: center;
+	text-align-last: center;
+
+	/* Align flex items to the center */
 	justify-content: center;
 }
 
 .left {
-	/* Align items to the left */
+	/* Align text to the left */
+	text-align: start;
+	text-align-last: start;
+
+	/* Align flex items to the left */
 	justify-content: left;
 }
 
 .right {
-	/* Align items to the right */
+	/* Align text to the right */
+	text-align: end;
+	text-align-last: end;
+
+	/* Align flex items to the right */
 	justify-content: right;
 }
