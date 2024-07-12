@@ -1,6 +1,9 @@
 .overlay, .overlay * {
 	/* Display properties */
 	display: flex;
+
+	/* Don't allow users to select anything */
+	user-select: none;
 }
 
 .overlay {
@@ -36,7 +39,7 @@
 	flex-direction: row;
 
 	* {
-		flex-grow: 1;
+		flex: 1;
 	}
 }
 
