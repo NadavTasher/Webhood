@@ -50,6 +50,23 @@
 		<noscript></noscript>
 
 		<!-- Additional -->
+		<script>
+			function promiseSleep(seconds) {
+				return new Promise((resolve) => {
+					setTimeout(resolve, seconds * 1000);
+				});
+			}
+		</script>
+
+		<style>
+			.narrow {
+				max-width: 100px;
+			}
+
+			.extra-wide {
+				max-width: 1000px;
+			}
+		</style>
 	</head>
 
 	<body class="column">
@@ -57,8 +74,9 @@
 			<!-- Generic titles -->
 			<p class="large left">Webhood // Test Page</p>
 			<p class="small left">This is a test.</p>
-			<div class="row">
-				<button class="small center"></button>
+			<div class="row stretch">
+				<button class="small center" onclick="document.body.classList.add('narrow')">Make body narrow</button>
+				<button class="small center" onclick="document.body.classList.add('extra-wide')">Make body extra-wide</button>
 			</div>
 			<!-- Coaster test -->
 			<p class="small left">This is a coasted div.</p>
@@ -88,24 +106,37 @@
 				<button class="small left">Option 1</button>
 				<button class="small right">Option 2</button>
 			</div>
-			<!-- Maximize test -->
-			<p class="small left">This is a row div where only one child is maximized.</p>
-			<div class="row">
-				<input class="small left maximized">
-				<button class="small right">Option 1</button>
-			</div>
 			<!-- Stretched test -->
 			<p class="small left">This is a row div where only one child is stretched.</p>
 			<div class="row">
-				<input class="small left stretched">
+				<input class="small left stretched" placeholder="This is a placeholder">
 				<button class="small right">Option 1</button>
 			</div>
+			<!-- Stubborn test -->
+			<p class="small left">This is a row div where only one child is stretched & stubborn.</p>
+			<div class="row">
+				<input class="small left stretched stubborn" placeholder="This is a placeholder">
+				<button class="small right">Option 1</button>
+			</div>
+			<!-- Select test -->
+			<p class="small left">This is a select input.</p>
+			<select class="small left">
+				<option>Option 1</option>
+				<option>Option 2</option>
+				<option>Option 3</option>
+				<option>Option 4</option>
+				<option>Option 5</option>
+			</select>
+			<!-- Textarea test -->
+			<p class="small left">This is a textarea input.</p>
+			<textarea class="small left" placeholder="This is a placeholder">This is some text</textarea>
 			<!-- Modal tests -->
+			<p class="small left">Here are some buttons to set the modals.</p>
 			<div class="row stretch">
 				<button class="small left" onclick="alertDialog('This is an alert dialog')">Spawn alert dialog</button>
 				<button class="small left" onclick="promptDialog('This is a prompt dialog', 'This is a custom hint')">Spawn prompt dialog</button>
-				<button class="small left" onclick="confirmDialog('This is a confirm dialog', 'This is a custom message')">Spawn confirm dialog</button>
-				<button class="small left">Spawn loading screen</button>
+				<button class="small left" onclick="confirmDialog('This is a confirm dialog')">Spawn confirm dialog</button>
+				<button class="small left" onclick="progressScreen('Sleeping for 10 seconds', promiseSleep(10))">Spawn loading screen</button>
 			</div>
 		</div>
 	</body>
