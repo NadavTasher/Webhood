@@ -33,6 +33,9 @@ format: $(wildcard $(BACKEND_PATH)/*.py) $(ENTRYPOINT_PATH) $(wildcard $(EXAMPLE
 image: $(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG) | format $(IMAGE_SOURCES)
 	$(DOCKER) build $(IMAGE_PATH) -f $^ -t $(IMAGE_NAME)/$(IMAGE_TAG) -t $(IMAGE_NAME)/$(IMAGE_DATE_TAG) -t $(IMAGE_NAME)/$(IMAGE_LATEST_TAG)
 
+headless: $(IMAGE_SOURCES)
+	cat $(FRONTEND_PATH)/index.html | sed -e 's#<link rel="stylesheet" href="\(.*\)" />#$$(cat $(FRONTEND_PATH)/\1)#g' > $@.test
+
 clean:
 	$(RM) $(IMAGE_PATH)/Dockerfile-*
 
