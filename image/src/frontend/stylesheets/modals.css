@@ -1,3 +1,8 @@
+html:has(.overlay) {
+	/* Disable scrolling when an overlay is displayed */
+	overflow: hidden;
+}
+
 .overlay, .overlay * {
 	/* Display properties */
 	display: flex;
