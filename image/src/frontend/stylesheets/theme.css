@@ -13,7 +13,7 @@ html {
 	min-height: fit-content;
 
 	/* Font properties */
-	white-space: pre;
+	white-space: pre-wrap;
 	line-height: 100%;
 	font-family: monospace;
 	text-decoration: none;
