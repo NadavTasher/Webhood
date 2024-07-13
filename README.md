@@ -1,4 +1,6 @@
 # Webhood
+Builds are ran on GitHub Actions.
+
 ![Builds](https://github.com/NadavTasher/Webhood/actions/workflows/build.yml/badge.svg)
 
 ## What is Webhood?
@@ -21,7 +23,13 @@ Choose the bundle thats right for you:
 # Clone webhood locally
 git clone git@github.com:NadavTasher/Webhood.git Webhood
 
-# Create a new 
+# Create a new project
+cp -r Webhood/bundles/independent ./New-Project && cd ./New-Project
+
+# Initialize a new Git repository
+git init
+git add --all
+git commit -m "Initial commit"
 ```
 
 ## Tech stack
@@ -32,4 +40,3 @@ Webhood is based on popular projects and strives to keep the application archite
 3. Frontend duties are handled by a couple of utility JavaScript and CSS files residing in [src/frontend](https://github.com/NadavTasher/Webhood/tree/master/image/src/frontend). You can see an example of the frontend capabilities in the [Headless Test Page](https://github.com/NadavTasher/Webhood/blob/master/bundles/headless/test-page.html).
 
 ## Features
-
