@@ -1,10 +1,6 @@
 # Webhood
 
-Builds are ran on GitHub Actions.
-
 ![Builds](https://github.com/NadavTasher/Webhood/actions/workflows/build.yml/badge.svg)
-
-## What is Webhood?
 
 Webhood is a simple to use, full-stack web-application framework for creating small to mid-size projects.
 
@@ -459,4 +455,4 @@ To make this possible, you might need to extend the `entrypoint` configuration t
 
 ## Contributing
 
-Contributions are highly encouraged through pull-requests or issues, mail me at [hey@nadav.app](mailto:hey@nadav.app) if needed.
+Contributions are highly encouraged through pull-requests or issues, contact me at [hey@nadav.app](mailto:hey@nadav.app) if needed.
