@@ -6,7 +6,7 @@ async function GET(action, parameters = {}) {
 	for (const [key, value] of Object.entries(parameters)) builder.set(key, value);
 
 	// Execute request using fetch
-	const response = await fetch(builder.size ? `${action}?${builder}` : action, {
+	const response = await fetch(builder.toString() ? `${action}?${builder}` : action, {
 		method: "GET",
 	});
 
