@@ -5,6 +5,7 @@ from guardify import *
 
 # Import the router
 from router import PlainTextResponse, router, initialize
+from database import DATABASE
 
 
 @router.get("/api/code", optional_head=int)
@@ -30,6 +31,12 @@ def code_request(head=None):
 @router.post("/api/ping", optional_echo=Text, optional_content_type=Text, optional_content_data=Bytes)
 def ping_request(echo=None, content_type=None, content_data=None):
     return "Ping %r" % (echo or content_data)
+
+
+@router.get("/api/click")
+def process_click():
+    REDIS.incrby("clicks", 1)
+    return REDIS.get("clicks")
 
 
 @router.socket("/socket/ping", optional_initial=Text)
