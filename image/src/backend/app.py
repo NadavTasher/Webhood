@@ -5,7 +5,10 @@ from guardify import *
 
 # Import the router
 from router import PlainTextResponse, router, initialize
-from database import DATABASE
+from database import DATABASE, RedisMapping
+
+rm = RedisMapping("test", DATABASE)
+rm.setdefaults(a="B", b="C")
 
 
 @router.get("/api/code", optional_head=int)
@@ -35,10 +38,7 @@ def ping_request(echo=None, content_type=None, content_data=None):
 
 @router.get("/api/click")
 def process_click():
-    DATABASE.incrby("clicks", 1)
-    return DATABASE.get("clicks")
-    DATABASE.json().set("aaa", ".", {"hello": "world"})
-    return DATABASE.json().get("aaa")
+    return rm.copy()
 
 
 @router.socket("/socket/ping", optional_initial=Text)

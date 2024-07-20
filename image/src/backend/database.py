@@ -30,59 +30,40 @@ class AdvancedMutableMapping(MutableMapping):
 
 class RedisMapping(AdvancedMutableMapping):
 
-    def __init__(self, name, redis):
+    def __init__(self, name: str, redis: redis.Redis):
         # Set the internal name and redis
         self._name = name
         self._redis = redis
 
     def __getitem__(self, key):
-        # Fetch the item
-        self._redis.json().get(key, self._name)
+        # Fetch the item type
+        item_type_response = self._redis.json().type(key, self._name)
 
-        # Resolve item path
-        item_path = self._item_path(key)
+        if not item_type_response:
+            raise KeyError(key)
 
-        # Lock the item for modifications
-        with self._lock(item_path):
-            return self._internal_get(key)
+        item_type, = item_type_response
+
+        if item_type == "object":
+            return RedisMapping(self._name + "." + key)
+
+        return self._redis.json().get(key, self._name)
 
     def __setitem__(self, key, value):
-        # Resolve item path
-        item_path = self._item_path(key)
-
-        # Lock the item for modifications
-        with self._lock(item_path):
-            return self._internal_set(key, value)
+        self._redis.json().set(key, self._name, value)
 
     def __delitem__(self, key):
-        # Resolve item path
-        item_path = self._item_path(key)
-
-        # Lock the item for modifications
-        with self._lock(item_path):
-            return self._internal_delete(key)
+        self._redis.json().delete(key)
 
     def __contains__(self, key):
-        # Resolve item path
-        item_path = self._item_path(key)
-
-        # Check if paths exist
-        with self._lock(item_path):
-            return self._internal_has(item_path)
+        return self._redis.json().get(key, self._name) is not None
 
     def __iter__(self):
-        # List all of the items in the path
-        for item_path in self._internal_iterate():
-            # Read the key contents and decode
-            with self._lock(item_path):
-                key_contents = self._decode(self._key_storage.readlink(os.path.join(item_path, FILE_KEY)))
-
-            # Yield the key contents
-            yield key_contents
+        return self._redis.json().objkeys(self._name)
 
     def __len__(self):
         # Count all key files
-        return len(list(self._internal_iterate()))
+        return self._redis.json().objlen(self._name)
 
     def __repr__(self):
         # Format the data like a dictionary
@@ -105,32 +86,32 @@ class RedisMapping(AdvancedMutableMapping):
         # Comparison succeeded
         return True
 
-    def pop(self, key, default=DEFAULT):
-        try:
-            # Resolve item path
-            item_path = self._item_path(key)
+    # def pop(self, key, default=DEFAULT):
+    #     try:
+    #         # Resolve item path
+    #         item_path = self._item_path(key)
 
-            # Check if paths exist
-            with self._lock(item_path):
-                # Fetch the value
-                value = self._internal_get(key)
+    #         # Check if paths exist
+    #         with self._lock(item_path):
+    #             # Fetch the value
+    #             value = self._internal_get(key)
 
-                # Check if the value is a keystore
-                if isinstance(value, Mapping):
-                    value = value.copy()
+    #             # Check if the value is a keystore
+    #             if isinstance(value, Mapping):
+    #                 value = value.copy()
 
-                # Delete the item
-                self._internal_delete(key)
+    #             # Delete the item
+    #             self._internal_delete(key)
 
-            # Return the value
-            return value
-        except KeyError:
-            # Check if a default is defined
-            if default != DEFAULT:
-                return default
+    #         # Return the value
+    #         return value
+    #     except KeyError:
+    #         # Check if a default is defined
+    #         if default != DEFAULT:
+    #             return default
 
-            # Reraise exception
-            raise
+    #         # Reraise exception
+    #         raise
 
     def popitem(self):
         # Convert self to list
