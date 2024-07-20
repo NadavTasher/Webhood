@@ -35,7 +35,9 @@ def ping_request(echo=None, content_type=None, content_data=None):
 
 @router.get("/api/click")
 def process_click():
-    DATABASE.json().set("aaa", ".", {})
+    DATABASE.incrby("clicks", 1)
+    return DATABASE.get("clicks")
+    DATABASE.json().set("aaa", ".", {"hello": "world"})
     return DATABASE.json().get("aaa")
 
 

@@ -6,6 +6,8 @@ import functools
 # Create a generic redis connection
 DATABASE = redis.Redis(unix_socket_path="/run/redis.sock", decode_responses=True)
 
+DEFAULT = object()
+
 try:
     # Python 3 mapping
     from collections.abc import MutableMapping, Mapping
