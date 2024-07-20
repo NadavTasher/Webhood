@@ -1,8 +1,9 @@
-# FROM redis:7.2.5 AS redis
-# FROM nginx:1.27.0-alpine3.19-slim AS nginx
+# Select the images to install from
+FROM redis:7.2.5-bookworm AS redis
+FROM nginx:1.27.0-bookworm AS nginx
 
 # Select the base image
-FROM {{BASE_IMAGE}}
+FROM python:{{PYTHON_VERSION}}-bookworm AS python
 
 # Upgrade pip and install dependencies
 RUN pip install --upgrade pip ipython starlette websockets uvicorn gunicorn redis python-multipart jinja2 fsdicts runtypes guardify
@@ -10,31 +11,16 @@ RUN pip install --upgrade pip ipython starlette websockets uvicorn gunicorn redi
 # Make the debian frontend non-interactive for apt installations
 ENV DEBIAN_FRONTEND=noninteractive
 
-# # Install NGINX
-RUN apt update && \
-	apt -y install nginx && \
-	rm -rf /var/lib/apt/lists /var/cache/apt/archives
+# Install redis from image
+COPY --from=redis /usr/lib /usr/lib
+COPY --from=redis /usr/sbin /usr/sbin
+COPY --from=redis /usr/local /usr/local
 
-# Install Redis
-RUN apt update && \
-	apt -y install curl gpg && \
-	curl -fsSL https://packages.redis.io/gpg | gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg && \
-	echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb bullseye main"  > /etc/apt/sources.list.d/redis.list && \
-	apt update && \
-	apt -y install redis && \
-	rm -rf /var/lib/apt/lists /var/cache/apt/archives
-
-# # COPY --from=redis /lib /lib
-# COPY --from=redis /usr/lib /usr/lib
-# COPY --from=redis /usr/sbin /usr/sbin
-# COPY --from=redis /usr/local /usr/local
-# # COPY --from=redis /etc/redis /etc/redis
-
-# COPY --from=nginx /lib /lib
-# COPY --from=nginx /usr/lib /usr/lib
-# COPY --from=nginx /usr/sbin /usr/sbin
-# COPY --from=nginx /usr/local /usr/local
-# COPY --from=nginx /etc/nginx /etc/nginx
+# Install nginx from image
+COPY --from=nginx /usr/lib /usr/lib
+COPY --from=nginx /usr/sbin /usr/sbin
+COPY --from=nginx /usr/local /usr/local
+COPY --from=nginx /etc/nginx/mime.types /etc/nginx/mime.types
 
 # Copy default configurations
 COPY configurations/nginx.conf /etc/nginx/nginx.conf

@@ -1,5 +1,3 @@
-BASE_IMAGE ?= python:3.8.18-slim-bullseye
-
 IMAGE_TAG ?= 3.8
 IMAGE_NAME ?= webhood
 
@@ -50,7 +48,7 @@ format: prerequisites $(PYTHON_SOURCES)
 
 $(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG): $(SCRIPTS_PATH)/create_dockerfile.py $(IMAGE_PATH)/Dockerfile.template
 	$(MKDIR) -p $(@D)
-	$(PYTHON) $(SCRIPTS_PATH)/create_dockerfile.py --base-image $(BASE_IMAGE) < $(IMAGE_PATH)/Dockerfile.template > $@
+	$(PYTHON) $(SCRIPTS_PATH)/create_dockerfile.py --python-version $(IMAGE_TAG) < $(IMAGE_PATH)/Dockerfile.template > $@
 
 image: format $(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG) $(IMAGE_SOURCES)
 	$(DOCKER) build $(IMAGE_PATH) -f $(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG) -t $(IMAGE_NAME)/$(IMAGE_TAG) -t $(IMAGE_NAME)/$(IMAGE_DATE_TAG) -t $(IMAGE_NAME)/$(IMAGE_LATEST_TAG)

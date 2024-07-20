@@ -35,8 +35,8 @@ def ping_request(echo=None, content_type=None, content_data=None):
 
 @router.get("/api/click")
 def process_click():
-    REDIS.incrby("clicks", 1)
-    return REDIS.get("clicks")
+    DATABASE.json().set("aaa", ".", {})
+    return DATABASE.json().get("aaa")
 
 
 @router.socket("/socket/ping", optional_initial=Text)
