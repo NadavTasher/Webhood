@@ -1,14 +1,10 @@
 # Import utilities
-from fsdicts import *
 from runtypes import *
 from guardify import *
 
 # Import the router
 from router import PlainTextResponse, router, initialize
-from database import DATABASE, RedisMapping
-
-rm = RedisMapping("test", DATABASE)
-rm.setdefaults(a="B", b="C")
+from database import redict, relist
 
 
 @router.get("/api/code", optional_head=int)
@@ -34,11 +30,6 @@ def code_request(head=None):
 @router.post("/api/ping", optional_echo=Text, optional_content_type=Text, optional_content_data=Bytes)
 def ping_request(echo=None, content_type=None, content_data=None):
     return "Ping %r" % (echo or content_data)
-
-
-@router.get("/api/click")
-def process_click():
-    return rm.copy()
 
 
 @router.socket("/socket/ping", optional_initial=Text)
