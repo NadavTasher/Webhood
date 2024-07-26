@@ -1,4 +1,4 @@
-name: Build and push multi-arch images
+name: Docker builds
 
 on:
   push:
@@ -25,9 +25,6 @@ jobs:
         with:
             username: ${{ secrets.NAME }}
             password: ${{ secrets.TOKEN }}
-
-      - name: Purge storage
-        run: ls -lah /
 
       - name: Build and push - Python 3.8
         run: IMAGE_TAG=3.8 make buildx

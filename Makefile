@@ -57,6 +57,7 @@ buildx: format $(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG) $(IMAGE_SOURCES)
 	$(DOCKER) buildx create --use
 	$(DOCKER) buildx build $(IMAGE_PATH) --push --platform linux/386,linux/amd64,linux/arm64/v8 -f $(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG) -t $(IMAGE_NAME)/$(IMAGE_DATE_TAG) -t $(IMAGE_NAME)/$(IMAGE_LATEST_TAG)
 	$(DOCKER) buildx rm --all-inactive --force
+	$(DOCKER) system prune --all --force
 
 clean:
 	$(RM) $(IMAGE_PATH)/Dockerfile-*
