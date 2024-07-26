@@ -176,7 +176,7 @@ Alert dialog:
 
 ```javascript
 // ...
-if (state.isDangerous) await alertDialog("The current conditions are dangerous. Take care!");
+if (state.isDangerous) await alertDialog("The current conditions are dangerous. Take care!", { closeText: "Acknowledged!" });
 // ...
 ```
 
@@ -184,8 +184,8 @@ Confirm dialog:
 
 ```javascript
 try {
-	// Ask for user confirmation
-	await confirmDialog("Are you sure you want to delete this item?");
+	// Ask for user confirmation (with optional arguments)
+	await confirmDialog("Are you sure you want to delete this item?", { approveText: "Delete item" });
 
 	// Delete item
 	await POST("/api/delete_item", { item });
@@ -198,10 +198,10 @@ Prompt dialog:
 
 ```javascript
 try {
-	// Ask user for their name
-	const name = await promptDialog("What is your name?", "Your name goes here");
+	// Ask user for their password (with optional arguments - type makes the input a password input)
+	const name = await promptDialog("What is your password?", { placeholder: "Your password goes here", declineText: "I don't know", type: "password" });
 
-	console.log(`User's name is ${name}`);
+	console.log(`User's password is ${name}`);
 } catch (e) {
 	// User might have cancelled the prompt
 	console.log(e);

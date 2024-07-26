@@ -137,8 +137,8 @@
 			<p class="small left">Here are some buttons to set the modals.</p>
 			<div class="row stretch">
 				<button class="small left" onclick="alertDialog('This is an alert dialog')">Spawn alert dialog</button>
-				<button class="small left" onclick="promptDialog('This is a prompt dialog', 'This is a custom hint')">Spawn prompt dialog</button>
-				<button class="small left" onclick="confirmDialog('This is a confirm dialog')">Spawn confirm dialog</button>
+				<button class="small left" onclick="promptDialog('This is a prompt dialog', { placeholder: 'This is a custom hint' })">Spawn prompt dialog</button>
+				<button class="small left" onclick="confirmDialog('This is a confirm dialog', { approveText: 'Confirm' })">Spawn confirm dialog</button>
 				<button class="small left" onclick="progressScreen('Sleeping for 10 seconds', sleep(10 * 1000))">Spawn loading screen</button>
 			</div>
 		</div>

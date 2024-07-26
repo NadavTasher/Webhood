@@ -86,7 +86,7 @@ function progressScreen(message, promise = undefined) {
 	});
 }
 
-function alertDialog(message, closeText = "Ok") {
+function alertDialog(message, { closeText = "Ok" } = {}) {
 	// Create the alert message
 	const messageParagraph = make("p", ["medium", "left"]).write(message);
 
@@ -118,7 +118,7 @@ function alertDialog(message, closeText = "Ok") {
 	});
 }
 
-function confirmDialog(message, approveText = "Ok", declineText = "Cancel") {
+function confirmDialog(message, { approveText = "Ok", declineText = "Cancel" } = {}) {
 	// Create the prompt title
 	const titleParagraph = make("p", ["medium", "left"]).write(message);
 
@@ -150,7 +150,7 @@ function confirmDialog(message, approveText = "Ok", declineText = "Cancel") {
 	});
 }
 
-function promptDialog(title, placeholder = "Enter here", inputType = "text", approveText = "Ok", declineText = "Cancel") {
+function promptDialog(title, { placeholder = "Enter here", inputType = "text", approveText = "Ok", declineText = "Cancel" } = {}) {
 	// Create the prompt title
 	const titleParagraph = make("p", ["medium", "left"]).write(title);
 
