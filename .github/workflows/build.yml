@@ -27,7 +27,7 @@ jobs:
             password: ${{ secrets.TOKEN }}
 
       - name: Purge storage
-        run: sudo swapoff /swapfile && sudo rm -f /swapfile
+        run: ls -lah /
 
       - name: Build and push - Python 3.8
         run: IMAGE_TAG=3.8 make buildx
