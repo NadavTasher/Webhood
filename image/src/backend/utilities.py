@@ -126,7 +126,7 @@ def process_parameters(required_types, optional_types, parameters):
     for key, value_type in required_types.items():
         # Make sure the required argument exists
         if key not in parameters:
-            raise KeyError("Parameter %r is missing" % key)
+            raise KeyError(f"Parameter {key} is missing")
 
         # Try casting into the value type
         parameters[key] = value_type(parameters[key])
@@ -146,7 +146,7 @@ def process_parameters(required_types, optional_types, parameters):
 
 class Router(object):
 
-    def __init__(self) -> None:
+    def __init__(self):
         # Initialize internals
         self.routes = list()
 
@@ -166,9 +166,6 @@ class Router(object):
 
                 # Process the parameters
                 parameters = process_parameters(required_types, optional_types, parameters)
-
-                # Accept the websocket
-                await websocket.accept()
 
                 try:
                     # Call the function
