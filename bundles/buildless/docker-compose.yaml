@@ -16,6 +16,7 @@ services:
             - ./src/frontend/application:/application/frontend/application:ro
             # Configuration mounts
             - ./configurations/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
+            - ./configurations/redis.conf:/etc/redis/conf.d/redis.conf:ro
             - ./configurations/entrypoint.conf:/etc/entrypoint/conf.d/entrypoint.conf:ro
             # Data volume path
             - data:/opt
