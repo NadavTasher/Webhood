@@ -438,7 +438,7 @@ Note that for database backups to take place, a Docker volume must be mounted on
 ```python
 import hashlib
 
-from utilities.redis import broadcast, listen, redict
+from utilities.redis import redict
 from utilities.starlette import router
 
 # Initialize the database
@@ -461,12 +461,12 @@ app = router.initialize()
 
 #### Redis Pub / Sub support
 
-The [`utilities/redis.py`](https://github.com/NadavTasher/Webhood/blob/master/image/src/backend/utilities/redis.py) file implements a simple `broadcast` / `listen` interface for using Pub / Sub for realtime applications.
+The [`utilities/redis.py`](https://github.com/NadavTasher/Webhood/blob/master/image/src/backend/utilities/redis.py) file implements simple `broadcast_(sync/async)` / `receive_(sync/async)` interfaces for using Pub / Sub for realtime applications.
 
 ```python
 import hashlib
 
-from utilities.redis import broadcast, listen, redict
+from utilities.redis import broadcast_sync, receive_async, redict
 from utilities.starlette import router
 
 # Initialize the database
@@ -475,12 +475,12 @@ DATABASE.setdefaults(clicks=0)
 
 
 @router.get("/api/click")
-async def click():
+def click():
 	# Increment the counter
 	DATABASE.clicks += 1
 
 	# Notify all listeners
-	await broadcast("clicks", index=DATABASE.clicks)
+	broadcast_sync("clicks", index=DATABASE.clicks)
 
 	# Return the click count
 	return DATABASE.clicks
@@ -492,7 +492,7 @@ async def notify_clicks(websocket):
 	await websocket.accept()
 
 	# Wait for clicks
-	async for click in listen("clicks"):
+	async for click in receive_async("clicks"):
 		websocket.send_text(click.index)
 
 

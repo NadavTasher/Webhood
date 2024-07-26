@@ -24,13 +24,49 @@ relist = functools.partial(Array, redis=REDIS)
 redict = functools.partial(Dictionary, redis=REDIS)
 
 
-# Utilities for Pub / Sub
-async def broadcast(channel=GLOBAL_CHANNEL, **parameters):
+def broadcast_sync(channel=GLOBAL_CHANNEL, **parameters):
+    # Publish to channel
+    REDIS.publish(channel, json.dumps(parameters))
+
+
+async def broadcast_async(channel=GLOBAL_CHANNEL, **parameters):
     # Publish to channel
     await ASYNC.publish(channel, json.dumps(parameters))
 
 
-async def listen(channel=GLOBAL_CHANNEL, count=0):
+def receive_sync(channel=GLOBAL_CHANNEL, count=0):
+    # Count messages
+    received = 0
+
+    # Create Pub / Sub subscriber
+    with REDIS.pubsub() as subscriber:
+        # Subscribe to channel
+        subscriber.subscribe(channel)
+
+        # Loop until count is reached
+        while (received < count) or (count == 0):
+            # Receive message from channel
+            message = subscriber.get_message(ignore_subscribe_messages=True)
+
+            # Skip sending if None
+            if message is None:
+                continue
+
+            # Fetch the message data
+            data = message.get("data")
+
+            # Only parse if data is valid
+            if not data:
+                continue
+
+            # Parse the message
+            yield munch.Munch(json.loads(data))
+
+            # Bump the receive count
+            received += 1
+
+
+async def receive_async(channel=GLOBAL_CHANNEL, count=0):
     # Count messages
     received = 0
 
