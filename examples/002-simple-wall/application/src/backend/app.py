@@ -2,15 +2,15 @@ import time
 import asyncio
 
 # Import utilities
-from fsdicts import *
 from runtypes import *
 from guardify import *
 
 # Import the router
-from router import router, initialize
+from utilities.redis import broadcast, listen
+from utilities.starlette import router
 
 # Import globals
-from globals import DATABASE, CHANNEL
+from globals import DATABASE
 
 
 @router.post("/api/post", type_message=Text)
@@ -19,40 +19,32 @@ async def post_request(message):
     assert 4 < len(message) < 60, "Message length is invalid"
 
     # Create the timestamp
-    timestamp = time.time()
+    timestamp = int(time.time())
 
     # Create the message
-    DATABASE[timestamp] = message
+    DATABASE[str(timestamp)] = message
+
+    # Notify listeners
+    await broadcast("posts", message=message, timestamp=timestamp)
 
 
 @router.get("/api/posts")
 @router.post("/api/posts")
 def posts_request():
     # Return the sorted posts
-    return [(timestamp, DATABASE[timestamp]) for timestamp in sorted(DATABASE)]
+    return [(int(timestamp), DATABASE[timestamp]) for timestamp in sorted(DATABASE)]
 
 
 @router.socket("/socket/posts")
 async def posts_socket(websocket):
-    # Known timestamps
-    known_timestamps = set(DATABASE)
+    # Accept the websocket
+    await websocket.accept()
 
     # Loop forever
-    while websocket:
-        # Check whether there are new messages
-        current_timestamps = set(DATABASE)
-
-        # Are there new timestamps?
-        for timestamp in sorted(current_timestamps - known_timestamps):
-            # Send the new message
-            await websocket.send_json([timestamp, DATABASE[timestamp]])
-
-        # Update the timestamps
-        known_timestamps |= current_timestamps
-
-        # Sleep for one seconds
-        await asyncio.sleep(1)
+    async for post in listen("posts"):
+        # Send the new message
+        await websocket.send_json([post.timestamp, post.message])
 
 
 # Initialize the application
-app = initialize()
+app = router.initialize()

@@ -17,7 +17,7 @@ while not EVENT.is_set():
 
     # Loop over posts and delete old posts
     for timestamp, message in DATABASE.items():
-        if time.time() - timestamp > MAX_AGE_SECONDS:
+        if time.time() - int(timestamp) > MAX_AGE_SECONDS:
             del DATABASE[timestamp]
 
     # Wait for event

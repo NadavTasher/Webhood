@@ -1,11 +1,8 @@
 # Import database class
-from fsdicts import localdict
+from utilities.redis import redict
 
 # Create post database
-DATABASE = localdict("/opt/database")
-
-# Cross-worker notifier
-CHANNEL = "wall"
+DATABASE = redict("wall")
 
 # Maximum age for a post
 MAX_AGE_SECONDS = 120
