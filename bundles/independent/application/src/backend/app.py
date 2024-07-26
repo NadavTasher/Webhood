@@ -3,7 +3,7 @@ from runtypes import *
 from guardify import *
 
 # Import the router
-from utilities.redis import broadcast, listen, redict
+from utilities.redis import broadcast_sync, broadcast_async, receive_sync, receive_async, redict
 from utilities.starlette import router
 
 # Initialize ping database
@@ -23,7 +23,7 @@ def click_request() -> str:
 @router.post("/api/relay", type_message=Text)
 async def relay_request(message):
     # Publish to channel
-    await broadcast(text=message)
+    await broadcast_async(text=message)
 
 
 @router.socket("/socket/relay")
@@ -32,7 +32,7 @@ async def relay_socket(websocket) -> None:
     await websocket.accept()
 
     # Subscribe to the global relay
-    async for event in listen():
+    async for event in receive_async():
         # Send the message
         await websocket.send_text(event.text)
 
