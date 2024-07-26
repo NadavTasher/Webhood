@@ -19,7 +19,11 @@ FROM nginx:1.27.0-bookworm AS nginx
 FROM python:{{PYTHON_VERSION}}-bookworm AS python
 
 # Upgrade pip and install dependencies
-RUN pip install --upgrade pip ipython starlette websockets uvicorn gunicorn python-multipart jinja2 redis rednest runtypes guardify
+RUN pip install --upgrade pip \ 
+	ipython \
+	uvicorn gunicorn \
+	starlette websockets python-multipart \
+	redis munch rednest runtypes guardify
 
 # Make the debian frontend non-interactive for apt installations
 ENV DEBIAN_FRONTEND=noninteractive

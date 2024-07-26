@@ -36,7 +36,7 @@ INDEPENDENT_BUNDLE_BACKEND_PATH := $(INDEPENDENT_BUNDLE_PATH)/application/src/ba
 INDEPENDENT_BUNDLE_FRONTEND_PATH := $(INDEPENDENT_BUNDLE_PATH)/application/src/frontend
 
 IMAGE_SOURCES := $(shell find $(IMAGE_PATH) -type f)
-PYTHON_SOURCES := $(wildcard $(BACKEND_PATH)/*.py) $(ENTRYPOINT_PATH) $(wildcard $(EXAMPLES_PATH)/*/application/src/backend/*.py) $(wildcard $(SCRIPTS_PATH)/*.py)
+PYTHON_SOURCES := $(wildcard $(BACKEND_PATH)/*.py) $(wildcard $(BACKEND_PATH)/*/*.py) $(ENTRYPOINT_PATH) $(wildcard $(EXAMPLES_PATH)/*/application/src/backend/*.py) $(wildcard $(SCRIPTS_PATH)/*.py)
 
 all: bundles image
 

@@ -3,7 +3,8 @@ from runtypes import *
 from guardify import *
 
 # Import the router
-from utilities import REDIS, router, redict
+from utilities.redis import broadcast, listen, redict
+from utilities.starlette import router
 
 # Initialize ping database
 DATABASE = redict("click")
@@ -21,28 +22,19 @@ def click_request() -> str:
 
 @router.post("/api/relay", type_message=Text)
 async def relay_request(message):
-    # Subscribe to the global relay
-    async with REDIS.pubsub() as pubsub:
-        # Publish to channel
-        await pubsub.publish("relay", message)
+    # Publish to channel
+    await broadcast(text=message)
 
 
-@router.socket("/socket/relay", optional_channel=Text)
-async def relay_socket(websocket, channel="relay") -> None:
-    # Validate relay channel
-    assert channel in ["relay"], "Invalid channel was requestd"
-
+@router.socket("/socket/relay")
+async def relay_socket(websocket) -> None:
     # Accept the websocket
     await websocket.accept()
 
     # Subscribe to the global relay
-    async with REDIS.pubsub() as pubsub:
-        # Subscribe to channel
-        await pubsub.subscribe(channel)
-
-        # Loop forever and send messages
-        while True:
-            await websocket.send_text(await channel.get_message(ignore_subscribe_messages=True))
+    async for event in listen():
+        # Send the message
+        await websocket.send_text(event.text)
 
 
 # Initialize the application

@@ -1,12 +1,9 @@
-import os
-import redis
 import typing
 import inspect
 import logging
-import functools
 
-# Import trednest utilities
-from rednest import Dictionary, Array
+# Import debug utilities
+from utilities.debug import DEBUG
 
 # Import starlette utilities
 from starlette.routing import Route, WebSocketRoute
@@ -14,9 +11,6 @@ from starlette.requests import Request
 from starlette.responses import Response, JSONResponse, PlainTextResponse
 from starlette.websockets import WebSocket
 from starlette.applications import Starlette
-
-# Get debug state
-DEBUG = bool(int(os.environ.get("DEBUG", 0)))
 
 # Type checking prefix
 PREFIX_REQUIRED = "type_"
@@ -30,13 +24,6 @@ MIMETYPE_JSON = "application/json"
 MIMETYPE_DEFAULT = "application/octet-stream"
 MIMETYPE_SIMPLE_FORM = "application/x-www-form-urlencoded"
 MIMETYPE_MULTIPART_FORM = "multipart/form-data"
-
-# Create the default redis connection
-REDIS = redis.Redis(unix_socket_path="/run/redis.sock", decode_responses=True)
-
-# Create wrapper functions for databases
-redict = functools.partial(Dictionary, redis=REDIS)
-relist = functools.partial(Array, redis=REDIS)
 
 
 def gather_types(types):
@@ -233,10 +220,10 @@ class Router(object):
         return self.route(path, methods=["DELETE"], **types)
 
     def initialize(self):
-        # Create the logging formatter
+        # Create logging formatter
         formatter = logging.Formatter("[%(asctime)s] [%(process)d] [%(levelname)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S %z")
 
-        # Loop over the loggers
+        # Set logging formatters
         for logger in ["root", "gunicorn.error"]:
             # Loop over all of the logging handlers
             for handler in logging.getLogger(logger).handlers:
