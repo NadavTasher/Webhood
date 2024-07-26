@@ -461,7 +461,7 @@ app = router.initialize()
 
 #### Redis Pub / Sub support
 
-The (`utilities/redis.py`)[https://github.com/NadavTasher/Webhood/blob/master/image/src/backend/utilities/redis.py] file implements a simple `broadcast` / `listen` interface for using Pub / Sub for realtime applications.
+The [`utilities/redis.py`](https://github.com/NadavTasher/Webhood/blob/master/image/src/backend/utilities/redis.py) file implements a simple `broadcast` / `listen` interface for using Pub / Sub for realtime applications.
 
 ```python
 import hashlib
