@@ -1,5 +1,3 @@
-BASE_IMAGE ?= python:3.8.18-slim-bullseye
-
 IMAGE_TAG ?= 3.8
 IMAGE_NAME ?= webhood
 
@@ -38,7 +36,7 @@ INDEPENDENT_BUNDLE_BACKEND_PATH := $(INDEPENDENT_BUNDLE_PATH)/application/src/ba
 INDEPENDENT_BUNDLE_FRONTEND_PATH := $(INDEPENDENT_BUNDLE_PATH)/application/src/frontend
 
 IMAGE_SOURCES := $(shell find $(IMAGE_PATH) -type f)
-PYTHON_SOURCES := $(wildcard $(BACKEND_PATH)/*.py) $(ENTRYPOINT_PATH) $(wildcard $(EXAMPLES_PATH)/*/application/src/backend/*.py) $(wildcard $(SCRIPTS_PATH)/*.py)
+PYTHON_SOURCES := $(wildcard $(BACKEND_PATH)/*.py) $(wildcard $(BACKEND_PATH)/*/*.py) $(ENTRYPOINT_PATH) $(wildcard $(EXAMPLES_PATH)/*/application/src/backend/*.py) $(wildcard $(SCRIPTS_PATH)/*.py)
 
 all: bundles image
 
@@ -50,7 +48,7 @@ format: prerequisites $(PYTHON_SOURCES)
 
 $(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG): $(SCRIPTS_PATH)/create_dockerfile.py $(IMAGE_PATH)/Dockerfile.template
 	$(MKDIR) -p $(@D)
-	$(PYTHON) $(SCRIPTS_PATH)/create_dockerfile.py --base-image $(BASE_IMAGE) < $(IMAGE_PATH)/Dockerfile.template > $@
+	$(PYTHON) $(SCRIPTS_PATH)/create_dockerfile.py --python-version $(IMAGE_TAG) < $(IMAGE_PATH)/Dockerfile.template > $@
 
 image: format $(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG) $(IMAGE_SOURCES)
 	$(DOCKER) build $(IMAGE_PATH) -f $(IMAGE_PATH)/Dockerfile-$(IMAGE_TAG) -t $(IMAGE_NAME)/$(IMAGE_TAG) -t $(IMAGE_NAME)/$(IMAGE_DATE_TAG) -t $(IMAGE_NAME)/$(IMAGE_LATEST_TAG)

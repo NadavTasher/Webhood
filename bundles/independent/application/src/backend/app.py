@@ -1,14 +1,17 @@
 # Import utilities
-from fsdicts import *
 from runtypes import *
 from guardify import *
 
 # Import the router
-from router import PlainTextResponse, router, initialize
+from utilities import PlainTextResponse, router, redict, relist
+
+# Initialize ping database
+DATABASE = redict("ping")
+DATABASE.setdefaults(count=0)
 
 
 @router.get("/api/code", optional_head=int)
-def code_request(head=None):
+def code_request(head=None) -> PlainTextResponse:
     # Read the uptime
     with open(__file__, "r") as code_file:
         code = code_file.read()
@@ -28,12 +31,16 @@ def code_request(head=None):
 
 
 @router.post("/api/ping", optional_echo=Text, optional_content_type=Text, optional_content_data=Bytes)
-def ping_request(echo=None, content_type=None, content_data=None):
-    return "Ping %r" % (echo or content_data)
+def ping_request(echo=None, content_type=None, content_data=None) -> str:
+    # Increment ping count
+    DATABASE.count += 1
+
+    # Return the ping count
+    return "Ping %r (count=%d)" % (echo or content_data, DATABASE.count)
 
 
 @router.socket("/socket/ping", optional_initial=Text)
-async def ping_socket(websocket, initial="Ping"):
+async def ping_socket(websocket, initial="Ping") -> None:
     # Send the initial string
     await websocket.send_text(initial)
 
@@ -47,4 +54,4 @@ async def ping_socket(websocket, initial="Ping"):
 
 
 # Initialize the application
-app = initialize()
+app = router.initialize()

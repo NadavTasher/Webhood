@@ -1,9 +1,9 @@
-import os
+import typing
 import inspect
 import logging
 
-# Import typing utilities
-from typing import Union
+# Import debug utilities
+from utilities.debug import DEBUG
 
 # Import starlette utilities
 from starlette.routing import Route, WebSocketRoute
@@ -11,9 +11,6 @@ from starlette.requests import Request
 from starlette.responses import Response, JSONResponse, PlainTextResponse
 from starlette.websockets import WebSocket
 from starlette.applications import Starlette
-
-# Get debug state
-DEBUG = bool(int(os.environ.get("DEBUG", 0)))
 
 # Type checking prefix
 PREFIX_REQUIRED = "type_"
@@ -29,7 +26,7 @@ MIMETYPE_SIMPLE_FORM = "application/x-www-form-urlencoded"
 MIMETYPE_MULTIPART_FORM = "multipart/form-data"
 
 
-def gather_types(types: dict):
+def gather_types(types):
     # Fetch all of the required types
     required_types = {
         # Create a key: value without prefix
@@ -54,7 +51,7 @@ def gather_types(types: dict):
     return required_types, optional_types, types
 
 
-async def gather_parameters(request_or_websocket: Union[Request, WebSocket]):
+async def gather_parameters(request_or_websocket: typing.Union[Request, WebSocket]):
     # Create a dictionary to store all of the paremters
     parameters = dict()
 
@@ -116,7 +113,7 @@ def process_parameters(required_types, optional_types, parameters):
     for key, value_type in required_types.items():
         # Make sure the required argument exists
         if key not in parameters:
-            raise KeyError("Parameter %r is missing" % key)
+            raise KeyError(f"Parameter {key} is missing")
 
         # Try casting into the value type
         parameters[key] = value_type(parameters[key])
@@ -150,15 +147,12 @@ class Router(object):
             assert inspect.iscoroutinefunction(function), "Socket routes must be async"
 
             # Create the request endpoint function
-            async def endpoint(websocket):
+            async def endpoint(websocket: WebSocket) -> None:
                 # Create a dictionary to store all of the paremters
                 parameters = await gather_parameters(websocket)
 
                 # Process the parameters
                 parameters = process_parameters(required_types, optional_types, parameters)
-
-                # Accept the websocket
-                await websocket.accept()
 
                 try:
                     # Call the function
@@ -184,7 +178,7 @@ class Router(object):
         def decorator(function):
 
             # Create the request endpoint function
-            async def endpoint(request):
+            async def endpoint(request: Request) -> Response:
                 # Create a dictionary to store all of the paremters
                 parameters = await gather_parameters(request)
 
@@ -225,28 +219,26 @@ class Router(object):
     def delete(self, path, **types):
         return self.route(path, methods=["DELETE"], **types)
 
+    def initialize(self):
+        # Create logging formatter
+        formatter = logging.Formatter("[%(asctime)s] [%(process)d] [%(levelname)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S %z")
+
+        # Set logging formatters
+        for logger in ["root", "gunicorn.error"]:
+            # Loop over all of the logging handlers
+            for handler in logging.getLogger(logger).handlers:
+                # Set the new logging formatter
+                handler.setFormatter(formatter)
+
+        # Create exception handler
+        exception_handlers = {
+            # When any exception occurs, return an exception string
+            Exception: lambda request, exception: PlainTextResponse(str(exception), 500)
+        }
+
+        # Initialize the starlette application
+        return Starlette(debug=DEBUG, routes=self.routes, exception_handlers=exception_handlers)
+
 
 # Initialize the router
 router = Router()
-
-
-# Create the initialization function
-def initialize():
-    # Create the logging formatter
-    formatter = logging.Formatter("[%(asctime)s] [%(process)d] [%(levelname)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S %z")
-
-    # Loop over the loggers
-    for logger in ["root", "gunicorn.error"]:
-        # Loop over all of the logging handlers
-        for handler in logging.getLogger(logger).handlers:
-            # Set the new logging formatter
-            handler.setFormatter(formatter)
-
-    # Create exception handler
-    exception_handlers = {
-        # When any exception occurs, return an exception string
-        Exception: lambda request, exception: PlainTextResponse(str(exception), 500)
-    }
-
-    # Initialize the starlette application
-    return Starlette(debug=DEBUG, routes=router.routes, exception_handlers=exception_handlers)

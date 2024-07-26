@@ -1,19 +1,53 @@
+# Build RedisJSON from source
+FROM rust:1.79.0-slim-bookworm AS builder
+
+# Install build dependencies
+RUN apt update && \
+	apt -y install curl libclang-dev
+
+# Clone the sources
+RUN cd /tmp && \
+	curl -fsSL https://github.com/RedisJSON/RedisJSON/archive/refs/tags/v2.6.10.tar.gz | tar xz && \
+	cd RedisJSON-* && \
+	cargo build --release
+
+# Select the images to install from
+FROM redis:7.2.5-bookworm AS redis
+FROM nginx:1.27.0-bookworm AS nginx
+
 # Select the base image
-FROM {{BASE_IMAGE}}
+FROM python:{{PYTHON_VERSION}}-bookworm AS python
 
 # Upgrade pip and install dependencies
-RUN pip install --upgrade pip ipython starlette websockets uvicorn gunicorn python-multipart jinja2 fsdicts runtypes guardify
+RUN pip install --upgrade pip \ 
+	ipython \
+	uvicorn gunicorn \
+	starlette websockets python-multipart \
+	redis munch rednest runtypes guardify
 
 # Make the debian frontend non-interactive for apt installations
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install NGINX
-RUN apt update && \
-	apt -y install nginx && \
-	rm -rf /var/lib/apt/lists /var/cache/apt/archives
+# Install redis from image
+COPY --from=redis /usr /usr
+
+# Additional redis setup
+RUN mkdir -p /etc/redis/conf.d /etc/redis/modules
+
+# Copy redis module from builder
+COPY --from=builder /tmp/RedisJSON-*/target/release/librejson.so /etc/redis/modules/librejson.so
+
+# Install nginx from image
+COPY --from=nginx /usr /usr
+COPY --from=nginx /etc/nginx/mime.types /etc/nginx/mime.types
+
+# Additional nginx setup
+RUN useradd -s /bin/false nginx && \
+	mkdir -p /var/cache/nginx /etc/nginx/conf.d
 
 # Copy default configurations
 COPY configurations/nginx.conf /etc/nginx/nginx.conf
+COPY configurations/redis.conf /etc/redis/redis.conf
 COPY configurations/entrypoint.conf /etc/entrypoint/entrypoint.conf
 
 # Copy default sources
