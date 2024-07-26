@@ -1,9 +1,12 @@
 import os
+import redis
+import typing
 import inspect
 import logging
+import functools
 
-# Import typing utilities
-from typing import Union
+# Import trednest utilities
+from rednest import Dictionary, Array
 
 # Import starlette utilities
 from starlette.routing import Route, WebSocketRoute
@@ -28,8 +31,15 @@ MIMETYPE_DEFAULT = "application/octet-stream"
 MIMETYPE_SIMPLE_FORM = "application/x-www-form-urlencoded"
 MIMETYPE_MULTIPART_FORM = "multipart/form-data"
 
+# Create the default redis connection
+REDIS = redis.Redis(unix_socket_path="/run/redis.sock", decode_responses=True)
 
-def gather_types(types: dict):
+# Create wrapper functions for databases
+redict = functools.partial(Dictionary, redis=REDIS)
+relist = functools.partial(Array, redis=REDIS)
+
+
+def gather_types(types):
     # Fetch all of the required types
     required_types = {
         # Create a key: value without prefix
@@ -54,7 +64,7 @@ def gather_types(types: dict):
     return required_types, optional_types, types
 
 
-async def gather_parameters(request_or_websocket: Union[Request, WebSocket]):
+async def gather_parameters(request_or_websocket: typing.Union[Request, WebSocket]):
     # Create a dictionary to store all of the paremters
     parameters = dict()
 
@@ -136,7 +146,7 @@ def process_parameters(required_types, optional_types, parameters):
 
 class Router(object):
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Initialize internals
         self.routes = list()
 
@@ -150,7 +160,7 @@ class Router(object):
             assert inspect.iscoroutinefunction(function), "Socket routes must be async"
 
             # Create the request endpoint function
-            async def endpoint(websocket):
+            async def endpoint(websocket: WebSocket) -> None:
                 # Create a dictionary to store all of the paremters
                 parameters = await gather_parameters(websocket)
 
@@ -184,7 +194,7 @@ class Router(object):
         def decorator(function):
 
             # Create the request endpoint function
-            async def endpoint(request):
+            async def endpoint(request: Request) -> Response:
                 # Create a dictionary to store all of the paremters
                 parameters = await gather_parameters(request)
 
@@ -225,28 +235,26 @@ class Router(object):
     def delete(self, path, **types):
         return self.route(path, methods=["DELETE"], **types)
 
+    def initialize(self):
+        # Create the logging formatter
+        formatter = logging.Formatter("[%(asctime)s] [%(process)d] [%(levelname)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S %z")
+
+        # Loop over the loggers
+        for logger in ["root", "gunicorn.error"]:
+            # Loop over all of the logging handlers
+            for handler in logging.getLogger(logger).handlers:
+                # Set the new logging formatter
+                handler.setFormatter(formatter)
+
+        # Create exception handler
+        exception_handlers = {
+            # When any exception occurs, return an exception string
+            Exception: lambda request, exception: PlainTextResponse(str(exception), 500)
+        }
+
+        # Initialize the starlette application
+        return Starlette(debug=DEBUG, routes=self.routes, exception_handlers=exception_handlers)
+
 
 # Initialize the router
 router = Router()
-
-
-# Create the initialization function
-def initialize():
-    # Create the logging formatter
-    formatter = logging.Formatter("[%(asctime)s] [%(process)d] [%(levelname)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S %z")
-
-    # Loop over the loggers
-    for logger in ["root", "gunicorn.error"]:
-        # Loop over all of the logging handlers
-        for handler in logging.getLogger(logger).handlers:
-            # Set the new logging formatter
-            handler.setFormatter(formatter)
-
-    # Create exception handler
-    exception_handlers = {
-        # When any exception occurs, return an exception string
-        Exception: lambda request, exception: PlainTextResponse(str(exception), 500)
-    }
-
-    # Initialize the starlette application
-    return Starlette(debug=DEBUG, routes=router.routes, exception_handlers=exception_handlers)
