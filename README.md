@@ -38,7 +38,7 @@ git commit -m "Initial commit"
 Webhood is based on popular projects and strives to keep the application architecture simple efficient.
 
 1. Web server duties are handled by [NGINX](https://nginx.org/). NGINX serves as a static file server and as a reverse-proxy for the backend API. NGINX also handles TLS.
-2. Python backend is powered by [Starlette](https://www.starlette.io/) - an open-source WSGI framework that is the basis for many open-source projects. In our case, Starlette is extended by the [utilities.py](https://github.com/NadavTasher/Webhood/blob/master/image/src/backend/utilities.py) file.
+2. Python backend is powered by [Starlette](https://www.starlette.io/) - an open-source WSGI framework that is the basis for many open-source projects. In our case, Starlette is extended by the [`utilities/starlette.py`](https://github.com/NadavTasher/Webhood/blob/master/image/src/backend/utilities/starlette.py) file.
 3. Database duties are handled by [Redis](https://redis.io/). A Redis server is incorporated into the base image, and can be easily accessed using the [rednest](https://pypi.org/rednest/) library.
 4. Frontend duties are handled by a couple of utility JavaScript and CSS files residing in [src/frontend](https://github.com/NadavTasher/Webhood/tree/master/image/src/frontend). You can see an example of the frontend capabilities in the [Headless Test Page](https://github.com/NadavTasher/Webhood/blob/master/bundles/headless/test-page.html).
 
@@ -339,7 +339,8 @@ These features can be taken advantage of like so:
 ```python
 import hashlib
 
-from utilities import PlainTextResponse, router
+from utilities.starlette import PlainTextResponse, router
+
 
 @router.get("/api/code", optional_head=int)
 def code_request(head=None):
@@ -404,11 +405,16 @@ WebSocket integration requires the use of `asyncio`.
 ```python
 import hashlib
 
-from utilities import router
+from utilities.starlette import router
 
 
 @router.socket("/socket/notifications", type_id=Text)
 async def notifications_socket(websocket, id):
+	# Run additional validations here...
+
+	# Accept the client
+	await websocket.accept()
+
     # Send the initial string
     await websocket.send_text("Some data")
 
@@ -432,7 +438,8 @@ Note that for database backups to take place, a Docker volume must be mounted on
 ```python
 import hashlib
 
-from utilities import router, redict
+from utilities.redis import broadcast, listen, redict
+from utilities.starlette import router
 
 # Initialize the database
 DATABASE = redict("clicker-database")
@@ -446,6 +453,47 @@ def click():
 
 	# Return the click count
 	return DATABASE.clicks
+
+
+# Initialize the application
+app = router.initialize()
+```
+
+#### Redis Pub / Sub support
+
+The (`utilities/redis.py`)[https://github.com/NadavTasher/Webhood/blob/master/image/src/backend/utilities/redis.py] file implements a simple `broadcast` / `listen` interface for using Pub / Sub for realtime applications.
+
+```python
+import hashlib
+
+from utilities.redis import broadcast, listen, redict
+from utilities.starlette import router
+
+# Initialize the database
+DATABASE = redict("clicker-database")
+DATABASE.setdefaults(clicks=0)
+
+
+@router.get("/api/click")
+async def click():
+	# Increment the counter
+	DATABASE.clicks += 1
+
+	# Notify all listeners
+	await broadcast("clicks", index=DATABASE.clicks)
+
+	# Return the click count
+	return DATABASE.clicks
+
+
+@router.socket("/socket/notifications")
+async def notify_clicks(websocket):
+	# Accept the client
+	await websocket.accept()
+
+	# Wait for clicks
+	async for click in listen("clicks"):
+		websocket.send_text(click.index)
 
 
 # Initialize the application
