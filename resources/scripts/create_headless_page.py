@@ -11,7 +11,7 @@ def substitute_with_file(content, base_path, file_path, content_type):
         data = file.read()
 
     # Return the content with the new path
-    return content.replace(file_path, f'data:{content_type};base64,{base64.b64encode(data).decode()}')
+    return content.replace(f'"{file_path}"', f'"data:{content_type};base64,{base64.b64encode(data).decode()}"')
 
 
 def main():
