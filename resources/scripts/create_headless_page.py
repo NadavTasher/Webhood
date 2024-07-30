@@ -37,6 +37,10 @@ def main():
     for stylesheet in re.findall(r'<link rel="stylesheet" href="(.*)".*/>', template):
         template = substitute_with_file(template, arguments.base_directory, stylesheet, "text/css")
 
+    # Replace manifests
+    for manifest in re.findall(r'<link rel="manifest" href="(.*)".*/>', template):
+        template = substitute_with_file(template, arguments.base_directory, manifest, "application/json")
+
     # Write the dockerfile to stdout
     sys.stdout.write(template)
 

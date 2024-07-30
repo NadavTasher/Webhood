@@ -1,0 +1,17 @@
+{
+	"name": "Test",
+	"short_name": "Test",
+	"description": "AppDescription",
+	"start_url": "/index.html",
+	"background_color": "#FFFFFF",
+	"theme_color": "#FFFFFF",
+	"display": "standalone",
+	"orientation": "natural",
+	"icons": [
+		{
+			"src": "/resources/icon.png",
+			"type": "image/png",
+			"sizes": "192x192"
+		}
+	]
+}
