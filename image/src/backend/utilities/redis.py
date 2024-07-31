@@ -46,7 +46,7 @@ def receive_sync(channel=GLOBAL_CHANNEL, count=0):
         # Loop until count is reached
         while (received < count) or (count == 0):
             # Receive message from channel
-            message = subscriber.get_message(ignore_subscribe_messages=True)
+            message = subscriber.get_message(ignore_subscribe_messages=True, timeout=1)
 
             # Skip sending if None
             if message is None:
@@ -78,7 +78,7 @@ async def receive_async(channel=GLOBAL_CHANNEL, count=0):
         # Loop until count is reached
         while (received < count) or (count == 0):
             # Receive message from channel
-            message = await subscriber.get_message(ignore_subscribe_messages=True)
+            message = await subscriber.get_message(ignore_subscribe_messages=True, timeout=1)
 
             # Skip sending if None
             if message is None:
