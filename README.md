@@ -486,6 +486,13 @@ def click():
 	return DATABASE.clicks
 
 
+@router.post("/api/wait_for_click")
+async def wait_for_click():
+	# Wait for a single click
+	async for click in receive_async("clicks", count=1):
+		return click.index
+
+
 @router.socket("/socket/notifications")
 async def notify_clicks(websocket):
 	# Accept the client

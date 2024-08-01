@@ -16,30 +16,30 @@ GLOBAL_CHANNEL = "global"
 UNIX_SOCKET_PATH = "/run/redis.sock"
 
 # Create the default redis connection
-REDIS = redis.Redis(unix_socket_path=UNIX_SOCKET_PATH, decode_responses=True)
-ASYNC = redis.asyncio.Redis(unix_socket_path=UNIX_SOCKET_PATH, decode_responses=True)
+REDIS_SYNC = redis.Redis(unix_socket_path=UNIX_SOCKET_PATH, decode_responses=True)
+REDIS_ASYNC = redis.asyncio.Redis(unix_socket_path=UNIX_SOCKET_PATH, decode_responses=True)
 
 # Create wrapper functions for databases
-relist = functools.partial(Array, redis=REDIS)
-redict = functools.partial(Dictionary, redis=REDIS)
+relist = functools.partial(Array, redis=REDIS_SYNC)
+redict = functools.partial(Dictionary, redis=REDIS_SYNC)
 
 
-def broadcast_sync(channel=GLOBAL_CHANNEL, **parameters):
+def broadcast_sync(channel=GLOBAL_CHANNEL, redis=REDIS_SYNC, **parameters):
     # Publish to channel
-    REDIS.publish(channel, json.dumps(parameters))
+    redis.publish(channel, json.dumps(parameters))
 
 
-async def broadcast_async(channel=GLOBAL_CHANNEL, **parameters):
+async def broadcast_async(channel=GLOBAL_CHANNEL, redis=REDIS_ASYNC, **parameters):
     # Publish to channel
-    await ASYNC.publish(channel, json.dumps(parameters))
+    await redis.publish(channel, json.dumps(parameters))
 
 
-def receive_sync(channel=GLOBAL_CHANNEL, count=0):
+def receive_sync(channel=GLOBAL_CHANNEL, redis=REDIS_SYNC, count=0):
     # Count messages
     received = 0
 
     # Create Pub / Sub subscriber
-    with REDIS.pubsub() as subscriber:
+    with redis.pubsub() as subscriber:
         # Subscribe to channel
         subscriber.subscribe(channel)
 
@@ -66,12 +66,12 @@ def receive_sync(channel=GLOBAL_CHANNEL, count=0):
             received += 1
 
 
-async def receive_async(channel=GLOBAL_CHANNEL, count=0):
+async def receive_async(channel=GLOBAL_CHANNEL, redis=REDIS_ASYNC, count=0):
     # Count messages
     received = 0
 
     # Create Pub / Sub subscriber
-    async with ASYNC.pubsub() as subscriber:
+    async with redis.pubsub() as subscriber:
         # Subscribe to channel
         await subscriber.subscribe(channel)
 
