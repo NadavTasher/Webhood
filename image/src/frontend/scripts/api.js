@@ -39,9 +39,9 @@ function socket(action, callback) {
 	const object = new WebSocket((window.location.protocol === "https:" ? "wss://" : "ws://") + window.location.host + action);
 
 	// Add the on-message event listener
-	object.onmessage = (event) => {
+	object.onmessage = async (event) => {
 		// Call the callback with the data and the object
-		callback(event.data, object);
+		await callback(event.data, object);
 	};
 
 	// Return the object
