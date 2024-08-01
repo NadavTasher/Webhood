@@ -1,3 +1,4 @@
+import os
 import json
 import munch
 import functools
@@ -12,12 +13,12 @@ from rednest import Array, Dictionary
 # Global broadcast channel
 GLOBAL_CHANNEL = "global"
 
-# Redis unix socket path
-UNIX_SOCKET_PATH = "/run/redis.sock"
+# Redis connection URL
+REDIS_URL = os.environ.get("REDIS", "unix:///run/redis.sock")
 
 # Create the default redis connection
-REDIS_SYNC = redis.Redis(unix_socket_path=UNIX_SOCKET_PATH, decode_responses=True)
-REDIS_ASYNC = redis.asyncio.Redis(unix_socket_path=UNIX_SOCKET_PATH, decode_responses=True)
+REDIS_SYNC = redis.Redis.from_url(REDIS_URL, decode_responses=True)
+REDIS_ASYNC = redis.asyncio.Redis.from_url(REDIS_URL, decode_responses=True)
 
 # Create wrapper functions for databases
 relist = functools.partial(Array, redis=REDIS_SYNC)
