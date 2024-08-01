@@ -1,3 +1,5 @@
+import logging
+
 # Import utilities
 from runtypes import *
 from guardify import *
@@ -15,6 +17,9 @@ DATABASE.setdefaults(count=0)
 def click_request() -> str:
     # Increment ping count
     DATABASE.count += 1
+
+    # Log the user click
+    logging.info("User clicked - count is now %d", DATABASE.count)
 
     # Return the ping count
     return "Click count is %d" % DATABASE.count

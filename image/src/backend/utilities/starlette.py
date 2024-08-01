@@ -220,16 +220,6 @@ class Router(object):
         return self.route(path, methods=["DELETE"], **types)
 
     def initialize(self):
-        # Create logging formatter
-        formatter = logging.Formatter("[%(asctime)s] [%(process)d] [%(levelname)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S %z")
-
-        # Set logging formatters
-        for logger in ["root", "gunicorn.error"]:
-            # Loop over all of the logging handlers
-            for handler in logging.getLogger(logger).handlers:
-                # Set the new logging formatter
-                handler.setFormatter(formatter)
-
         # Create exception handler
         exception_handlers = {
             # When any exception occurs, return an exception string
