@@ -101,13 +101,13 @@ $(HEADLESS_BUNDLE_TEST_PAGE_PATH): $(TESTS_PATH)/test-page.html $(SCRIPTS_PATH)/
 	$(PYTHON) $(SCRIPTS_PATH)/create_headless_page.py --base-directory $(FRONTEND_PATH) < $(TESTS_PATH)/test-page.html > $@
 
 test: image
-	$(DOCKER) run --rm -p 80:80 -p 443:443 -e DEBUG=1 -v $(abspath $(TESTS_PATH)/test-page.html):/application/frontend/index.html:ro $(IMAGE_NAME)/$(IMAGE_TAG)
+	$(DOCKER) run --rm -p 80:80 -p 443:443 -e DEBUG=1 -v $(abspath $(TESTS_PATH)/test-page.html):/application/frontend/index.html:ro -v /tmp/test:/opt $(IMAGE_NAME)/$(IMAGE_TAG)
 
 test-bash: image
-	$(DOCKER) run --rm -p 80:80 -p 443:443 -e DEBUG=1 -v $(abspath $(TESTS_PATH)/test-page.html):/application/frontend/index.html:ro -it $(IMAGE_NAME)/$(IMAGE_TAG) bash
+	$(DOCKER) run --rm -p 80:80 -p 443:443 -e DEBUG=1 -v $(abspath $(TESTS_PATH)/test-page.html):/application/frontend/index.html:ro -v /tmp/test:/opt -it $(IMAGE_NAME)/$(IMAGE_TAG) bash
 
 test-image: image
-	$(DOCKER) run --rm -p 80:80 -p 443:443 $(IMAGE_NAME)/$(IMAGE_TAG)
+	$(DOCKER) run --rm -p 80:80 -p 443:443 -v /tmp/test:/opt $(IMAGE_NAME)/$(IMAGE_TAG)
 
 test-buildless: buildless
 	$(DOCKER) compose --project-directory $(BUILDLESS_BUNDLE_PATH) up
