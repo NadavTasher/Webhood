@@ -17,8 +17,8 @@ GLOBAL_CHANNEL = "global"
 REDIS_URL = os.environ.get("REDIS", "unix:///run/redis.sock")
 
 # Create the default redis connection
-REDIS_SYNC = redis.Redis.from_url(REDIS_URL, decode_responses=True)
-REDIS_ASYNC = redis.asyncio.Redis.from_url(REDIS_URL, decode_responses=True)
+REDIS_SYNC = redis.Redis.from_url(REDIS_URL)
+REDIS_ASYNC = redis.asyncio.Redis.from_url(REDIS_URL)
 
 # Create wrapper functions for databases
 relist = functools.partial(Array, redis=REDIS_SYNC)
