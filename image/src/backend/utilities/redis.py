@@ -8,7 +8,7 @@ import redis
 import redis.asyncio
 
 # Import rednest utilities
-from rednest import Array, Dictionary
+from rednest import List, Dictionary
 
 # Global broadcast channel
 GLOBAL_CHANNEL = "global"
@@ -17,11 +17,11 @@ GLOBAL_CHANNEL = "global"
 REDIS_URL = os.environ.get("REDIS", "unix:///run/redis.sock")
 
 # Create the default redis connection
-REDIS_SYNC = redis.Redis.from_url(REDIS_URL)
-REDIS_ASYNC = redis.asyncio.Redis.from_url(REDIS_URL)
+REDIS_SYNC = redis.Redis.from_url(REDIS_URL, decode_responses=True)
+REDIS_ASYNC = redis.asyncio.Redis.from_url(REDIS_URL, decode_responses=True)
 
 # Create wrapper functions for databases
-relist = functools.partial(Array, redis=REDIS_SYNC)
+relist = functools.partial(List, redis=REDIS_SYNC)
 redict = functools.partial(Dictionary, redis=REDIS_SYNC)
 
 
