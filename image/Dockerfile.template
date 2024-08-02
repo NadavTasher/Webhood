@@ -54,6 +54,9 @@ COPY configurations/entrypoint.conf /etc/entrypoint/entrypoint.conf
 # Copy default sources
 COPY src /application
 
+# Expose the HTTP and HTTPs ports
+EXPOSE 80 443
+
 # Change working directory to application
 WORKDIR /application/backend
 
