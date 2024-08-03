@@ -10,7 +10,6 @@ PYTHON ?= $(shell which python3)
 DOCKER ?= $(shell which docker)
 
 IMAGE_PATH := image
-BUILD_PATH := build
 BUNDLES_PATH := bundles
 EXAMPLES_PATH := examples
 RESOURCES_PATH := resources
