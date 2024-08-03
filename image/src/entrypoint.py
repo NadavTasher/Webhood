@@ -35,13 +35,15 @@ if configuration.has_section("include"):
     configuration.pop("include")
 
 # Create list of processes
-devnull = None
 processes = dict()
 
-try:
-    # Open devnull for reading as stdin for subprocesses
-    devnull = os.open(os.devnull, os.O_RDONLY)
+# Open devnull to use as the children's stdin
+devnull = os.open(os.devnull, os.O_RDONLY)
 
+# Create a placeholder for the exit code
+exit_code = 0
+
+try:
     # Loop over sections and parse them
     for name in configuration.sections():
         # Fetch the configuration
@@ -71,6 +73,12 @@ try:
 
     # Log the killed process
     logging.error("Process %s has stopped - exit code %d", stopped_process_name, stopped_process_exit_code)
+
+    # Set the exit code
+    exit_code = stopped_process_exit_code
+except KeyboardInterrupt:
+    # Log the container shutdown
+    logging.critical("Received shutdown signal")
 finally:
     # Loop over all processes
     for (process_name, process) in processes.values():
@@ -79,7 +87,7 @@ finally:
             continue
 
         # Log termination
-        logging.warning("Terminating %s (%d)", process_name, process.pid)
+        logging.info("Terminating %s (%d)", process_name, process.pid)
 
         # Stop running process
         process.terminate()
@@ -94,5 +102,7 @@ finally:
         process.wait()
 
     # Close the devnull
-    if devnull is not None:
-        os.close(devnull)
+    os.close(devnull)
+
+    # Exit with the error code
+    exit(exit_code)
