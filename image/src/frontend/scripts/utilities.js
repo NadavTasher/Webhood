@@ -104,7 +104,7 @@ HTMLElement.prototype.populate = function (parameters = {}) {
 	for (const key in parameters) {
 		if (key in parameters) {
 			// Set the internal value as text
-			sanitizer.innerText = parameters[key].toString();
+			sanitizer.innerText = new String(parameters[key]);
 
 			// Extract sanitized value
 			parameters[key] = sanitizer.innerHTML;
