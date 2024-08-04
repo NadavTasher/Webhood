@@ -1,7 +1,6 @@
 import os
 import json
 import munch
-import functools
 
 # Import redis utilities
 import redis
@@ -20,9 +19,12 @@ REDIS_URL = os.environ.get("REDIS", "unix:///run/redis.sock")
 REDIS_SYNC = redis.Redis.from_url(REDIS_URL, decode_responses=True)
 REDIS_ASYNC = redis.asyncio.Redis.from_url(REDIS_URL, decode_responses=True)
 
+# Patch the dictionary copy type
+Dictionary._COPY_TYPE = munch.Munch
+
 # Create wrapper functions for databases
-relist = functools.partial(List, redis=REDIS_SYNC)
-redict = functools.partial(Dictionary, redis=REDIS_SYNC)
+relist = lambda name: List(REDIS_SYNC, name)
+redict = lambda name: Dictionary(REDIS_SYNC, name)
 
 
 def broadcast_sync(channel=GLOBAL_CHANNEL, redis=REDIS_SYNC, **parameters):
