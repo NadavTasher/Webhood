@@ -3,7 +3,7 @@ FROM redis:7.2.5-bookworm AS redis
 FROM nginx:1.27.0-bookworm AS nginx
 
 # Select the base image
-FROM python:{{PYTHON_VERSION}}-bookworm AS python
+FROM python:{{PYTHON_VERSION}}-slim-bookworm AS python
 
 # Upgrade pip and install dependencies
 RUN pip install --upgrade \ 
