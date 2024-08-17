@@ -1,6 +1,5 @@
 import typing
 import inspect
-import logging
 
 # Import debug utilities
 from utilities.debug import DEBUG
@@ -11,6 +10,9 @@ from starlette.requests import Request
 from starlette.responses import Response, JSONResponse, PlainTextResponse
 from starlette.websockets import WebSocket
 from starlette.applications import Starlette
+
+# Import typing utilities
+from runtypes import cast_type_hints, check_type_hints
 
 # Type checking prefix
 PREFIX_REQUIRED = "type_"
@@ -108,39 +110,13 @@ async def gather_parameters(request_or_websocket: typing.Union[Request, WebSocke
     return parameters
 
 
-def process_parameters(required_types, optional_types, parameters):
-    # Validate must-have arguments
-    for key, value_type in required_types.items():
-        # Make sure the required argument exists
-        if key not in parameters:
-            raise KeyError(f"Parameter {key} is missing")
-
-        # Try casting into the value type
-        parameters[key] = value_type(parameters[key])
-
-    # Validate optional arguments
-    for key, value_type in optional_types.items():
-        # Check whether the argument exists
-        if key not in parameters:
-            continue
-
-        # Try casting into the value type
-        parameters[key] = value_type(parameters[key])
-
-    # Return the parameters
-    return parameters
-
-
 class Router(object):
 
     def __init__(self):
         # Initialize internals
         self.routes = list()
 
-    def socket(self, path, **types):
-        # Fetch all of the required types
-        required_types, optional_types, types = gather_types(types)
-
+    def socket(self, path, cast=True):
         # Create a decorator function
         def decorator(function):
             # Make sure the function is a coroutine function
@@ -152,11 +128,14 @@ class Router(object):
                 parameters = await gather_parameters(websocket)
 
                 # Process the parameters
-                parameters = process_parameters(required_types, optional_types, parameters)
+                if cast:
+                    parameters = cast_type_hints(function, [websocket], parameters)
+                else:
+                    parameters = check_type_hints(function, [websocket], parameters)
 
                 try:
                     # Call the function
-                    await function(websocket, **parameters)
+                    await function(**parameters)
                 finally:
                     # Close the websocket
                     await websocket.close()
@@ -170,10 +149,7 @@ class Router(object):
         # Return the decorator
         return decorator
 
-    def route(self, path, methods, **types):
-        # Fetch all of the required types
-        required_types, optional_types, types = gather_types(types)
-
+    def route(self, path, methods, cast=True):
         # Create a decorator function
         def decorator(function):
 
@@ -183,7 +159,10 @@ class Router(object):
                 parameters = await gather_parameters(request)
 
                 # Process the parameters
-                parameters = process_parameters(required_types, optional_types, parameters)
+                if cast:
+                    parameters = cast_type_hints(function, [], parameters)
+                else:
+                    parameters = check_type_hints(function, [], parameters)
 
                 # Call the function
                 if inspect.iscoroutinefunction(function):

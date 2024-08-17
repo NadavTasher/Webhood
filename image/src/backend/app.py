@@ -25,8 +25,12 @@ def click_request() -> str:
     return "Click count is %d" % DATABASE.count
 
 
-@router.post("/api/relay", type_message=Text)
-async def relay_request(message):
+@router.post("/api/relay")
+async def relay_request(message: str, sender: Optional[Email] = None) -> None:
+    # Append to message
+    if sender:
+        message += f" ({sender})"
+
     # Publish to channel
     await broadcast_async(text=message)
 

@@ -330,7 +330,7 @@ A background worker can be configured to run background jobs.
 
 This is a convenience feature that can be disabled using the entrypoint configuration file. Just set `replication=0` and the process will never be launched.
 
-#### Request type checking
+#### Request type checking & casting
 
 A `flask` like routing mechanism takes place, with an addition of runtime type-checking using the [runtypes](https://github.com/NadavTasher/RunTypes) library.
 
@@ -339,11 +339,13 @@ These features can be taken advantage of like so:
 ```python
 import hashlib
 
+from runtypes import Optional, Text, ByteString
+
 from utilities.starlette import PlainTextResponse, router
 
 
-@router.get("/api/code", optional_head=int)
-def code_request(head=None):
+@router.get("/api/code")
+def code_request(head: Optional[int] = None):
 	"""
 	This endpoint takes an optional int parameter.
 	If "head" will be present in the query parameters or the body,
@@ -370,8 +372,8 @@ def code_request(head=None):
     return PlainTextResponse(str().join(lines[:head]))
 
 
-@router.post("/api/echo", type_name=Text)
-def echo_request(name):
+@router.post("/api/echo")
+def echo_request(name: str):
 	"""
 	This endpoint takes a mandatory Text parameter.
 	If "name" will be present in the query parameters or the body,
@@ -384,8 +386,8 @@ def echo_request(name):
     return name
 
 
-@router.post("/api/md5sum", type_content_type=Text, type_content_data=Bytes)
-def md5sum_request(content_type, content_data):
+@router.post("/api/md5sum")
+def md5sum_request(content_type: Text, content_data: ByteString):
 	"""
 	This endpoint takes a mandatory Content-Type header and the body is a mandatory Bytes type.
 	"""
@@ -398,6 +400,15 @@ def md5sum_request(content_type, content_data):
 app = router.initialize()
 ```
 
+By default, all type validations default to **casting** the input to the required type.
+If only checking is desired, this default option can be overriden using:
+
+```python
+@router.get("/api/code", cast=False)
+def code_request(head: Optional[int] = None):
+	...
+```
+
 #### WebSocket support
 
 WebSocket integration requires the use of `asyncio`.
@@ -405,11 +416,13 @@ WebSocket integration requires the use of `asyncio`.
 ```python
 import hashlib
 
+from runtypes import Text
+
 from utilities.starlette import router
 
 
-@router.socket("/socket/notifications", type_id=Text)
-async def notifications_socket(websocket, id):
+@router.socket("/socket/notifications")
+async def notifications_socket(websocket, id: Text):
 	# Run additional validations here...
 
 	# Accept the client
