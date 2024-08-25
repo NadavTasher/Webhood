@@ -54,7 +54,7 @@ async def wait_for_redis_async():
         # Ignore busy loading errors
         with contextlib.suppress(redis.BusyLoadingError):
             # Ping the instance
-            ping_response = await REDIS_SYNC.ping()
+            ping_response = await REDIS_ASYNC.ping()
 
         # Sleep a second
         await asyncio.sleep(1)
