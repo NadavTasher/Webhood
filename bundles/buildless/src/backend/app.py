@@ -5,8 +5,11 @@ from runtypes import *
 from guardify import *
 
 # Import the router
-from utilities.redis import broadcast_sync, broadcast_async, receive_sync, receive_async, redict
+from utilities.redis import wait_for_redis_sync, broadcast_sync, broadcast_async, receive_sync, receive_async, redict
 from utilities.starlette import router
+
+# Wait for redis to ping back before operating on database
+wait_for_redis_sync()
 
 # Initialize ping database
 DATABASE = redict("click")

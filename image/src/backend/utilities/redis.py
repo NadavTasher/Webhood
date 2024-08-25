@@ -1,6 +1,9 @@
 import os
+import time
 import json
 import munch
+import asyncio
+import contextlib
 
 # Import redis utilities
 import redis
@@ -25,6 +28,36 @@ Dictionary._COPY_TYPE = munch.Munch
 # Create wrapper functions for databases
 relist = lambda name: List(REDIS_SYNC, name)
 redict = lambda name: Dictionary(REDIS_SYNC, name)
+
+
+def wait_for_redis_sync():
+    # Initialize ping response
+    ping_response = None
+
+    # Loop until the redis instance can be pinged
+    while not ping_response:
+        # Ignore busy loading errors
+        with contextlib.suppress(redis.BusyLoadingError):
+            # Ping the instance
+            ping_response = REDIS_SYNC.ping()
+
+        # Sleep a second
+        time.sleep(1)
+
+
+async def wait_for_redis_async():
+    # Initialize ping response
+    ping_response = None
+
+    # Loop until the redis instance can be pinged
+    while not ping_response:
+        # Ignore busy loading errors
+        with contextlib.suppress(redis.BusyLoadingError):
+            # Ping the instance
+            ping_response = await REDIS_SYNC.ping()
+
+        # Sleep a second
+        await asyncio.sleep(1)
 
 
 def broadcast_sync(channel=GLOBAL_CHANNEL, redis=REDIS_SYNC, **parameters):

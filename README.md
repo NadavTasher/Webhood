@@ -451,8 +451,11 @@ Note that for database backups to take place, a Docker volume must be mounted on
 ```python
 import hashlib
 
-from utilities.redis import redict
+from utilities.redis import wait_for_redis_sync, redict
 from utilities.starlette import router
+
+# Wait for redis to ping back before operating on database
+wait_for_redis_sync()
 
 # Initialize the database
 DATABASE = redict("clicker-database")
@@ -479,8 +482,11 @@ The [`utilities/redis.py`](https://github.com/NadavTasher/Webhood/blob/master/im
 ```python
 import hashlib
 
-from utilities.redis import broadcast_sync, receive_async, redict
+from utilities.redis import wait_for_redis_sync, broadcast_sync, receive_async, redict
 from utilities.starlette import router
+
+# Wait for redis to ping back before operating on database
+wait_for_redis_sync()
 
 # Initialize the database
 DATABASE = redict("clicker-database")
