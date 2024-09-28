@@ -113,3 +113,6 @@ test-buildless: buildless
 
 test-independent: independent
 	$(DOCKER) compose --project-directory $(INDEPENDENT_BUNDLE_PATH) up --build
+
+test-independent-build: independent
+	$(MAKE) -C $(INDEPENDENT_BUNDLE_PATH)

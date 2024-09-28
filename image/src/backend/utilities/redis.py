@@ -16,7 +16,7 @@ from rednest import List, Dictionary
 GLOBAL_CHANNEL = "global"
 
 # Redis connection URL
-REDIS_URL = os.environ.get("REDIS", "unix:///run/redis.sock")
+REDIS_URL = os.environ["REDIS"]
 
 # Create the default redis connection
 REDIS_SYNC = redis.Redis.from_url(REDIS_URL, decode_responses=True)
