@@ -16,10 +16,20 @@ services:
             - ./src/frontend/application:/application/frontend/application:ro
             # Configuration mounts
             - ./configurations/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
-            - ./configurations/redis.conf:/etc/redis/conf.d/redis.conf:ro
             - ./configurations/entrypoint.conf:/etc/entrypoint/conf.d/entrypoint.conf:ro
             # Data volume path
-            - data:/opt
+            - data:/data
+        environment:
+            # Address to redis instance
+            - REDIS=redis://redis/
+    
+    redis:
+        image: redis:7.4.0-alpine
+        command: --save 300 1
+        restart: unless-stopped
+        volumes:
+            # Data volume path
+            - data:/data
 
 # Configure persistent data volume
 volumes:

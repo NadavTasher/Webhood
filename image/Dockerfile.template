@@ -1,6 +1,5 @@
 # Select the images to install from
-FROM redis:7.2.5-bookworm AS redis
-FROM nginx:1.27.0-bookworm AS nginx
+FROM nginx:1.27.1-bookworm AS nginx
 
 # Select the base image
 FROM python:{{PYTHON_VERSION}}-slim-bookworm AS python
@@ -15,12 +14,6 @@ RUN pip install --upgrade \
 # Make the debian frontend non-interactive for apt installations
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install redis from image
-COPY --from=redis /usr /usr
-
-# Additional redis setup
-RUN mkdir -p /etc/redis/conf.d
-
 # Install nginx from image
 COPY --from=nginx /usr /usr
 COPY --from=nginx /etc/nginx/mime.types /etc/nginx/mime.types
@@ -31,11 +24,10 @@ RUN useradd -s /bin/false nginx && \
 
 # Copy default configurations
 COPY configurations/nginx.conf /etc/nginx/nginx.conf
-COPY configurations/redis.conf /etc/redis/redis.conf
 COPY configurations/gunicorn.conf /etc/gunicorn/gunicorn.conf
 COPY configurations/entrypoint.conf /etc/entrypoint/entrypoint.conf
 
-# Copy default sources
+# Copy the sources
 COPY src /application
 
 # Expose the HTTP and HTTPs ports
@@ -47,8 +39,8 @@ WORKDIR /application/backend
 # Specify stop signal
 STOPSIGNAL SIGINT
 
-# Set default command to run
-CMD [ "/usr/local/bin/python", "/application/entrypoint.py" ]
+# Set the entrypoint to the entrypoint script
+CMD [ "python", "/application/entrypoint.py" ]
 
 # Create the certificate and the key
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj / -keyout /etc/ssl/private/server.key -out /etc/ssl/private/server.crt

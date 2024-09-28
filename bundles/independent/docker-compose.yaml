@@ -11,6 +11,17 @@ services:
         volumes:
             # Data volume path
             - data:/opt
+        environment:
+            # Address to redis instance
+            - REDIS=redis://redis/
+    
+    redis:
+        image: redis:7.4.0-alpine
+        command: --save 300 1
+        restart: unless-stopped
+        volumes:
+            # Data volume path
+            - data:/data
 
 # Configure persistent data volume
 volumes:

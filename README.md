@@ -39,7 +39,7 @@ Webhood is based on popular projects and strives to keep the application archite
 
 1. Web server duties are handled by [NGINX](https://nginx.org/). NGINX serves as a static file server and as a reverse-proxy for the backend API. NGINX also handles TLS.
 2. Python backend is powered by [Starlette](https://www.starlette.io/) - an open-source WSGI framework that is the basis for many open-source projects. In our case, Starlette is extended by the [`utilities/starlette.py`](https://github.com/NadavTasher/Webhood/blob/master/image/src/backend/utilities/starlette.py) file.
-3. Database duties are handled by [Redis](https://redis.io/). A Redis server is incorporated into the base image, and can be easily accessed using the [rednest](https://pypi.org/rednest/) library.
+3. Database duties are handled by [Redis](https://redis.io/). A Redis server can be easily accessed using the [rednest](https://pypi.org/rednest/) library.
 4. Frontend duties are handled by a couple of utility JavaScript and CSS files residing in [src/frontend](https://github.com/NadavTasher/Webhood/tree/master/image/src/frontend). You can see an example of the frontend capabilities in the [Headless Test Page](https://github.com/NadavTasher/Webhood/blob/master/bundles/headless/test-page.html).
 
 ## Examples
