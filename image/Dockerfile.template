@@ -33,6 +33,9 @@ COPY src /application
 # Expose the HTTP and HTTPs ports
 EXPOSE 80 443
 
+# Mark /data as a volume directory
+VOLUME /data
+
 # Change working directory to application
 WORKDIR /application/backend
 
