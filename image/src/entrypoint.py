@@ -3,6 +3,7 @@
 import os
 import glob
 import shlex
+import signal
 import logging
 import argparse
 import subprocess
@@ -13,7 +14,9 @@ logging.basicConfig(level=logging.INFO, format="%(process)d:E %(asctime)s * %(me
 
 # Create the argument parser
 parser = argparse.ArgumentParser()
-parser.add_argument("-c", "--configuration", default="/etc/entrypoint/entrypoint.conf")
+parser.add_argument("-t", "--timeout", type=int, default=10)
+parser.add_argument("-c", "--configuration", type=str, default="/etc/entrypoint/entrypoint.conf")
+parser.add_argument("programs", type=str, nargs="*")
 
 # Parse the arguments
 arguments = parser.parse_args()
@@ -37,7 +40,7 @@ if configuration.has_section("include"):
     configuration.pop("include")
 
 # Create list of processes
-processes = dict()
+processes = {}
 
 # Open devnull to use as the children's stdin
 devnull = os.open(os.devnull, os.O_RDONLY)
@@ -48,6 +51,10 @@ exit_code = 0
 try:
     # Loop over sections and parse them
     for name in configuration.sections():
+        # Check if the program should be ran
+        if arguments.programs and name not in arguments.programs:
+            continue
+
         # Fetch the configuration
         program_configuration = configuration[name]
 
@@ -82,6 +89,27 @@ except KeyboardInterrupt:
     # Log the container shutdown
     logging.critical("Received shutdown signal")
 finally:
+    # Loop over all processes
+    for (process_name, process) in processes.values():
+        # Make sure process is stopped
+        if process.poll() is not None:
+            continue
+
+        # Log termination
+        logging.info("Interrupting %s (%d)", process_name, process.pid)
+
+        # Stop running process
+        process.send_signal(signal.SIGINT)
+
+    # Wait for all processes to finish
+    for (process_name, process) in processes.values():
+        # Log wait for termination
+        if process.poll() is None:
+            logging.info("Waiting for %s (%d) to stop gracefully", process_name, process.pid)
+
+        # Wait for termination
+        process.wait(arguments.timeout)
+
     # Loop over all processes
     for (process_name, process) in processes.values():
         # Make sure process is stopped
