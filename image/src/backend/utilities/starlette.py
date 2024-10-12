@@ -116,10 +116,7 @@ class Router(object):
     def __init__(self, static_directory: typing.Optional[str] = None) -> None:
         # Initialize routes
         self.routes = []
-
-        # Create the static files route as needed
-        if static_directory is not None:
-            self.routes.append(Mount(path="/", app=StaticFiles(directory=static_directory, html=True)))
+        self.static_directory = static_directory
 
     def socket(self, path, cast=True):
         # Create a decorator function
@@ -191,17 +188,17 @@ class Router(object):
         # Return the decorator
         return decorator
 
-    def get(self, path, **types):
-        return self.route(path, methods=["GET"], **types)
+    def get(self, path):
+        return self.route(path, methods=["GET"])
 
-    def post(self, path, **types):
-        return self.route(path, methods=["POST"], **types)
+    def post(self, path):
+        return self.route(path, methods=["POST"])
 
-    def put(self, path, **types):
-        return self.route(path, methods=["PUT"], **types)
+    def put(self, path):
+        return self.route(path, methods=["PUT"])
 
-    def delete(self, path, **types):
-        return self.route(path, methods=["DELETE"], **types)
+    def delete(self, path):
+        return self.route(path, methods=["DELETE"])
 
     def initialize(self):
         # Create exception handler
@@ -210,8 +207,15 @@ class Router(object):
             Exception: lambda request, exception: PlainTextResponse(str(exception), 500)
         }
 
+        # Generate a list of routes
+        routes = list(self.routes)
+
+        # Create the static files route as needed
+        if self.static_directory is not None:
+            routes.append(Mount(path="/", app=StaticFiles(directory=self.static_directory, html=True)))
+
         # Initialize the starlette application
-        return Starlette(debug=DEBUG, routes=self.routes, exception_handlers=exception_handlers)
+        return Starlette(debug=DEBUG, routes=routes, exception_handlers=exception_handlers)
 
 
 # Initialize the router

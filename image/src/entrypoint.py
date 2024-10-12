@@ -10,7 +10,7 @@ import subprocess
 import configparser
 
 # Setup the logging
-logging.basicConfig(level=logging.INFO, format="%(process)d:E %(asctime)s * %(message)s", datefmt="%d %b %Y %H:%M:%S.000")
+logging.basicConfig(level=logging.INFO, format="[%(asctime)s] [%(process)d] [%(levelname)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S %z")
 
 # Create the argument parser
 parser = argparse.ArgumentParser()
