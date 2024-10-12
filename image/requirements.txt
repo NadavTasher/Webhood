@@ -1,0 +1,11 @@
+uvicorn==0.30.3
+gunicorn==22.0.0
+starlette==0.38.2
+websockets==12.0
+python-multipart==0.0.9
+redis==5.0.8
+hiredis==3.0.0
+munch==4.0.0
+rednest==0.5.1
+runtypes==0.6.1
+guardify==0.2.3

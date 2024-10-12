@@ -1,9 +1,12 @@
 import os
 import time
 import json
-import munch
+import typing
 import asyncio
 import contextlib
+
+# Import munch utility
+import munch
 
 # Import redis utilities
 import redis
@@ -23,14 +26,21 @@ REDIS_SYNC = redis.Redis.from_url(REDIS_URL, decode_responses=True)
 REDIS_ASYNC = redis.asyncio.Redis.from_url(REDIS_URL, decode_responses=True)
 
 # Patch the dictionary copy type
+# pylint: disable-next=protected-access
 Dictionary._COPY_TYPE = munch.Munch
 
+
 # Create wrapper functions for databases
-relist = lambda name: List(REDIS_SYNC, name)
-redict = lambda name: Dictionary(REDIS_SYNC, name)
+def relist(name: str) -> List:
+    return List(REDIS_SYNC, name)
 
 
-def wait_for_redis_sync():
+def redict(name: str) -> Dictionary:
+    return Dictionary(REDIS_SYNC, name)
+
+
+# Functions to wait for redis
+def wait_for_redis_sync() -> None:
     # Initialize ping response
     ping_response = None
 
@@ -45,7 +55,7 @@ def wait_for_redis_sync():
         time.sleep(1)
 
 
-async def wait_for_redis_async():
+async def wait_for_redis_async() -> None:
     # Initialize ping response
     ping_response = None
 
@@ -60,22 +70,22 @@ async def wait_for_redis_async():
         await asyncio.sleep(1)
 
 
-def broadcast_sync(channel=GLOBAL_CHANNEL, redis=REDIS_SYNC, **parameters):
+def broadcast_sync(channel: str = GLOBAL_CHANNEL, connection: redis.Redis = REDIS_SYNC, **parameters: typing.Any) -> None:
     # Publish to channel
-    redis.publish(channel, json.dumps(parameters))
+    connection.publish(channel, json.dumps(parameters))
 
 
-async def broadcast_async(channel=GLOBAL_CHANNEL, redis=REDIS_ASYNC, **parameters):
+async def broadcast_async(channel: str = GLOBAL_CHANNEL, connection: redis.Redis = REDIS_ASYNC, **parameters: typing.Any) -> None:
     # Publish to channel
-    await redis.publish(channel, json.dumps(parameters))
+    await connection.publish(channel, json.dumps(parameters))
 
 
-def receive_sync(channel=GLOBAL_CHANNEL, redis=REDIS_SYNC, count=0):
+def receive_sync(channel: str = GLOBAL_CHANNEL, connection: redis.Redis = REDIS_SYNC, count: int = 0) -> munch.Munch:
     # Count messages
     received = 0
 
     # Create Pub / Sub subscriber
-    with redis.pubsub() as subscriber:
+    with connection.pubsub() as subscriber:
         # Subscribe to channel
         subscriber.subscribe(channel)
 
@@ -102,12 +112,12 @@ def receive_sync(channel=GLOBAL_CHANNEL, redis=REDIS_SYNC, count=0):
             received += 1
 
 
-async def receive_async(channel=GLOBAL_CHANNEL, redis=REDIS_ASYNC, count=0):
+async def receive_async(channel: str = GLOBAL_CHANNEL, connection: redis.Redis = REDIS_ASYNC, count: int = 0) -> munch.Munch:
     # Count messages
     received = 0
 
     # Create Pub / Sub subscriber
-    async with redis.pubsub() as subscriber:
+    async with connection.pubsub() as subscriber:
         # Subscribe to channel
         await subscriber.subscribe(channel)
 

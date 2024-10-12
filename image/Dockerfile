@@ -1,18 +1,16 @@
-# Select the base image
-FROM python:{{PYTHON_VERSION}}-slim-bookworm AS python
+# The default python version is 3.10
+ARG PYTHON_VERSION=3.10
 
-# Make the debian frontend non-interactive for apt installations
-ENV DEBIAN_FRONTEND=noninteractive
+# Select the base image
+FROM python:${PYTHON_VERSION}-slim-bookworm
+
+# Copy the requirements file
+COPY requirements.txt /tmp/requirements.txt
 
 # Upgrade pip and install dependencies
-RUN pip install --upgrade \ 
-	pip ipython \
-	uvicorn==0.30.3 gunicorn==22.0.0 \
-	starlette==0.38.2 websockets==12.0 python-multipart==0.0.9 \
-	redis==5.0.8 hiredis==3.0.0 munch==4.0.0 rednest==0.5.0 runtypes==0.6.1 guardify==0.2.3
+RUN pip install -U -r /tmp/requirements.txt pip ipython
 
 # Copy default configurations
-COPY configurations/gunicorn.conf /etc/gunicorn/gunicorn.conf
 COPY configurations/entrypoint.conf /etc/entrypoint/entrypoint.conf
 
 # Copy the sources

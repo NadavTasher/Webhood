@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 import os
+import sys
 import glob
 import shlex
-import signal
 import logging
 import argparse
 import subprocess
@@ -14,7 +14,6 @@ logging.basicConfig(level=logging.INFO, format="[%(asctime)s] [%(process)d] [%(l
 
 # Create the argument parser
 parser = argparse.ArgumentParser()
-parser.add_argument("-t", "--timeout", type=int, default=10)
 parser.add_argument("-c", "--configuration", type=str, default="/etc/entrypoint/entrypoint.conf")
 parser.add_argument("programs", type=str, nargs="*")
 
@@ -59,12 +58,12 @@ try:
         program_configuration = configuration[name]
 
         # Create the processes
-        for worker in range(int(program_configuration.get("replication", 1))):
+        for worker in range(int(program_configuration.get("replication", "1"))):
             # Create the process using the values
             process = subprocess.Popen(shlex.split(program_configuration["command"]), stdin=devnull, cwd=program_configuration.get("directory"))
 
             # Add the process to the dictionary
-            processes[process.pid] = ("%s_%d" % (name, worker + 1), process)
+            processes[process.pid] = (f"{name}_{worker + 1}", process)
 
             # Log the startup
             logging.info("Started worker %d for %s", worker + 1, name)
@@ -114,4 +113,4 @@ finally:
     os.close(devnull)
 
     # Exit with the error code
-    exit(exit_code)
+    sys.exit(exit_code)

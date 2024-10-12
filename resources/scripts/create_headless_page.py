@@ -5,7 +5,7 @@ import base64
 import argparse
 
 
-def substitute_with_file(content, base_path, file_path, content_type):
+def substitute_with_file(content: str, base_path: str, file_path: str, content_type: str) -> str:
     # Open the file for reading and read contents
     with open(os.path.join(base_path, file_path.lstrip("/")), "rb") as file:
         data = file.read()
@@ -14,7 +14,7 @@ def substitute_with_file(content, base_path, file_path, content_type):
     return content.replace(f'"{file_path}"', f'"data:{content_type};base64,{base64.b64encode(data).decode()}"')
 
 
-def main():
+def main() -> None:
     # Create argument parser
     parser = argparse.ArgumentParser()
     parser.add_argument("--base-directory", action="store", required=True, help="Directory to use for rendering the template")
