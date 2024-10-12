@@ -96,27 +96,6 @@ finally:
             continue
 
         # Log termination
-        logging.info("Interrupting %s (%d)", process_name, process.pid)
-
-        # Stop running process
-        process.send_signal(signal.SIGINT)
-
-    # Wait for all processes to finish
-    for (process_name, process) in processes.values():
-        # Log wait for termination
-        if process.poll() is None:
-            logging.info("Waiting for %s (%d) to stop gracefully", process_name, process.pid)
-
-        # Wait for termination
-        process.wait(arguments.timeout)
-
-    # Loop over all processes
-    for (process_name, process) in processes.values():
-        # Make sure process is stopped
-        if process.poll() is not None:
-            continue
-
-        # Log termination
         logging.info("Terminating %s (%d)", process_name, process.pid)
 
         # Stop running process

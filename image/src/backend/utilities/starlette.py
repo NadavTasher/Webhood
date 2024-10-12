@@ -5,10 +5,11 @@ import inspect
 from utilities.debug import DEBUG
 
 # Import starlette utilities
-from starlette.routing import Route, WebSocketRoute
+from starlette.routing import Mount, Route, WebSocketRoute
 from starlette.requests import Request
 from starlette.responses import Response, JSONResponse, PlainTextResponse
 from starlette.websockets import WebSocket
+from starlette.staticfiles import StaticFiles
 from starlette.applications import Starlette
 
 # Import typing utilities
@@ -112,9 +113,13 @@ async def gather_parameters(request_or_websocket: typing.Union[Request, WebSocke
 
 class Router(object):
 
-    def __init__(self):
-        # Initialize internals
-        self.routes = list()
+    def __init__(self, static_directory: typing.Optional[str] = None) -> None:
+        # Initialize routes
+        self.routes = []
+
+        # Create the static files route as needed
+        if static_directory is not None:
+            self.routes.append(Mount(path="/", app=StaticFiles(directory=static_directory, html=True)))
 
     def socket(self, path, cast=True):
         # Create a decorator function
@@ -210,4 +215,4 @@ class Router(object):
 
 
 # Initialize the router
-router = Router()
+router = Router("/application/frontend")

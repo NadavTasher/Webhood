@@ -1,8 +1,8 @@
-# Select the images to install from
-FROM nginx:1.27.1-bookworm AS nginx
-
 # Select the base image
 FROM python:{{PYTHON_VERSION}}-slim-bookworm AS python
+
+# Make the debian frontend non-interactive for apt installations
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Upgrade pip and install dependencies
 RUN pip install --upgrade \ 
@@ -11,19 +11,7 @@ RUN pip install --upgrade \
 	starlette==0.38.2 websockets==12.0 python-multipart==0.0.9 \
 	redis==5.0.8 hiredis==3.0.0 munch==4.0.0 rednest==0.5.0 runtypes==0.6.1 guardify==0.2.3
 
-# Make the debian frontend non-interactive for apt installations
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Install nginx from image
-COPY --from=nginx /usr /usr
-COPY --from=nginx /etc/nginx/mime.types /etc/nginx/mime.types
-
-# Additional nginx setup
-RUN useradd -s /bin/false nginx && \
-	mkdir -p /var/cache/nginx /etc/nginx/conf.d
-
 # Copy default configurations
-COPY configurations/nginx.conf /etc/nginx/nginx.conf
 COPY configurations/gunicorn.conf /etc/gunicorn/gunicorn.conf
 COPY configurations/entrypoint.conf /etc/entrypoint/entrypoint.conf
 
