@@ -6,7 +6,7 @@ from guardify import *
 
 # Import the router
 from utilities.redis import wait_for_redis_sync, broadcast_sync, broadcast_async, receive_sync, receive_async, redict
-from utilities.starlette import router
+from utilities.starlette import WebSocket, router
 
 # Wait for redis to ping back before operating on database
 wait_for_redis_sync()
@@ -25,7 +25,7 @@ def click_request() -> str:
     logging.info("User clicked - count is now %d", DATABASE.count)
 
     # Return the ping count
-    return "Click count is %d" % DATABASE.count
+    return f"Click count is {DATABASE.count}"
 
 
 @router.post("/api/relay")
@@ -39,7 +39,7 @@ async def relay_request(message: str, sender: Optional[Email] = None) -> None:
 
 
 @router.socket("/socket/relay")
-async def relay_socket(websocket) -> None:
+async def relay_socket(websocket: WebSocket) -> None:
     # Accept the websocket
     await websocket.accept()
 
