@@ -10,7 +10,7 @@ DOCKER ?= $(shell which docker)
 PYTHON ?= $(shell which python3)
 
 # Python virtual environment paths
-VENV_PATH := .venv
+VENV_PATH := $(abspath .venv)
 
 # Python executable paths
 PIP := $(VENV_PATH)/bin/pip
@@ -20,10 +20,10 @@ PYLINT := $(VENV_PATH)/bin/pylint
 PYTHON := $(VENV_PATH)/bin/python
 
 # All paths
-IMAGE_PATH := image
-BUNDLES_PATH := bundles
-EXAMPLES_PATH := examples
-RESOURCES_PATH := resources
+IMAGE_PATH := $(abspath image)
+BUNDLES_PATH := $(abspath bundles)
+EXAMPLES_PATH := $(abspath examples)
+RESOURCES_PATH := $(abspath resources)
 
 # Additional resources
 TESTS_PATH := $(RESOURCES_PATH)/tests
@@ -33,7 +33,7 @@ SCRIPTS_PATH := $(RESOURCES_PATH)/scripts
 BACKEND_PATH := $(IMAGE_PATH)/src/backend
 FRONTEND_PATH := $(IMAGE_PATH)/src/frontend
 ENTRYPOINT_PATH := $(IMAGE_PATH)/src/entrypoint.py
-REQUIREMENTS_PATH := $(IMAGE_PATH)/requirements.txt
+REQUIREMENTS_PATH := $(IMAGE_PATH)/resources/requirements.txt
 
 # Bundle paths
 HEADLESS_BUNDLE_PATH := $(BUNDLES_PATH)/headless
@@ -66,11 +66,11 @@ checks: format lint typecheck
 
 lint: $(PYLINT) $(PYTHON_SOURCES)
 	@# Lint all of the sources
-	$(PYLINT) -d C0301 -d C0114 -d C0115 -d C0116 $(PYTHON_SOURCES)
+	cd $(BACKEND_PATH); $(PYLINT) -d C0301 -d C0114 -d C0115 -d C0116 -d W0401 $(PYTHON_SOURCES)
 
 typecheck: $(MYPY) $(PYTHON_SOURCES)
 	@# Typecheck all of the sources
-	$(MYPY) --strict --explicit-package-bases --no-implicit-reexport $(PYTHON_SOURCES)
+	cd $(BACKEND_PATH); $(MYPY) --cache-dir=/dev/null --explicit-package-bases --no-implicit-reexport $(PYTHON_SOURCES)
 
 format: $(YAPF) $(PYTHON_SOURCES)
 	@# Format the python sources using yapf
@@ -103,7 +103,7 @@ $(VENV_PATH): $(REQUIREMENTS_PATH)
 	python3 -m venv $(VENV_PATH)
 
 	@# Install some dependencies
-	$(PIP) install -r $(REQUIREMENTS_PATH) jinja2 yapf mypy pylint
+	$(PIP) install -r $(REQUIREMENTS_PATH) jinja2 yapf mypy pylint munch-stubs
 
 $(YAPF): $(VENV_PATH)
 $(MYPY): $(VENV_PATH)

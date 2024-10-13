@@ -2,115 +2,168 @@
 
 import os
 import sys
-import glob
+import time
 import shlex
+import signal
+import typing
 import logging
 import argparse
 import subprocess
+import dataclasses
 import configparser
 
 # Setup the logging
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s] [%(process)d] [%(levelname)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S %z")
 
-# Create the argument parser
-parser = argparse.ArgumentParser()
-parser.add_argument("-c", "--configuration", type=str, default="/etc/entrypoint/entrypoint.conf")
-parser.add_argument("programs", type=str, nargs="*")
 
-# Parse the arguments
-arguments = parser.parse_args()
+@dataclasses.dataclass(frozen=True)
+class Program:
 
-# Create configuration parser
-configuration = configparser.ConfigParser()
+    name: str
+    count: int
+    signal: int
+    command: str
+    directory: str
 
-# Load the configuration
-configuration.read(arguments.configuration)
 
-# Check whether should include more files
-if configuration.has_section("include"):
-    # Get the extra configuration glob
-    extra_files = glob.glob(configuration.get("include", "files"))
+def parse() -> typing.Tuple[typing.List[Program], int]:
+    # Create the argument parser
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-t", "--timeout", type=int, default=10, help="Timeout for graceful exit")
+    parser.add_argument("-c", "--configuration", type=str, default="/etc/entrypoint.conf", help="Path to entrypoint configuration")
+    parser.add_argument("names", type=str, nargs="*", help="Names of programs to run")
 
-    # Load all of these files
-    for extra_file in extra_files:
-        configuration.read(extra_file)
+    # Parse the arguments
+    arguments = parser.parse_args()
 
-    # Pop the include section
-    configuration.pop("include")
+    # Create configuration parser and load the configuration
+    configuration = configparser.ConfigParser()
+    configuration.read(arguments.configuration)
 
-# Create list of processes
-processes = {}
+    # Create a list of programs
+    programs: typing.List[Program] = []
 
-# Open devnull to use as the children's stdin
-devnull = os.open(os.devnull, os.O_RDONLY)
-
-# Create a placeholder for the exit code
-exit_code = 0
-
-try:
-    # Loop over sections and parse them
-    for name in configuration.sections():
-        # Check if the program should be ran
-        if arguments.programs and name not in arguments.programs:
+    # Loop over configuration entries and create programs
+    for section in configuration.sections():
+        # If the section is not whitelisted, skip
+        if arguments.names and section not in arguments.names:
             continue
 
-        # Fetch the configuration
-        program_configuration = configuration[name]
+        # Fetch the section values
+        configuration_section = configuration[section]
 
-        # Create the processes
-        for worker in range(int(program_configuration.get("replication", "1"))):
-            # Create the process using the values
-            process = subprocess.Popen(shlex.split(program_configuration["command"]), stdin=devnull, cwd=program_configuration.get("directory"))
+        # Initialize default values
+        program_count = 1
+        program_signal = signal.SIGINT
 
-            # Add the process to the dictionary
-            processes[process.pid] = (f"{name}_{worker + 1}", process)
+        # Count is an optional value
+        if "count" in configuration_section:
+            program_count = int(configuration_section["count"])
 
-            # Log the startup
-            logging.info("Started worker %d for %s", worker + 1, name)
+        # Signal is an optional value
+        if "signal" in configuration_section:
+            program_signal = signal.Signals[configuration_section["signal"]]
 
-    # Wait for any process to finish
-    stopped_process_id, stopped_process_exit_code = os.wait()
+        # Must-have configuration values
+        program_command = str(configuration_section["command"])
+        program_directory = str(configuration_section["directory"])
 
-    # Loop until the stopped process is one of our processes
-    while stopped_process_id not in processes:
+        # Create the program entry
+        programs.append(Program(section, program_count, program_signal, program_command, program_directory))
+
+    # Return the program list
+    return programs, arguments.timeout
+
+
+def run(programs: typing.List[Program], timeout: int = 5) -> int:
+    # Initialize dictionary of processes
+    processes: typing.Dict[int, typing.Tuple[Program, subprocess.Popen]] = {}
+
+    try:
+        # Loop over programs and create processes
+        for program in programs:
+            # Create as many replicas as needed
+            for replica in range(program.count):
+                # Create the process
+                # pylint: disable-next=consider-using-with, subprocess-popen-preexec-fn
+                process = subprocess.Popen(shlex.split(program.command), stdin=subprocess.DEVNULL, cwd=program.directory, preexec_fn=os.setpgrp)
+
+                # Register the process
+                processes[process.pid] = (program, process)
+
+                # Log the replica
+                logging.info("Started replica %d for %r", replica + 1, program.name)
+
         # Wait for any process to finish
-        stopped_process_id, stopped_process_exit_code = os.wait()
+        process_id, exit_code = os.wait()
 
-    # Find the stopped process
-    stopped_process_name, _ = processes[stopped_process_id]
+        # Loop until the stopped process is one of our processes
+        while process_id not in processes:
+            # Wait for any process to finish
+            process_id, exit_code = os.wait()
 
-    # Log the killed process
-    logging.error("Process %s has stopped - exit code %d", stopped_process_name, stopped_process_exit_code)
+        # Find the program
+        program, _ = processes[process_id]
 
-    # Set the exit code
-    exit_code = stopped_process_exit_code
-except KeyboardInterrupt:
-    # Log the container shutdown
-    logging.critical("Received shutdown signal")
-finally:
-    # Loop over all processes
-    for (process_name, process) in processes.values():
-        # Make sure process is stopped
-        if process.poll() is not None:
-            continue
+        # Log the killed process
+        logging.error("Process %d of %r has exited with %d", process_id, program.name, exit_code)
 
-        # Log termination
-        logging.info("Terminating %s (%d)", process_name, process.pid)
+        # Ungraceful exit, exit code should be as of process
+        return exit_code
+    except KeyboardInterrupt:
+        # Log keyboard interrupt
+        logging.critical("Received shutdown signal")
 
-        # Stop running process
-        process.terminate()
+        # Graceful exit, exit code should be 0
+        return 0
+    except:  # pylint: disable=bare-except
+        # Log the exception
+        logging.exception("An exception has occured")
 
-    # Wait for all processes to finish
-    for (process_name, process) in processes.values():
-        # Log wait for termination
-        if process.poll() is None:
-            logging.info("Waiting for %s (%d) to terminate", process_name, process.pid)
+        # Ungraceful exit, exit code should be 1
+        return 1
+    finally:
+        # Try interrupting all processes
+        for program, process in processes.values():
+            # Only interrupt if not stopped
+            if process.poll() is None:
+                # Send the termination signal
+                process.send_signal(program.signal)
 
-        # Wait for termination
-        process.wait()
+        # Mark end time
+        end_time = time.time() + timeout
 
-    # Close the devnull
-    os.close(devnull)
+        # Wait for all processes
+        for _, process in processes.values():
+            # Only wait if not stopped
+            if process.poll() is None:
+                # Calculate the time left
+                time_left = max(end_time - time.time(), 0)
+
+                # Wait for the process
+                process.wait(time_left)
+
+        # Timeout exceeded, terminate all remaining processes
+        for program, process in processes.values():
+            # Only terminate if still running
+            if process.poll() is None:
+                # Terminate the process
+                process.terminate()
+
+                # Log termination
+                logging.warning("Terminated %d of %r because of timeout", process.pid, program.name)
+
+
+def main() -> None:
+    # Parse the arguments and configuration
+    programs, timeout = parse()
+
+    # Execute the programs and wait for an exit code
+    exit_code = run(programs, timeout)
 
     # Exit with the error code
     sys.exit(exit_code)
+
+
+if __name__ == "__main__":
+    main()

@@ -7,5 +7,5 @@ redis==5.0.8
 hiredis==3.0.0
 munch==4.0.0
 rednest==0.5.1
-runtypes==0.6.1
-guardify==0.2.3
+runtypes==0.6.2
+guardify==0.3.0

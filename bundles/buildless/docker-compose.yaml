@@ -3,7 +3,7 @@ version: "3"
 # Configure applcation service
 services: 
     application:
-        image: webhood/3.8
+        image: webhood/3.10
         restart: unless-stopped
         ports: 
             - 80:80
@@ -14,9 +14,6 @@ services:
             - ./src/backend/worker.py:/application/backend/worker.py:ro
             - ./src/frontend/index.html:/application/frontend/index.html:ro
             - ./src/frontend/application:/application/frontend/application:ro
-            # Configuration mounts
-            - ./configurations/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
-            - ./configurations/entrypoint.conf:/etc/entrypoint/conf.d/entrypoint.conf:ro
             # Data volume path
             - data:/data
         environment:

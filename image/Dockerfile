@@ -14,13 +14,13 @@ VOLUME /data
 STOPSIGNAL SIGINT
 
 # Copy the requirements file
-COPY requirements.txt /tmp/requirements.txt
+COPY resources/requirements.txt /tmp/requirements.txt
 
 # Upgrade pip and install dependencies
 RUN pip install -U -r /tmp/requirements.txt pip ipython
 
 # Copy default configurations
-COPY configurations/entrypoint.conf /etc/entrypoint/entrypoint.conf
+COPY resources/entrypoint.conf /etc/entrypoint.conf
 
 # Copy the sources
 COPY src /application

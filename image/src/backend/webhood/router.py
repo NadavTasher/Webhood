@@ -1,9 +1,6 @@
 import typing
 import inspect
 
-# Import debug utilities
-from utilities.debug import DEBUG
-
 # Import starlette utilities
 from starlette.routing import BaseRoute, Mount, Route, WebSocketRoute
 from starlette.requests import Request
@@ -14,6 +11,9 @@ from starlette.applications import Starlette
 
 # Import typing utilities
 from runtypes import cast_type_hints, check_type_hints
+
+# Import debug utilities
+from webhood.debug import DEBUG
 
 # Type checking prefix
 PREFIX_REQUIRED = "type_"
@@ -111,9 +111,11 @@ class Router:
 
                 # Process the parameters
                 if cast:
+                    # Cast all parameters and overwrite the parameters dictionary
                     parameters = cast_type_hints(function, [websocket], parameters)
                 else:
-                    parameters = check_type_hints(function, [websocket], parameters)
+                    # Only type check the parameters
+                    check_type_hints(function, [websocket], parameters)
 
                 try:
                     # Call the function
@@ -126,10 +128,10 @@ class Router:
             self.routes.append(WebSocketRoute(path, endpoint=endpoint, name=function.__name__))
 
             # Return the original function
-            return function
+            return typing.cast(Function, function)
 
         # Return the decorator
-        return typing.cast(Function, decorator)
+        return decorator
 
     def route(self, path: str, methods: typing.List[str], cast: bool = True) -> typing.Callable[[Function], Function]:
         # Create a decorator function
@@ -142,9 +144,11 @@ class Router:
 
                 # Process the parameters
                 if cast:
+                    # Cast all parameters and overwrite the parameters dictionary
                     parameters = cast_type_hints(function, [], parameters)
                 else:
-                    parameters = check_type_hints(function, [], parameters)
+                    # Only type check the parameters
+                    check_type_hints(function, [], parameters)
 
                 # Call the function
                 if inspect.iscoroutinefunction(function):
@@ -163,10 +167,10 @@ class Router:
             self.routes.append(Route(path, endpoint=endpoint, methods=methods, name=function.__name__ + repr(methods)))
 
             # Return the original function
-            return function
+            return typing.cast(Function, function)
 
         # Return the decorator
-        return typing.cast(Function, decorator)
+        return decorator
 
     def get(self, path: str) -> typing.Callable[[Function], Function]:
         return self.route(path, methods=["GET"])
@@ -201,3 +205,6 @@ class Router:
 
 # Initialize the router
 router = Router("/application/frontend")
+
+# Add explicit exports
+__all__ = ["WebSocket", "Request", "Response", "PlainTextResponse", "JSONResponse", "router"]

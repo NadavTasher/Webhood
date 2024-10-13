@@ -28,3 +28,6 @@ endif
 
 image: $(IMAGE_SOURCES)
 	@docker build $(IMAGE_PATH) -t $(IMAGE_NAME):$(IMAGE_TAG)
+
+develop: image
+	@docker compose up

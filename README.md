@@ -37,10 +37,10 @@ git commit -m "Initial commit"
 
 Webhood is based on popular projects and strives to keep the application architecture simple efficient.
 
-1. Python backend is powered by [Starlette](https://www.starlette.io/) - an open-source WSGI framework that is the basis for many open-source projects. In our case, Starlette is extended by the [`utilities/starlette.py`](https://github.com/NadavTasher/Webhood/blob/master/image/src/backend/utilities/starlette.py) file.
-1. Web server duties are handled by [Gunicorn](https://gunicorn.org/) - an open-source WSGI server that's lite and speedy.
-2. Database duties are handled by [Redis](https://redis.io/). A Redis server can be easily accessed using the [rednest](https://pypi.org/rednest/) library.
-3. Frontend duties are handled by a couple of utility JavaScript and CSS files residing in [src/frontend](https://github.com/NadavTasher/Webhood/tree/master/image/src/frontend). You can see an example of the frontend capabilities in the [Headless Test Page](https://github.com/NadavTasher/Webhood/blob/master/bundles/headless/test-page.html).
+1. Python backend is powered by [Starlette](https://www.starlette.io/) - an open-source WSGI framework. See [usage](https://github.com/NadavTasher/Webhood/blob/master/image/src/backend/webhood/router.py).
+1. Web server duties are handled by [Gunicorn](https://gunicorn.org/) - an open-source WSGI server. See [usage](https://github.com/NadavTasher/Webhood/blob/master/image/resources/entrypoint.conf).
+2. Database duties are handled by [Redis](https://redis.io/) using the [rednest](https://pypi.org/rednest/) library.
+3. Frontend duties are handled by custom JS and CSS files in [src/frontend](https://github.com/NadavTasher/Webhood/tree/master/image/src/frontend). An example can be seen [here](https://github.com/NadavTasher/Webhood/blob/master/bundles/headless/test-page.html).
 
 ## Examples
 
@@ -54,7 +54,7 @@ You can easily spin up one of the example applications found [here](https://gith
 
 By default, the color scheme is defined by the system configuration.
 
-This can be disabled by excluding the `/stylesheets/colors.css` file from your page, and create a custom color scheme like so:
+This behaviour can be disabled - exclude the `/stylesheets/colors.css` file from your page, and create a custom color scheme:
 
 ```css
 :root {
@@ -341,7 +341,7 @@ import hashlib
 
 from runtypes import Optional, Text, ByteString
 
-from utilities.starlette import PlainTextResponse, router
+from webhood.router import PlainTextResponse, router
 
 
 @router.get("/api/code")
@@ -418,11 +418,11 @@ import hashlib
 
 from runtypes import Text
 
-from utilities.starlette import router
+from webhood.router import WebSocket, router
 
 
 @router.socket("/socket/notifications")
-async def notifications_socket(websocket, id: Text):
+async def notifications_socket(websocket: WebSocket, id: Text) -> None:
 	# Run additional validations here...
 
 	# Accept the client
@@ -451,8 +451,8 @@ Note that for database backups to take place, a Docker volume must be mounted on
 ```python
 import hashlib
 
-from utilities.redis import wait_for_redis_sync, redict
-from utilities.starlette import router
+from webhood.router import router
+from webhood.database import wait_for_redis_sync, redict
 
 # Wait for redis to ping back before operating on database
 wait_for_redis_sync()
@@ -482,8 +482,8 @@ The [`utilities/redis.py`](https://github.com/NadavTasher/Webhood/blob/master/im
 ```python
 import hashlib
 
-from utilities.redis import wait_for_redis_sync, broadcast_sync, receive_async, redict
-from utilities.starlette import router
+from webhood.router import router
+from webhood.database import wait_for_redis_sync, broadcast_sync, receive_async, redict
 
 # Wait for redis to ping back before operating on database
 wait_for_redis_sync()
@@ -526,27 +526,14 @@ async def notify_clicks(websocket):
 app = router.initialize()
 ```
 
-### Configuration
-
-Entrypoint configuration can be extended using `/etc/entrypoint/conf.d/`.
-
-## Quirks
-
 ### Container entrypoint
 
-The entrypoint of the container (the default built image), is `entrypoint.py`.
+The entrypoint of the image, is [`entrypoint.py`](https://github.com/NadavTasher/Webhood/blob/master/image/src/entrypoint.conf).
 
-This entrypoint is a simple Python process watcher. It stops when any one of it's direct children exits.
+This entrypoint is a simple Python process watcher.
+It stops when one of it's direct children exits, and terminates the others.
 
-It can be configured to spawn new services and can be patched to change the default configuration using it's `conf.d` directory.
-
-A sample configuration can be found [here](https://github.com/NadavTasher/Webhood/blob/master/image/configurations/entrypoint.conf).
-
-### Creating an in-mem application
-
-If you do not want to use the pre-bundled `rednest` library to create a Redis persistent storage key-value store, you might want to use a regular `dict()` as a way to temporarly store globals.
-
-To make this possible, you might need to extend the `entrypoint` configuration to tell `gunicorn` to only spawn a single worker. That way all of the requests will be handled by the same process with the same globals.
+A sample configuration can be found [here](https://github.com/NadavTasher/Webhood/blob/master/image/resources/entrypoint.conf).
 
 ## Contributing
 

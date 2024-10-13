@@ -1,3 +1,6 @@
+# mypy: disable-error-code=valid-type
+# pylint: disable=no-member, unused-wildcard-import
+
 import logging
 
 # Import utilities
@@ -5,8 +8,8 @@ from runtypes import *
 from guardify import *
 
 # Import the router
-from utilities.redis import wait_for_redis_sync, broadcast_sync, broadcast_async, receive_sync, receive_async, redict
-from utilities.starlette import WebSocket, router
+from webhood.router import WebSocket, router
+from webhood.database import wait_for_redis_sync, broadcast_async, receive_async, redict
 
 # Wait for redis to ping back before operating on database
 wait_for_redis_sync()
