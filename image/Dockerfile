@@ -4,6 +4,15 @@ ARG PYTHON_VERSION=3.10
 # Select the base image
 FROM python:${PYTHON_VERSION}-slim-bookworm
 
+# Expose the HTTP and HTTPs ports
+EXPOSE 80 443
+
+# Mark /data as a volume directory
+VOLUME /data
+
+# Specify stop signal
+STOPSIGNAL SIGINT
+
 # Copy the requirements file
 COPY requirements.txt /tmp/requirements.txt
 
@@ -16,17 +25,8 @@ COPY configurations/entrypoint.conf /etc/entrypoint/entrypoint.conf
 # Copy the sources
 COPY src /application
 
-# Expose the HTTP and HTTPs ports
-EXPOSE 80 443
-
-# Mark /data as a volume directory
-VOLUME /data
-
 # Change working directory to application
 WORKDIR /application/backend
-
-# Specify stop signal
-STOPSIGNAL SIGINT
 
 # Set the entrypoint to the entrypoint script
 CMD [ "python", "/application/entrypoint.py" ]
