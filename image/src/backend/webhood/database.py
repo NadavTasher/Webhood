@@ -80,7 +80,7 @@ async def broadcast_async(channel: str = GLOBAL_CHANNEL, connection: redis.Redis
     await connection.publish(channel, json.dumps(parameters))
 
 
-def receive_sync(channel: str = GLOBAL_CHANNEL, connection: redis.Redis = REDIS_SYNC, count: int = 0) -> munch.Munch:
+def receive_sync(channel: str = GLOBAL_CHANNEL, connection: redis.Redis = REDIS_SYNC, count: int = 0) -> typing.Iterator[munch.Munch]:
     # Count messages
     received = 0
 
@@ -112,7 +112,7 @@ def receive_sync(channel: str = GLOBAL_CHANNEL, connection: redis.Redis = REDIS_
             received += 1
 
 
-async def receive_async(channel: str = GLOBAL_CHANNEL, connection: redis.Redis = REDIS_ASYNC, count: int = 0) -> munch.Munch:
+async def receive_async(channel: str = GLOBAL_CHANNEL, connection: redis.Redis = REDIS_ASYNC, count: int = 0) -> typing.AsyncIterator[munch.Munch]:
     # Count messages
     received = 0
 
