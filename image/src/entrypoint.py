@@ -8,6 +8,7 @@ import signal
 import typing
 import logging
 import argparse
+import contextlib
 import subprocess
 import dataclasses
 import configparser
@@ -133,15 +134,17 @@ def run(programs: typing.List[Program], timeout: int = 5) -> int:
         # Mark end time
         end_time = time.time() + timeout
 
-        # Wait for all processes
-        for _, process in processes.values():
-            # Only wait if not stopped
-            if process.poll() is None:
-                # Calculate the time left
-                time_left = max(end_time - time.time(), 0)
+        # Ignore timeouts
+        with contextlib.suppress(subprocess.TimeoutExpired):
+            # Wait for all processes
+            for _, process in processes.values():
+                # Only wait if not stopped
+                if process.poll() is None:
+                    # Calculate the time left
+                    time_left = max(end_time - time.time(), 0)
 
-                # Wait for the process
-                process.wait(time_left)
+                    # Wait for the process
+                    process.wait(time_left)
 
         # Timeout exceeded, terminate all remaining processes
         for program, process in processes.values():
@@ -151,7 +154,7 @@ def run(programs: typing.List[Program], timeout: int = 5) -> int:
                 process.terminate()
 
                 # Log termination
-                logging.warning("Terminated %d of %r because of timeout", process.pid, program.name)
+                logging.warning("Terminated process %d of %r because of timeout", process.pid, program.name)
 
 
 def main() -> None:

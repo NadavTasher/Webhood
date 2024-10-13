@@ -418,11 +418,11 @@ import hashlib
 
 from runtypes import Text
 
-from webhood.router import WebSocket, router
+from webhood.router import router
 
 
 @router.socket("/socket/notifications")
-async def notifications_socket(websocket: WebSocket, id: Text) -> None:
+async def notifications_socket(websocket, id: Text) -> None:
 	# Run additional validations here...
 
 	# Accept the client

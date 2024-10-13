@@ -8,7 +8,7 @@ from runtypes import *
 from guardify import *
 
 # Import the router
-from webhood.router import WebSocket, router
+from webhood.router import router
 from webhood.database import wait_for_redis_sync, broadcast_async, receive_async, redict
 
 # Wait for redis to ping back before operating on database
@@ -42,7 +42,7 @@ async def relay_request(message: str, sender: Optional[Email] = None) -> None:
 
 
 @router.socket("/socket/relay")
-async def relay_socket(websocket: WebSocket) -> None:
+async def relay_socket(websocket) -> None:
     # Accept the websocket
     await websocket.accept()
 
