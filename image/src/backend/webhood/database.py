@@ -142,3 +142,7 @@ async def receive_async(channel: str = GLOBAL_CHANNEL, connection: redis.Redis =
 
             # Bump the receive count
             received += 1
+
+
+# Add explicit exports
+__all__ = ["GLOBAL_CHANNEL", "REDIS_URL", "REDIS_ASYNC", "relist", "redict", "wait_for_redis_sync", "wait_for_redis_async", "broadcast_sync", "broadcast_async", "receive_sync", "receive_async"]
