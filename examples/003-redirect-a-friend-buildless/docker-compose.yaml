@@ -1,0 +1,33 @@
+version: "3"
+
+# Configure applcation service
+services: 
+    application:
+        image: webhood/3.10:2024.10.13
+        restart: unless-stopped
+        ports: 
+            - 80:80
+            - 443:443
+        volumes:
+            # Sources mounts
+            - ./src/backend/app.py:/application/backend/app.py:ro
+            - ./src/backend/worker.py:/application/backend/worker.py:ro
+            - ./src/frontend/index.html:/application/frontend/index.html:ro
+            - ./src/frontend/application:/application/frontend/application:ro
+            # Data volume path
+            - data:/data
+        environment:
+            # Address to redis instance
+            - REDIS=redis://redis/
+    
+    redis:
+        image: redis:7.4.0-alpine
+        command: --save 300 1
+        restart: unless-stopped
+        volumes:
+            # Data volume path
+            - data:/data
+
+# Configure persistent data volume
+volumes:
+    data:
