@@ -1,14 +1,20 @@
 # Change this to your image name
 IMAGE_NAME := your/image
 
-# Path to your sources
-IMAGE_PATH := application
+# Paths to sources
+SOURCE_DIRECTORY := application
+SOURCE_FILES := $(shell find $(SOURCE_DIRECTORY) -type f)
 
-# Find all image sources
-IMAGE_SOURCES := $(shell find $(IMAGE_PATH) -type f)
+# Change this to your upstream branch name
+UPSTREAM_BRANCH := master
 
-# Create the image tag from the commit date
+ifeq ($(shell git rev-parse --abbrev-ref HEAD),$(UPSTREAM_BRANCH))
+# We are on the upstream branch, create image tag from commit date.
 IMAGE_TAG := $(shell git show --quiet --date=format:%Y.%m.%d --format=%cd)
+else
+# We are not on the upstream branch, make image tag reflect that.
+IMAGE_TAG := develop
+endif
 
 all: image
 
@@ -26,8 +32,8 @@ push: image
 	@docker push $(IMAGE_NAME):$(IMAGE_TAG)
 endif
 
-image: $(IMAGE_SOURCES)
-	@docker build $(IMAGE_PATH) -t $(IMAGE_NAME):$(IMAGE_TAG)
+image: $(SOURCE_FILES)
+	@docker build $(SOURCE_DIRECTORY) -t $(IMAGE_NAME):$(IMAGE_TAG)
 
 develop: image
 	@docker compose up --build
