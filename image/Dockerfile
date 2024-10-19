@@ -5,13 +5,18 @@ ARG PYTHON_VERSION=3.10
 FROM python:${PYTHON_VERSION}-slim-bookworm
 
 # Expose the HTTP and HTTPs ports
-EXPOSE 80 443
+EXPOSE 8080 8443
 
 # Mark /data as a volume directory
 VOLUME /data
 
 # Specify stop signal
 STOPSIGNAL SIGINT
+
+# Install socat
+RUN apt update && \
+	apt install -y socat && \
+	rm -rf /var/lib/apt/lists
 
 # Copy the requirements file
 COPY resources/requirements.txt /tmp/requirements.txt
@@ -20,7 +25,6 @@ COPY resources/requirements.txt /tmp/requirements.txt
 RUN pip install -U -r /tmp/requirements.txt pip ipython
 
 # Copy default configurations
-COPY resources/logconfig.json /etc/logconfig.json
 COPY resources/entrypoint.conf /etc/entrypoint.conf
 
 # Copy the sources
