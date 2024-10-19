@@ -11,15 +11,20 @@ from guardify import *
 from webhood.router import WebSocket, router
 from webhood.database import wait_for_redis_sync, broadcast_async, receive_async, redict
 
-# Setup the logger
-logging.basicConfig(level=logging.INFO, format="[%(asctime)s] [%(process).4d] [%(levelname).4s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S %z")
-
-# Wait for redis to ping back before operating on database
-wait_for_redis_sync()
-
-# Initialize ping database
+# Global database
 DATABASE = redict("click")
-DATABASE.setdefaults(count=0)
+
+
+def startup() -> None:
+    # Wait for redis to ping back before operating on database
+    wait_for_redis_sync()
+
+    # Initialize click value
+    DATABASE.setdefaults(count=0)
+
+
+def shutdown() -> None:
+    pass
 
 
 @router.post("/api/click")
