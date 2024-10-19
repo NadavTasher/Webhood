@@ -14,7 +14,7 @@ import dataclasses
 import configparser
 
 # Setup the logging
-logging.basicConfig(level=logging.INFO, format="[%(asctime)s] [%(process)d] [%(levelname)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S %z")
+logging.basicConfig(level=logging.INFO, format="[%(asctime)s] [%(process).4d] [%(levelname).4s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S %z")
 
 
 @dataclasses.dataclass(frozen=True)

@@ -8,8 +8,11 @@ from runtypes import *
 from guardify import *
 
 # Import the router
-from webhood.router import router
+from webhood.router import WebSocket, router
 from webhood.database import wait_for_redis_sync, broadcast_async, receive_async, redict
+
+# Setup the logger
+logging.basicConfig(level=logging.INFO, format="[%(asctime)s] [%(process).4d] [%(levelname).4s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S %z")
 
 # Wait for redis to ping back before operating on database
 wait_for_redis_sync()
@@ -20,7 +23,7 @@ DATABASE.setdefaults(count=0)
 
 
 @router.post("/api/click")
-def click_request() -> str:
+async def click_request() -> str:
     # Increment ping count
     DATABASE.count += 1
 
@@ -42,7 +45,7 @@ async def relay_request(message: str, sender: Optional[Email] = None) -> None:
 
 
 @router.socket("/socket/relay")
-async def relay_socket(websocket) -> None:
+async def relay_socket(websocket: WebSocket) -> None:
     # Accept the websocket
     await websocket.accept()
 
@@ -50,7 +53,3 @@ async def relay_socket(websocket) -> None:
     async for event in receive_async():
         # Send the message
         await websocket.send_text(event.text)
-
-
-# Initialize the application
-app = router.initialize()

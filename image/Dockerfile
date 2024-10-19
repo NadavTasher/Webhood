@@ -20,6 +20,7 @@ COPY resources/requirements.txt /tmp/requirements.txt
 RUN pip install -U -r /tmp/requirements.txt pip ipython
 
 # Copy default configurations
+COPY resources/logconfig.json /etc/logconfig.json
 COPY resources/entrypoint.conf /etc/entrypoint.conf
 
 # Copy the sources

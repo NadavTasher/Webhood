@@ -39,8 +39,8 @@ Webhood is based on popular projects and strives to keep the application archite
 
 1. Python backend is powered by [Starlette](https://www.starlette.io/) - an open-source WSGI framework. See [usage](https://github.com/NadavTasher/Webhood/blob/master/image/src/backend/webhood/router.py).
 1. Web server duties are handled by [Gunicorn](https://gunicorn.org/) - an open-source WSGI server. See [usage](https://github.com/NadavTasher/Webhood/blob/master/image/resources/entrypoint.conf).
-2. Database duties are handled by [Redis](https://redis.io/) using the [rednest](https://pypi.org/rednest/) library.
-3. Frontend duties are handled by custom JS and CSS files in [src/frontend](https://github.com/NadavTasher/Webhood/tree/master/image/src/frontend). An example can be seen [here](https://github.com/NadavTasher/Webhood/blob/master/bundles/headless/test-page.html).
+1. Database duties are handled by [Redis](https://redis.io/) using the [rednest](https://pypi.org/rednest/) library.
+1. Frontend duties are handled by custom JS and CSS files in [src/frontend](https://github.com/NadavTasher/Webhood/tree/master/image/src/frontend). An example can be seen [here](https://github.com/NadavTasher/Webhood/blob/master/bundles/headless/test-page.html).
 
 ## Examples
 
@@ -394,10 +394,6 @@ def md5sum_request(content_type: Text, content_data: ByteString):
 
 	# Return the hexdigest of the body
     return hashlib.md5(content_data).hexdigest().decode()
-
-
-# Initialize the application
-app = router.initialize()
 ```
 
 By default, all type validations default to **casting** the input to the required type.
@@ -409,6 +405,27 @@ def code_request(head: Optional[int] = None):
 	...
 ```
 
+#### File upload support
+
+File upload support requires to use of `asyncio` and `case=False`.
+
+```python
+import hashlib
+
+from webhood.router import UploadFile, router
+
+
+@router.post("/api/upload", cast=False)
+async def upload_file(file: UploadFile) -> str:
+	# Run additional validations here...
+
+	# Read the file contents
+	data = await file.read()
+
+	# Calculate md5sum
+	return hashlib.md5(data).hexdigest()
+```
+
 #### WebSocket support
 
 WebSocket integration requires the use of `asyncio`.
@@ -418,11 +435,11 @@ import hashlib
 
 from runtypes import Text
 
-from webhood.router import router
+from webhood.router import WebSocket, router
 
 
 @router.socket("/socket/notifications")
-async def notifications_socket(websocket, id: Text) -> None:
+async def notifications_socket(websocket: WebSocket, id: Text) -> None:
 	# Run additional validations here...
 
 	# Accept the client
@@ -438,10 +455,6 @@ async def notifications_socket(websocket, id: Text) -> None:
 
         # Send the same string
         await websocket.send_text("New data")
-
-
-# Initialize the application
-app = router.initialize()
 ```
 
 #### Redis database support
@@ -469,10 +482,6 @@ def click():
 
 	# Return the click count
 	return DATABASE.clicks
-
-
-# Initialize the application
-app = router.initialize()
 ```
 
 #### Redis Pub / Sub support
@@ -520,10 +529,6 @@ async def notify_clicks(websocket):
 	# Wait for clicks
 	async for click in receive_async("clicks"):
 		websocket.send_text(click.index)
-
-
-# Initialize the application
-app = router.initialize()
 ```
 
 ### Container entrypoint

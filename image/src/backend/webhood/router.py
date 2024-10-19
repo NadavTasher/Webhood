@@ -1,5 +1,6 @@
 import typing
 import inspect
+import collections.abc
 
 # Import starlette utilities
 from starlette.routing import BaseRoute, Mount, Route, WebSocketRoute
@@ -8,6 +9,7 @@ from starlette.responses import Response, JSONResponse, PlainTextResponse
 from starlette.websockets import WebSocket
 from starlette.staticfiles import StaticFiles
 from starlette.applications import Starlette
+from starlette.datastructures import UploadFile
 
 # Import typing utilities
 from runtypes import cast_type_hints, check_type_hints
@@ -61,7 +63,7 @@ async def gather_parameters(request_or_websocket: typing.Union[Request, WebSocke
         form_object = await request_or_websocket.form()
 
         # Make sure form object is a dictionary
-        if not isinstance(form_object, dict):
+        if not isinstance(form_object, collections.abc.Mapping):
             raise TypeError("Form body must be a dictionary")
 
         # Update the request parameters using the form body
@@ -98,7 +100,7 @@ class Router:
         # Initialize routes
         self.routes: typing.List[BaseRoute] = []
 
-    def socket(self, path: str, cast: bool = True) -> typing.Callable[[Function], Function]:
+    def socket(self, path: str, cast: bool = True, check: bool = True) -> typing.Callable[[Function], Function]:
         # Create a decorator function
         def decorator(function: Function) -> Function:
             # Make sure the function is a coroutine function
@@ -109,12 +111,12 @@ class Router:
                 # Create a dictionary to store all of the paremters
                 parameters = await gather_parameters(websocket)
 
-                # Process the parameters
                 if cast:
                     # Cast all parameters and overwrite the parameters dictionary
                     parameters = cast_type_hints(function, [websocket], parameters)
-                else:
-                    # Only type check the parameters
+
+                if check:
+                    # Check all the parameters against the types
                     check_type_hints(function, [websocket], parameters)
 
                 try:
@@ -133,7 +135,7 @@ class Router:
         # Return the decorator
         return decorator
 
-    def route(self, path: str, methods: typing.List[str], cast: bool = True) -> typing.Callable[[Function], Function]:
+    def route(self, methods: typing.List[str], path: str, cast: bool = True, check: bool = True) -> typing.Callable[[Function], Function]:
         # Create a decorator function
         def decorator(function: Function) -> Function:
 
@@ -146,8 +148,9 @@ class Router:
                 if cast:
                     # Cast all parameters and overwrite the parameters dictionary
                     parameters = cast_type_hints(function, [], parameters)
-                else:
-                    # Only type check the parameters
+
+                if check:
+                    # Check all the parameters against the types
                     check_type_hints(function, [], parameters)
 
                 # Call the function
@@ -172,22 +175,24 @@ class Router:
         # Return the decorator
         return decorator
 
-    def get(self, path: str) -> typing.Callable[[Function], Function]:
-        return self.route(path, methods=["GET"])
+    def get(self, *args, **kwargs) -> typing.Callable[[Function], Function]:
+        return self.route(["GET"], *args, **kwargs)
 
-    def post(self, path: str) -> typing.Callable[[Function], Function]:
-        return self.route(path, methods=["POST"])
+    def post(self, *args, **kwargs) -> typing.Callable[[Function], Function]:
+        return self.route(["POST"], *args, **kwargs)
 
-    def put(self, path: str) -> typing.Callable[[Function], Function]:
-        return self.route(path, methods=["PUT"])
+    def put(self, *args, **kwargs) -> typing.Callable[[Function], Function]:
+        return self.route(["PUT"], *args, **kwargs)
 
-    def delete(self, path: str) -> typing.Callable[[Function], Function]:
-        return self.route(path, methods=["DELETE"])
+    def delete(self, *args, **kwargs) -> typing.Callable[[Function], Function]:
+        return self.route(["DELETE"], *args, **kwargs)
 
     def initialize(self) -> Starlette:
         # Create exception handler
         exception_handlers = {
             # When any exception occurs, return an exception string
+            TypeError: lambda request, exception: PlainTextResponse(str(exception), 400),
+            # When a type error occurs, return an exception string
             Exception: lambda request, exception: PlainTextResponse(str(exception), 500)
         }
 
@@ -202,9 +207,13 @@ class Router:
         # Initialize the starlette application
         return Starlette(debug=DEBUG, routes=routes, exception_handlers=exception_handlers)
 
+    def __call__(self) -> Starlette:
+        # Call the initialize method
+        return self.initialize()
+
 
 # Initialize the router
 router = Router("/application/frontend")
 
 # Add explicit exports
-__all__ = ["WebSocket", "Request", "Response", "PlainTextResponse", "JSONResponse", "router"]
+__all__ = ["WebSocket", "Request", "Response", "PlainTextResponse", "JSONResponse", "UploadFile", "router"]
