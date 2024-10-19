@@ -7,7 +7,7 @@ services:
         restart: unless-stopped
         ports: 
             - 80:8080
-            - 443:443
+            - 443:8443
         volumes:
             # Sources mounts
             - ./src/backend/app.py:/application/backend/app.py:ro
