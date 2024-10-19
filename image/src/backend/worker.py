@@ -3,8 +3,11 @@
 import logging
 import threading
 
-# Setup the logger
-logging.basicConfig(level=logging.INFO, format="[%(asctime)s] [%(process).4d] [%(levelname).4s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S %z")
+# Import logging formats
+from webhood.constants import LOG_LEVEL, LOG_FORMAT, LOG_DATEFORMAT
+
+# Setup logging
+logging.basicConfig(level=LOG_LEVEL, format=LOG_FORMAT, datefmt=LOG_DATEFORMAT)
 
 # Create stop event
 EVENT = threading.Event()

@@ -6,7 +6,7 @@ services:
         image: webhood/3.10
         restart: unless-stopped
         ports: 
-            - 80:80
+            - 80:8080
             - 443:443
         volumes:
             # Sources mounts

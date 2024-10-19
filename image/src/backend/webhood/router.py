@@ -15,7 +15,7 @@ from starlette.datastructures import UploadFile
 from runtypes import cast_type_hints, check_type_hints
 
 # Import debug utilities
-from webhood.debug import DEBUG
+from webhood.constants import DEBUG
 
 # Type checking prefix
 PREFIX_REQUIRED = "type_"
@@ -187,7 +187,7 @@ class Router:
     def delete(self, *args, **kwargs) -> typing.Callable[[Function], Function]:
         return self.route(["DELETE"], *args, **kwargs)
 
-    def initialize(self) -> Starlette:
+    def __call__(self) -> Starlette:
         # Create exception handler
         exception_handlers = {
             # When any exception occurs, return an exception string
@@ -206,10 +206,6 @@ class Router:
 
         # Initialize the starlette application
         return Starlette(debug=DEBUG, routes=routes, exception_handlers=exception_handlers)
-
-    def __call__(self) -> Starlette:
-        # Call the initialize method
-        return self.initialize()
 
 
 # Initialize the router
