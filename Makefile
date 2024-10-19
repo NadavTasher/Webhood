@@ -32,6 +32,7 @@ SCRIPTS_PATH := $(RESOURCES_PATH)/scripts
 # Source paths
 BACKEND_PATH := $(IMAGE_PATH)/src/backend
 FRONTEND_PATH := $(IMAGE_PATH)/src/frontend
+SERVER_PATH := $(IMAGE_PATH)/src/server.py
 ENTRYPOINT_PATH := $(IMAGE_PATH)/src/entrypoint.py
 REQUIREMENTS_PATH := $(IMAGE_PATH)/resources/requirements.txt
 
@@ -56,7 +57,7 @@ INDEPENDENT_BUNDLE_FRONTEND_PATH := $(INDEPENDENT_BUNDLE_PATH)/application/src/f
 IMAGE_SOURCES := $(shell find $(IMAGE_PATH) -type f)
 
 # All python sources
-PYTHON_SOURCES := $(wildcard $(BACKEND_PATH)/*.py) $(wildcard $(BACKEND_PATH)/*/*.py) $(wildcard $(SCRIPTS_PATH)/*.py) $(ENTRYPOINT_PATH)
+PYTHON_SOURCES := $(wildcard $(BACKEND_PATH)/*.py) $(wildcard $(BACKEND_PATH)/*/*.py) $(wildcard $(SCRIPTS_PATH)/*.py) $(SERVER_PATH) $(ENTRYPOINT_PATH)
 
 all: bundles image
 

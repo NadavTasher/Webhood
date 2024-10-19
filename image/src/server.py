@@ -1,5 +1,8 @@
-# pylint: disable=import-outside-toplevel
+#!/usr/bin/env python
+# pylint: disable=import-outside-toplevel,wrong-import-position
 
+import os
+import sys
 import logging
 import argparse
 import contextlib
@@ -7,6 +10,9 @@ import contextlib
 # Import uvicorn
 import uvicorn
 import uvicorn.config
+
+# Append the current directory to the Python PATH
+sys.path.append(os.getcwd())
 
 # Import logging formats
 from webhood.constants import LOG_LEVEL, LOG_FORMAT, LOG_DATEFORMAT
