@@ -24,7 +24,7 @@ def main():
 
     # Create argument parser to parse arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument("--workers", type=int, default=10)
+    parser.add_argument("--workers", type=int, default=4)
 
     # Parse the arguments
     arguments = parser.parse_args()
