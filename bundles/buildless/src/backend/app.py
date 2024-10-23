@@ -13,7 +13,7 @@ from webhood.database import wait_for_redis_sync, broadcast_async, receive_async
 from webhood.constants import LOG_LEVEL, LOG_FORMAT, LOG_DATE_FORMAT
 
 # Setup logging
-logging.basicConfig(level=LOG_LEVEL, format=LOG_FORMAT, datefmt=LOG_DATEFORMAT)
+logging.basicConfig(level=LOG_LEVEL, format=LOG_FORMAT, datefmt=LOG_DATE_FORMAT)
 
 # Global database
 DATABASE = redict("click")
