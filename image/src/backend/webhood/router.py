@@ -100,7 +100,7 @@ class Router:
         # Initialize routes
         self.routes: typing.List[BaseRoute] = []
 
-    def socket(self, path: str, cast: bool = True, check: bool = True) -> typing.Callable[[Function], Function]:
+    def socket(self, path: str, /, cast: bool = True, check: bool = True) -> typing.Callable[[Function], Function]:
         # Create a decorator function
         def decorator(function: Function) -> Function:
             # Make sure the function is a coroutine function
@@ -110,6 +110,9 @@ class Router:
             async def endpoint(websocket: WebSocket) -> None:
                 # Create a dictionary to store all of the paremters
                 parameters = await gather_parameters(websocket)
+
+                # Overwrite the websocket parameter
+                parameters.update(websocket=websocket)
 
                 if cast:
                     # Cast all parameters and overwrite the parameters dictionary
@@ -135,7 +138,7 @@ class Router:
         # Return the decorator
         return decorator
 
-    def route(self, methods: typing.List[str], path: str, cast: bool = True, check: bool = True) -> typing.Callable[[Function], Function]:
+    def route(self, methods: typing.List[str], /, path: str, cast: bool = False, check: bool = True) -> typing.Callable[[Function], Function]:
         # Create a decorator function
         def decorator(function: Function) -> Function:
 
@@ -175,17 +178,17 @@ class Router:
         # Return the decorator
         return decorator
 
-    def get(self, *args, **kwargs) -> typing.Callable[[Function], Function]:
-        return self.route(["GET"], *args, **kwargs)
+    def get(self, path: str, /, cast: bool = True, check: bool = True) -> typing.Callable[[Function], Function]:
+        return self.route(["GET"], path=path, cast=cast, check=check)
 
-    def post(self, *args, **kwargs) -> typing.Callable[[Function], Function]:
-        return self.route(["POST"], *args, **kwargs)
+    def post(self, path: str, /, cast: bool = False, check: bool = True) -> typing.Callable[[Function], Function]:
+        return self.route(["POST"], path=path, cast=cast, check=check)
 
-    def put(self, *args, **kwargs) -> typing.Callable[[Function], Function]:
-        return self.route(["PUT"], *args, **kwargs)
+    def put(self, path: str, /, cast: bool = False, check: bool = True) -> typing.Callable[[Function], Function]:
+        return self.route(["PUT"], path=path, cast=cast, check=check)
 
-    def delete(self, *args, **kwargs) -> typing.Callable[[Function], Function]:
-        return self.route(["DELETE"], *args, **kwargs)
+    def delete(self, path: str, /, cast: bool = False, check: bool = True) -> typing.Callable[[Function], Function]:
+        return self.route(["DELETE"], path=path, cast=cast, check=check)
 
     def __call__(self) -> Starlette:
         # Create exception handler
