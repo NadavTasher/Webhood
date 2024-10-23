@@ -86,7 +86,7 @@ buildx: format
 	docker buildx create --use
 
 	@# Build the image
-	docker buildx build --build-arg PYTHON_VERSION=$(PYTHON_VERSION) $(IMAGE_PATH) --push --platform linux/386,linux/amd64,linux/arm64/v8 -t $(IMAGE_NAME):latest -t $(IMAGE_NAME)/$(IMAGE_TAG)
+	docker buildx build --build-arg PYTHON_VERSION=$(PYTHON_VERSION) $(IMAGE_PATH) --push --platform linux/386,linux/amd64,linux/arm64/v8 -t $(IMAGE_NAME):latest -t $(IMAGE_NAME):$(IMAGE_TAG)
 
 # Bundles
 
