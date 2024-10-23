@@ -34,6 +34,28 @@ async function POST(action, parameters = {}) {
 	return await response.json();
 }
 
+async function upload(action, parameters = {}) {
+	// Create a form body from the parameters
+	const body = new FormData();
+
+	// Append all values from parameters
+	for (const [name, value] of Object.entries(parameters)) {
+		body.append(name, value);
+	}
+
+	// Execute request using fetch
+	const response = await fetch(action, {
+		method: "POST",
+		body: body,
+	});
+
+	// Check response status code
+	if (response.status !== 200) throw new Error(await response.text());
+
+	// Return the result
+	return await response.json();
+}
+
 function socket(action, callback) {
 	// Create websocket object using current location
 	const object = new WebSocket((window.location.protocol === "https:" ? "wss://" : "ws://") + window.location.host + action);
