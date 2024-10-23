@@ -31,7 +31,13 @@ def shutdown() -> None:
     pass
 
 
-@router.post("/api/click")
+@router.get("/api/clicks")
+async def fetch_clicks() -> int:
+    # Return the count from the database
+    return DATABASE.count
+
+
+@router.post("/api/clicks")
 async def click_request() -> str:
     # Increment ping count
     DATABASE.count += 1
