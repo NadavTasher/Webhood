@@ -57,6 +57,10 @@ IMAGE_SOURCES := $(shell find $(IMAGE_PATH) -type f)
 # All python sources
 PYTHON_SOURCES := $(PAGE_RENDERER_PATH) $(shell find $(IMAGE_PATH) -type f -name '*.py')
 
+# Default test values
+DEBUG ?= 0
+REDIS ?= redis://$(shell hostname)
+
 all: checks bundles image
 
 # Linting and checks
