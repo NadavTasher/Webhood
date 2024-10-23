@@ -22,7 +22,7 @@ RUN apt update && \
 COPY resources/requirements.txt /tmp/requirements.txt
 
 # Upgrade pip and install dependencies
-RUN pip install -U -r /tmp/requirements.txt pip ipython
+RUN pip install --no-cache-dir --prefer-binary --upgrade --requirement /tmp/requirements.txt pip ipython
 
 # Copy default configurations
 COPY resources/entrypoint.conf /etc/entrypoint.conf
