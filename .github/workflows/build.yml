@@ -30,16 +30,16 @@ jobs:
         run: docker buildx rm --all-inactive --force && docker buildx prune --all --force
 
       - name: Build and push - Python 3.8
-        run: IMAGE_TAG=3.8 make buildx
+        run: make buildx PYTHON_VERSION=3.8
 
       - name: Purge builder and caches
         run: docker buildx rm --all-inactive --force && docker buildx prune --all --force
 
       - name: Build and push - Python 3.10
-        run: IMAGE_TAG=3.10 make buildx
+        run: make buildx PYTHON_VERSION=3.10
 
       - name: Purge builder and caches
         run: docker buildx rm --all-inactive --force && docker buildx prune --all --force
 
       - name: Build and push - Python 3.12
-        run: IMAGE_TAG=3.12 make buildx
+        run: make buildx PYTHON_VERSION=3.12

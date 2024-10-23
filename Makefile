@@ -1,15 +1,13 @@
-IMAGE_TAG ?= 3.8
-IMAGE_NAME ?= webhood
+# Python version for builds
+PYTHON_VERSION ?= 3.8
 
-IMAGE_DATE_TAG ?= $(IMAGE_TAG):$(shell date +%Y.%m.%d)
-IMAGE_LATEST_TAG ?= $(IMAGE_TAG):latest
+# Generate image name from python version
+IMAGE_NAME ?= webhood/$(PYTHON_VERSION)
 
-COPY ?= $(shell which cp)
-MKDIR ?= $(shell which mkdir)
-DOCKER ?= $(shell which docker)
-PYTHON ?= $(shell which python3)
+# Generate image tag from commit date
+IMAGE_TAG ?= $(shell git show --quiet --date=format:%Y.%m.%d --format=%cd)
 
-# Python virtual environment paths
+# Python virtual environment path
 VENV_PATH := $(abspath .venv)
 
 # Python executable paths
@@ -26,14 +24,14 @@ EXAMPLES_PATH := $(abspath examples)
 RESOURCES_PATH := $(abspath resources)
 
 # Additional resources
-TESTS_PATH := $(RESOURCES_PATH)/tests
-SCRIPTS_PATH := $(RESOURCES_PATH)/scripts
+EXAMPLE_PAGE_PATH := $(RESOURCES_PATH)/headless/example-page.html
+PAGE_RENDERER_PATH := $(RESOURCES_PATH)/headless/page-renderer.py
 
 # Source paths
 BACKEND_PATH := $(IMAGE_PATH)/src/backend
 FRONTEND_PATH := $(IMAGE_PATH)/src/frontend
-SERVER_PATH := $(IMAGE_PATH)/src/server.py
-ENTRYPOINT_PATH := $(IMAGE_PATH)/src/entrypoint.py
+
+# Path to image requirements
 REQUIREMENTS_PATH := $(IMAGE_PATH)/resources/requirements.txt
 
 # Bundle paths
@@ -42,8 +40,8 @@ BUILDLESS_BUNDLE_PATH := $(BUNDLES_PATH)/buildless
 INDEPENDENT_BUNDLE_PATH := $(BUNDLES_PATH)/independent
 
 # Headless bundle source paths
-HEADLESS_BUNDLE_INDEX_PATH := $(HEADLESS_BUNDLE_PATH)/index.html
-HEADLESS_BUNDLE_TEST_PAGE_PATH := $(HEADLESS_BUNDLE_PATH)/test-page.html
+HEADLESS_BUNDLE_EMPTY_PAGE_PATH := $(HEADLESS_BUNDLE_PATH)/empty-page.html
+HEADLESS_BUNDLE_EXAMPLE_PAGE_PATH := $(HEADLESS_BUNDLE_PATH)/example-page.html
 
 # Buildless bundle source paths
 BUILDLESS_BUNDLE_BACKEND_PATH := $(BUILDLESS_BUNDLE_PATH)/src/backend
@@ -57,43 +55,43 @@ INDEPENDENT_BUNDLE_FRONTEND_PATH := $(INDEPENDENT_BUNDLE_PATH)/application/src/f
 IMAGE_SOURCES := $(shell find $(IMAGE_PATH) -type f)
 
 # All python sources
-PYTHON_SOURCES := $(wildcard $(BACKEND_PATH)/*.py) $(wildcard $(BACKEND_PATH)/*/*.py) $(wildcard $(SCRIPTS_PATH)/*.py) $(SERVER_PATH) $(ENTRYPOINT_PATH)
+PYTHON_SOURCES := $(PAGE_RENDERER_PATH) $(shell find $(IMAGE_PATH) -type f -name '*.py')
 
-all: bundles image
+all: checks bundles image
 
 # Linting and checks
 
 checks: format lint typecheck
 
-lint: $(PYLINT) $(PYTHON_SOURCES)
+lint: $(PYLINT)
 	@# Lint all of the sources
-	cd $(BACKEND_PATH); $(PYLINT) -d C0301 -d C0114 -d C0115 -d C0116 -d W0401 $(PYTHON_SOURCES)
+	cd $(BACKEND_PATH); $(PYLINT) -d C0103 -d C0301 -d C0114 -d C0115 -d C0116 -d W0401 $(PYTHON_SOURCES)
 
-typecheck: $(MYPY) $(PYTHON_SOURCES)
+typecheck: $(MYPY)
 	@# Typecheck all of the sources
 	cd $(BACKEND_PATH); $(MYPY) --cache-dir=/dev/null --explicit-package-bases --no-implicit-reexport $(PYTHON_SOURCES)
 
-format: $(YAPF) $(PYTHON_SOURCES)
+format: $(YAPF)
 	@# Format the python sources using yapf
-	$(YAPF) -i $(PYTHON_SOURCES) --style "{based_on_style: google, column_limit: 400, indent_width: 4}"
+	$(YAPF) --in-place --recursive --style "{based_on_style: google, column_limit: 400, indent_width: 4}" $(PYTHON_SOURCES)
 
 # Images
 
-image: format $(IMAGE_SOURCES)
+image: format
 	@# Build the image
-	$(DOCKER) build --build-arg PYTHON_VERSION=$(IMAGE_TAG) $(IMAGE_PATH) -t $(IMAGE_NAME)/$(IMAGE_TAG) -t $(IMAGE_NAME)/$(IMAGE_DATE_TAG) -t $(IMAGE_NAME)/$(IMAGE_LATEST_TAG)
+	docker build --build-arg PYTHON_VERSION=$(PYTHON_VERSION) $(IMAGE_PATH) -t $(IMAGE_NAME):latest
 
-buildx: format $(IMAGE_SOURCES)
+buildx: format
 	@# Create the build context
-	$(DOCKER) buildx create --use
+	docker buildx create --use
 
 	@# Build the image
-	$(DOCKER) buildx build --build-arg PYTHON_VERSION=$(IMAGE_TAG) $(IMAGE_PATH) --push --platform linux/386,linux/amd64,linux/arm64/v8 -t $(IMAGE_NAME)/$(IMAGE_DATE_TAG) -t $(IMAGE_NAME)/$(IMAGE_LATEST_TAG)
+	docker buildx build --build-arg PYTHON_VERSION=$(PYTHON_VERSION) $(IMAGE_PATH) --push --platform linux/386,linux/amd64,linux/arm64/v8 -t $(IMAGE_NAME):latest -t $(IMAGE_NAME)/$(IMAGE_TAG)
 
 # Bundles
 
 bundles: headless buildless independent
-headless: $(HEADLESS_BUNDLE_INDEX_PATH) $(HEADLESS_BUNDLE_TEST_PAGE_PATH)
+headless: $(HEADLESS_BUNDLE_EMPTY_PAGE_PATH) $(HEADLESS_BUNDLE_EXAMPLE_PAGE_PATH)
 buildless: $(BUILDLESS_BUNDLE_BACKEND_PATH)/app.py $(BUILDLESS_BUNDLE_BACKEND_PATH)/worker.py $(BUILDLESS_BUNDLE_FRONTEND_PATH)/index.html $(BUILDLESS_BUNDLE_FRONTEND_PATH)/application/application.css $(BUILDLESS_BUNDLE_FRONTEND_PATH)/application/application.js
 independent: $(INDEPENDENT_BUNDLE_BACKEND_PATH)/app.py $(INDEPENDENT_BUNDLE_BACKEND_PATH)/worker.py $(INDEPENDENT_BUNDLE_FRONTEND_PATH)/index.html $(INDEPENDENT_BUNDLE_FRONTEND_PATH)/application/application.css $(INDEPENDENT_BUNDLE_FRONTEND_PATH)/application/application.js
 
@@ -117,58 +115,61 @@ $(PYTHON): $(VENV_PATH)
 # Targets to make
 
 $(INDEPENDENT_BUNDLE_BACKEND_PATH)/%.py: $(BACKEND_PATH)/%.py
-	$(MKDIR) -p $(@D)
-	$(COPY) $^ $@
+	mkdir -p $(@D)
+	cp $^ $@
 
 $(INDEPENDENT_BUNDLE_FRONTEND_PATH)/index.html: $(FRONTEND_PATH)/index.html
-	$(MKDIR) -p $(@D)
-	$(COPY) $^ $@
+	mkdir -p $(@D)
+	cp $^ $@
 
 $(INDEPENDENT_BUNDLE_FRONTEND_PATH)/application/application.%: $(FRONTEND_PATH)/application/application.%
-	$(MKDIR) -p $(@D)
-	$(COPY) $^ $@
+	mkdir -p $(@D)
+	cp $^ $@
 
 $(BUILDLESS_BUNDLE_BACKEND_PATH)/%.py: $(BACKEND_PATH)/%.py
-	$(MKDIR) -p $(@D)
-	$(COPY) $^ $@
+	mkdir -p $(@D)
+	cp $^ $@
 
 $(BUILDLESS_BUNDLE_FRONTEND_PATH)/index.html: $(FRONTEND_PATH)/index.html
-	$(MKDIR) -p $(@D)
-	$(COPY) $^ $@
+	mkdir -p $(@D)
+	cp $^ $@
 
 $(BUILDLESS_BUNDLE_FRONTEND_PATH)/application/application.%: $(FRONTEND_PATH)/application/application.%
-	$(MKDIR) -p $(@D)
-	$(COPY) $^ $@
+	mkdir -p $(@D)
+	cp $^ $@
 
-$(HEADLESS_BUNDLE_INDEX_PATH): $(FRONTEND_PATH)/index.html $(SCRIPTS_PATH)/create_headless_page.py $(IMAGE_SOURCES)
-	$(MKDIR) -p $(@D)
-	$(PYTHON) $(SCRIPTS_PATH)/create_headless_page.py --base-directory $(FRONTEND_PATH) < $(FRONTEND_PATH)/index.html > $@
+$(HEADLESS_BUNDLE_EMPTY_PAGE_PATH): $(FRONTEND_PATH)/index.html $(PAGE_RENDERER_PATH) $(IMAGE_SOURCES)
+	mkdir -p $(@D)
+	$(PYTHON) $(PAGE_RENDERER_PATH) --base-directory $(FRONTEND_PATH) < $(FRONTEND_PATH)/index.html > $@
 
-$(HEADLESS_BUNDLE_TEST_PAGE_PATH): $(TESTS_PATH)/test-page.html $(SCRIPTS_PATH)/create_headless_page.py $(IMAGE_SOURCES)
-	$(MKDIR) -p $(@D)
-	$(PYTHON) $(SCRIPTS_PATH)/create_headless_page.py --base-directory $(FRONTEND_PATH) < $(TESTS_PATH)/test-page.html > $@
+$(HEADLESS_BUNDLE_EXAMPLE_PAGE_PATH): $(EXAMPLE_PAGE_PATH) $(PAGE_RENDERER_PATH) $(IMAGE_SOURCES)
+	mkdir -p $(@D)
+	$(PYTHON) $(PAGE_RENDERER_PATH) --base-directory $(FRONTEND_PATH) < $(EXAMPLE_PAGE_PATH) > $@
 
 # Tests
 
 test: image
-	$(DOCKER) run --rm -p 80:8080 -p 443:8443 -e DEBUG=1 -e REDIS=$(REDIS) -v $(abspath $(TESTS_PATH)/test-page.html):/application/frontend/index.html:ro -v /tmp/test:/opt $(IMAGE_NAME)/$(IMAGE_TAG)
+	docker run --rm -it -p 80:8080 -p 443:8443 -e DEBUG=$(DEBUG) -e REDIS=$(REDIS) -v $(EXAMPLE_PAGE_PATH):/application/frontend/index.html:ro $(IMAGE_NAME):latest $(COMMAND)
 
-test-bash: image
-	$(DOCKER) run --rm -p 80:8080 -p 443:8443 -e DEBUG=1 -e REDIS=$(REDIS) -v $(abspath $(TESTS_PATH)/test-page.html):/application/frontend/index.html:ro -v /tmp/test:/opt -it $(IMAGE_NAME)/$(IMAGE_TAG) bash
+test-debug: image
+	$(MAKE) test DEBUG=1
 
-test-image: image
-	$(DOCKER) run --rm -p 80:8080 -p 443:8443 -e REDIS=$(REDIS) -v /tmp/test:/opt $(IMAGE_NAME)/$(IMAGE_TAG)
+test-bash:
+	$(MAKE) test COMMAND=bash
 
-test-buildless: buildless
-	$(DOCKER) compose --project-directory $(BUILDLESS_BUNDLE_PATH) up
+test-ipython:
+	$(MAKE) test COMMAND=ipython
 
-test-independent: independent
-	$(DOCKER) compose --project-directory $(INDEPENDENT_BUNDLE_PATH) up --build
+test-buildless-bundle: buildless
+	docker compose --project-directory $(BUILDLESS_BUNDLE_PATH) up
 
-test-independent-build: independent
+test-independent-bundle: independent
+	docker compose --project-directory $(INDEPENDENT_BUNDLE_PATH) up --build
+
+test-independent-makefile: independent
 	$(MAKE) -C $(INDEPENDENT_BUNDLE_PATH)
 
 # Cleanups
 
 clean:
-	$(RM) -r $(VENV_PATH) $(IMAGE_PATH)/Dockerfile-*
+	$(RM) -r $(VENV_PATH)

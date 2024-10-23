@@ -10,10 +10,10 @@ from guardify import *
 # Import webhood utilities
 from webhood.router import WebSocket, router
 from webhood.database import wait_for_redis_sync, broadcast_async, receive_async, redict
-from webhood.constants import LOG_LEVEL, LOG_FORMAT, LOG_DATE_FORMAT
+from webhood.constants import LOG_LEVEL, LOG_FORMAT, LOG_DATEFORMAT
 
 # Setup logging
-logging.basicConfig(level=LOG_LEVEL, format=LOG_FORMAT, datefmt=LOG_DATE_FORMAT)
+logging.basicConfig(level=LOG_LEVEL, format=LOG_FORMAT, datefmt=LOG_DATEFORMAT)
 
 # Global database
 DATABASE = redict("click")
