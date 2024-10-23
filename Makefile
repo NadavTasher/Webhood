@@ -100,6 +100,9 @@ independent: $(INDEPENDENT_BUNDLE_BACKEND_PATH)/app.py $(INDEPENDENT_BUNDLE_BACK
 # Local prerequisites
 
 $(VENV_PATH): $(REQUIREMENTS_PATH)
+	@# Remove the old virtual environment
+	$(RM) -r $(VENV_PATH)
+	
 	@# Create a new virtual environment
 	python3 -m venv $(VENV_PATH)
 
