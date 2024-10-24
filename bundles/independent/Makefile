@@ -16,24 +16,29 @@ else
 IMAGE_TAG := develop
 endif
 
+.PHONY: all
 all: image
 
 ifneq ($(shell git status --porcelain),)
 # The repository is dirty, deny pushes and mark image as dirty.
 IMAGE_TAG := $(IMAGE_TAG)-dirty
 
+.PHONY: push
 push:
 	@echo "There are unstaged changes in the repository, refusing push"
 	@false
 else
 # The repository is clean, allow pushing images after building them.
 
+.PHONY: push
 push: image
 	@docker push $(IMAGE_NAME):$(IMAGE_TAG)
 endif
 
+.PHONY: image
 image: $(SOURCE_FILES)
 	@docker build $(SOURCE_DIRECTORY) -t $(IMAGE_NAME):$(IMAGE_TAG)
 
+.PHONY: develop
 develop: image
 	@docker compose up --build
