@@ -2,6 +2,7 @@ import os
 import time
 import json
 import typing
+import logging
 import asyncio
 import contextlib
 
@@ -15,22 +16,21 @@ import redis.asyncio
 # Import rednest utilities
 from rednest import List, Dictionary
 
-# Global broadcast channel
-GLOBAL_CHANNEL = "global"
-
-# Redis connection URL
-REDIS_URL = os.environ["REDIS"]
-
-# Create the default redis connection
-REDIS_SYNC = redis.Redis.from_url(REDIS_URL, decode_responses=True)
-REDIS_ASYNC = redis.asyncio.Redis.from_url(REDIS_URL, decode_responses=True)
-
 # Patch the dictionary copy type
 # pylint: disable-next=protected-access
 Dictionary._COPY_TYPE = munch.Munch
 
+# Default channel
+CHANNEL = "global"
 
-# Create wrapper functions for databases
+# Fetch database URL from environment
+REDIS_URL = os.environ["REDIS"]
+
+# Default database connections
+REDIS_SYNC = redis.Redis.from_url(REDIS_URL, decode_responses=True)
+REDIS_ASYNC = redis.asyncio.Redis.from_url(REDIS_URL, decode_responses=True)
+
+
 def relist(name: str) -> List:
     return List(REDIS_SYNC, name)
 
@@ -39,7 +39,9 @@ def redict(name: str) -> Dictionary:
     return Dictionary(REDIS_SYNC, name)
 
 
-# Functions to wait for redis
+# Database connectivity utilities
+
+
 def wait_for_redis_sync() -> None:
     # Initialize ping response
     ping_response = None
@@ -47,9 +49,15 @@ def wait_for_redis_sync() -> None:
     # Loop until the redis instance can be pinged
     while not ping_response:
         # Ignore busy loading errors
-        with contextlib.suppress(redis.BusyLoadingError):
+        with contextlib.suppress(redis.BusyLoadingError, redis.ConnectionError):
             # Ping the instance
             ping_response = REDIS_SYNC.ping()
+
+            # Database accepts connections
+            return
+
+        # Log the database state
+        logging.info("Waiting for database to respond")
 
         # Sleep a second
         time.sleep(1)
@@ -62,25 +70,34 @@ async def wait_for_redis_async() -> None:
     # Loop until the redis instance can be pinged
     while not ping_response:
         # Ignore busy loading errors
-        with contextlib.suppress(redis.BusyLoadingError):
+        with contextlib.suppress(redis.BusyLoadingError, redis.ConnectionError):
             # Ping the instance
             ping_response = await REDIS_ASYNC.ping()
+
+            # Database accepts connections
+            return
+
+        # Log the database state
+        logging.info("Waiting for database to respond")
 
         # Sleep a second
         await asyncio.sleep(1)
 
 
-def broadcast_sync(channel: str = GLOBAL_CHANNEL, connection: redis.Redis = REDIS_SYNC, **parameters: typing.Any) -> None:
+# Publish / subscribe utilities
+
+
+def broadcast_sync(channel: str = CHANNEL, connection: redis.Redis = REDIS_SYNC, **parameters: typing.Any) -> None:
     # Publish to channel
     connection.publish(channel, json.dumps(parameters))
 
 
-async def broadcast_async(channel: str = GLOBAL_CHANNEL, connection: redis.Redis = REDIS_ASYNC, **parameters: typing.Any) -> None:
+async def broadcast_async(channel: str = CHANNEL, connection: redis.Redis = REDIS_ASYNC, **parameters: typing.Any) -> None:
     # Publish to channel
     await connection.publish(channel, json.dumps(parameters))
 
 
-def receive_sync(channel: str = GLOBAL_CHANNEL, connection: redis.Redis = REDIS_SYNC, count: int = 0) -> typing.Iterator[munch.Munch]:
+def receive_sync(channel: str = CHANNEL, connection: redis.Redis = REDIS_SYNC, count: int = 0) -> typing.Iterator[munch.Munch]:
     # Count messages
     received = 0
 
@@ -112,7 +129,7 @@ def receive_sync(channel: str = GLOBAL_CHANNEL, connection: redis.Redis = REDIS_
             received += 1
 
 
-async def receive_async(channel: str = GLOBAL_CHANNEL, connection: redis.Redis = REDIS_ASYNC, count: int = 0) -> typing.AsyncIterator[munch.Munch]:
+async def receive_async(channel: str = CHANNEL, connection: redis.Redis = REDIS_ASYNC, count: int = 0) -> typing.AsyncIterator[munch.Munch]:
     # Count messages
     received = 0
 
@@ -145,4 +162,4 @@ async def receive_async(channel: str = GLOBAL_CHANNEL, connection: redis.Redis =
 
 
 # Add explicit exports
-__all__ = ["GLOBAL_CHANNEL", "REDIS_URL", "REDIS_ASYNC", "relist", "redict", "wait_for_redis_sync", "wait_for_redis_async", "broadcast_sync", "broadcast_async", "receive_sync", "receive_async"]
+__all__ = ["CHANNEL", "REDIS_URL", "REDIS_ASYNC", "relist", "redict", "wait_for_redis_sync", "wait_for_redis_async", "broadcast_sync", "broadcast_async", "receive_sync", "receive_async"]
