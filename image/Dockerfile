@@ -18,11 +18,9 @@ RUN apt update && \
 	apt install -y socat && \
 	rm -rf /var/lib/apt/lists
 
-# Copy the requirements file
-COPY resources/requirements.txt /tmp/requirements.txt
-
 # Upgrade pip and install dependencies
-RUN pip install --no-cache-dir --prefer-binary --upgrade --requirement /tmp/requirements.txt pip ipython
+RUN --mount=type=bind,source=resources/requirements.txt,target=/tmp/requirements.txt \
+    pip install --no-cache-dir --prefer-binary --upgrade --requirement /tmp/requirements.txt pip ipython
 
 # Copy default configurations
 COPY resources/entrypoint.conf /etc/entrypoint.conf

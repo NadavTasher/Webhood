@@ -83,7 +83,7 @@ format: $(YAPF)
 
 image: format
 	@# Build the image
-	docker build --build-arg PYTHON_VERSION=$(PYTHON_VERSION) $(IMAGE_PATH) -t $(IMAGE_NAME):latest
+	docker buildx build --build-arg PYTHON_VERSION=$(PYTHON_VERSION) $(IMAGE_PATH) --load -t $(IMAGE_NAME):latest
 
 buildx: format
 	@# Create the build context
