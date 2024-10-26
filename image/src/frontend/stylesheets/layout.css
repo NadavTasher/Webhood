@@ -56,7 +56,9 @@ div, body, html {
 	/* Align text to the center */
 	text-align: center;
 	text-align-last: center;
+}
 
+div.center {
 	/* Align flex items to the center */
 	justify-content: center;
 }
@@ -65,7 +67,9 @@ div, body, html {
 	/* Align text to the left */
 	text-align: start;
 	text-align-last: start;
+}
 
+div.left {
 	/* Align flex items to the left */
 	justify-content: left;
 }
@@ -74,7 +78,9 @@ div, body, html {
 	/* Align text to the right */
 	text-align: end;
 	text-align-last: end;
+}
 
+div.right {
 	/* Align flex items to the right */
 	justify-content: right;
 }
