@@ -37,10 +37,10 @@ git commit -m "Initial commit"
 
 Webhood is based on popular projects and strives to keep the application architecture simple efficient.
 
-1. Python backend is powered by [Starlette](https://www.starlette.io/) - an open-source WSGI framework. See [usage](https://github.com/NadavTasher/Webhood/blob/master/image/src/backend/webhood/router.py).
-1. Web server duties are handled by [Gunicorn](https://gunicorn.org/) - an open-source WSGI server. See [usage](https://github.com/NadavTasher/Webhood/blob/master/image/resources/entrypoint.conf).
-1. Database duties are handled by [Redis](https://redis.io/) using the [rednest](https://pypi.org/rednest/) library.
-1. Frontend duties are handled by custom JS and CSS files in [src/frontend](https://github.com/NadavTasher/Webhood/tree/master/image/src/frontend). An example can be seen [here](https://github.com/NadavTasher/Webhood/blob/master/bundles/headless/test-page.html).
+1. Python backend is powered by [Starlette](https://www.starlette.io/) - an open-source ASGI framework. See [usage](https://github.com/NadavTasher/Webhood/blob/master/image/src/backend/webhood/router.py).
+1. Web server duties are handled by [Uvicorn](https://www.uvicorn.org/) - an open-source ASGI server. See [usage](https://github.com/NadavTasher/Webhood/blob/master/image/src/server.py).
+1. Database duties are handled by [Redis](https://redis.io/) using the [rednest](https://pypi.org/project/rednest/) library.
+1. Frontend duties are handled by custom JS and CSS files in [src/frontend](https://github.com/NadavTasher/Webhood/tree/master/image/src/frontend). An example can be seen [here](https://github.com/NadavTasher/Webhood/blob/master/resources/headless/example-page.html) or [here](https://github.com/NadavTasher/Webhood/blob/master/bundles/headless/example-page.html).
 
 ## Examples
 
@@ -54,7 +54,7 @@ You can easily spin up one of the example applications found [here](https://gith
 
 By default, the color scheme is defined by the system configuration.
 
-This behaviour can be disabled - exclude the `/stylesheets/colors.css` file from your page, and create a custom color scheme:
+This behaviour can be disabled - exclude the [`/stylesheets/colors.css`](https://github.com/NadavTasher/Webhood/blob/master/image/src/frontend/stylesheets/colors.css) file from your page, and create a custom color scheme:
 
 ```css
 :root {
@@ -67,7 +67,7 @@ This behaviour can be disabled - exclude the `/stylesheets/colors.css` file from
 
 #### Built-in CSS classes
 
-All of these classes can be demoed using the `test-page.html` file, provided [here](https://github.com/NadavTasher/Webhood/blob/master/resources/tests/test-page.html) or [here (headless bundle)](https://github.com/NadavTasher/Webhood/blob/master/bundles/headless/test-page.html)
+All of these classes can be demoed using the `example-page.html` file, provided [here](https://github.com/NadavTasher/Webhood/blob/master/resources/headless/example-page.html) or [here (headless bundle)](https://github.com/NadavTasher/Webhood/blob/master/bundles/headless/example-page.html)
 
 Row & Column (every `<div>` is a column by default):
 
@@ -316,6 +316,12 @@ POST API function:
 const result = await POST("/api/update_name", { name: name, password: password });
 ```
 
+File upload API function:
+
+```javascript
+const result = await upload("/api/upload_file", { name: name, file: $("#file-input").files[0] });
+```
+
 WebSocket connection function:
 
 ```javascript
@@ -328,13 +334,13 @@ socket("/socket/notifications", (data, socket) => console.log(data));
 
 A background worker can be configured to run background jobs.
 
-This is a convenience feature that can be disabled using the entrypoint configuration file. Just set `replication=0` and the process will never be launched.
+This is a convenience feature that can be disabled using the entrypoint configuration file. Just set `count=0` and the process will never be launched.
 
 #### Request type checking & casting
 
-A `flask` like routing mechanism takes place, with an addition of runtime type-checking using the [runtypes](https://github.com/NadavTasher/RunTypes) library.
+A `flask` like routing mechanism takes place, with an addition of runtime type-checking or casting using the [runtypes](https://pypi.org/project/runtypes) library.
 
-These features can be taken advantage of like so:
+These features can be used like so:
 
 ```python
 import hashlib
@@ -407,7 +413,7 @@ def code_request(head: Optional[int] = None):
 
 #### File upload support
 
-File upload support requires to use of `asyncio` and `case=False`.
+File upload support requires to use of `asyncio` and `cast=False`.
 
 ```python
 import hashlib
@@ -459,7 +465,7 @@ async def notifications_socket(websocket: WebSocket, id: Text) -> None:
 
 #### Redis database support
 
-Note that for database backups to take place, a Docker volume must be mounted on `/opt`.
+The following example showcases and example usage of [rednest](https://pypi.org/project/rednest) with Redis:
 
 ```python
 import hashlib
@@ -486,7 +492,7 @@ def click():
 
 #### Redis Pub / Sub support
 
-The [`utilities/redis.py`](https://github.com/NadavTasher/Webhood/blob/master/image/src/backend/utilities/redis.py) file implements simple `broadcast_(sync/async)` / `receive_(sync/async)` interfaces for using Pub / Sub for realtime applications.
+The [`webhood/database.py`](https://github.com/NadavTasher/Webhood/blob/master/image/src/backend/webhood/database.py) file implements simple `broadcast_(sync/async)` / `receive_(sync/async)` interfaces for using Pub / Sub for realtime applications.
 
 ```python
 import hashlib
@@ -533,7 +539,7 @@ async def notify_clicks(websocket):
 
 ### Container entrypoint
 
-The entrypoint of the image, is [`entrypoint.py`](https://github.com/NadavTasher/Webhood/blob/master/image/src/entrypoint.conf).
+The entrypoint of the image, is [`entrypoint.py`](https://github.com/NadavTasher/Webhood/blob/master/image/src/entrypoint.py).
 
 This entrypoint is a simple Python process watcher.
 It stops when one of it's direct children exits, and terminates the others.
