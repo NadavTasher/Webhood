@@ -54,99 +54,97 @@
 	</head>
 
 	<body class="column">
-		<div>
-			<!-- Generic titles -->
-			<p class="large left">Webhood // Test Page</p>
-			<p class="small left">Choose a body width:</p>
-			<select class="small center" oninput="document.body.style.maxWidth = this.value">
-				<option value="500px">Default</option>
-				<option value="100px">Narrow</option>
-				<option value="1000px">Extra-Wide</option>
-			</select>
-			<!-- Coaster test -->
-			<p class="small left">This is a coasted div.</p>
-			<div class="coasted">
-				<button class="small left">Option 1</button>
-				<button class="small left">Option 2</button>
-				<button class="small left">Option 3</button>
-			</div>
-			<!-- Text alignments -->
-			<p class="small left">This is a coasted div with texts inside.</p>
-			<div class="coasted">
-				<p class="tiny left">This is a tiny text aligned to the left</p>
-				<p class="small center">This is a small text aligned to the center</p>
-				<p class="medium right">This is a medium text aligned to the right</p>
-				<p class="large center">This is a large text aligned to the center</p>
-				<p class="huge left">This is a huge text aligned to the right</p>
-			</div>
-			<!-- Row test -->
-			<p class="small left">This is a row div without any special child treatment.</p>
-			<div class="row">
-				<button class="small left">Option 1</button>
-				<button class="small right">Option 2</button>
-			</div>
-			<p class="small left">This is a row div with personally aligned children.</p>
-			<div class="row stretch">
-				<p class="small left">I'm on the left</p>
-				<button class="large center">Centered</button>
-				<p class="small right">I'm on the right</p>
-			</div>
-			<!-- Left test -->
-			<p class="small left">This is a row div with a left alignment.</p>
-			<div class="row left">
-				<button class="small left">Option 1</button>
-				<button class="small right">Option 2</button>
-			</div>
-			<!-- Center test -->
-			<p class="small left">This is a row div with a center alignment.</p>
-			<div class="row center">
-				<button class="small left">Option 1</button>
-				<button class="small right">Option 2</button>
-			</div>
-			<!-- Right test -->
-			<p class="small left">This is a row div with a right alignment.</p>
-			<div class="row right">
-				<button class="small left">Option 1</button>
-				<button class="small right">Option 2</button>
-			</div>
-			<!-- Stretch row test -->
-			<p class="small left">This is a row div where all children are stretched.</p>
-			<div class="row stretch">
-				<button class="small left">Option 1</button>
-				<button class="small right">Option 2</button>
-			</div>
-			<!-- Stretched test -->
-			<p class="small left">This is a row div where only one child is stretched.</p>
-			<div class="row">
-				<input class="small left stretched" placeholder="This is a placeholder">
-				<button class="small right">Option 1</button>
-			</div>
-			<!-- Stubborn test -->
-			<p class="small left">This is a row div where only one child is stretched & stubborn.</p>
-			<div class="row">
-				<input class="small left stretched stubborn" placeholder="This is a placeholder">
-				<button class="small right">Option 1</button>
-			</div>
-			<!-- Select test -->
-			<p class="small left">This is a select input.</p>
-			<select class="small left">
-				<option>Option 1</option>
-				<option>Option 2</option>
-				<option>Option 3</option>
-				<option>Option 4</option>
-				<option>Option 5</option>
-			</select>
-			<!-- Textarea test -->
-			<p class="small left">This is a textarea input.</p>
-			<textarea class="small left" placeholder="This is a placeholder">This is some text</textarea>
-			<!-- Modal tests -->
-			<p class="small left">Here are some buttons to set the modals.</p>
-			<div class="row stretch">
-				<button class="small left" onclick="alertDialog('This is an alert dialog')">Spawn alert dialog</button>
-				<button class="small left" onclick="promptDialog('This is a prompt dialog', { placeholder: 'This is a custom hint' })">Spawn prompt dialog</button>
-				<button class="small left" onclick="confirmDialog('This is a confirm dialog', { approveText: 'Confirm' })">Spawn confirm dialog</button>
-				<button class="small left" onclick="progressScreen('Sleeping for 10 seconds', sleep(10 * 1000))">Spawn loading screen</button>
-			</div>
+		<!-- Generic titles -->
+		<p class="large left">Webhood // Test Page</p>
+		<p class="small left">Choose a body width:</p>
+		<select class="small center" oninput="document.body.style.maxWidth = this.value">
+			<option value="500px">Default</option>
+			<option value="100px">Narrow</option>
+			<option value="1000px">Extra-Wide</option>
+		</select>
+		<!-- Coaster test -->
+		<p class="small left">This is a coasted div.</p>
+		<div class="coasted">
+			<button class="small left">Option 1</button>
+			<button class="small left">Option 2</button>
+			<button class="small left">Option 3</button>
+		</div>
+		<!-- Text alignments -->
+		<p class="small left">This is a coasted div with texts inside.</p>
+		<div class="coasted">
+			<p class="tiny left">This is a tiny text aligned to the left</p>
+			<p class="small center">This is a small text aligned to the center</p>
+			<p class="medium right">This is a medium text aligned to the right</p>
+			<p class="large center">This is a large text aligned to the center</p>
+			<p class="huge left">This is a huge text aligned to the right</p>
+		</div>
+		<!-- Row test -->
+		<p class="small left">This is a row div without any special child treatment.</p>
+		<div class="row">
+			<button class="small left">Option 1</button>
+			<button class="small right">Option 2</button>
+		</div>
+		<p class="small left">This is a row div with personally aligned children.</p>
+		<div class="row stretch">
+			<p class="small left">I'm on the left</p>
+			<button class="large center">Centered</button>
+			<p class="small right">I'm on the right</p>
+		</div>
+		<!-- Left test -->
+		<p class="small left">This is a row div with a left alignment.</p>
+		<div class="row left">
+			<button class="small left">Option 1</button>
+			<button class="small right">Option 2</button>
+		</div>
+		<!-- Center test -->
+		<p class="small left">This is a row div with a center alignment.</p>
+		<div class="row center">
+			<button class="small left">Option 1</button>
+			<button class="small right">Option 2</button>
+		</div>
+		<!-- Right test -->
+		<p class="small left">This is a row div with a right alignment.</p>
+		<div class="row right">
+			<button class="small left">Option 1</button>
+			<button class="small right">Option 2</button>
+		</div>
+		<!-- Stretch row test -->
+		<p class="small left">This is a row div where all children are stretched.</p>
+		<div class="row stretch">
+			<button class="small left">Option 1</button>
+			<button class="small right">Option 2</button>
+		</div>
+		<!-- Stretched test -->
+		<p class="small left">This is a row div where only one child is stretched.</p>
+		<div class="row">
+			<input class="small left stretched" placeholder="This is a placeholder">
+			<button class="small right">Option 1</button>
+		</div>
+		<!-- Stubborn test -->
+		<p class="small left">This is a row div where only one child is stretched & stubborn.</p>
+		<div class="row">
+			<input class="small left stretched stubborn" placeholder="This is a placeholder">
+			<button class="small right">Option 1</button>
+		</div>
+		<!-- Select test -->
+		<p class="small left">This is a select input.</p>
+		<select class="small left">
+			<option>Option 1</option>
+			<option>Option 2</option>
+			<option>Option 3</option>
+			<option>Option 4</option>
+			<option>Option 5</option>
+		</select>
+		<!-- Textarea test -->
+		<p class="small left">This is a textarea input.</p>
+		<textarea class="small left" placeholder="This is a placeholder">This is some text</textarea>
+		<!-- Modal tests -->
+		<p class="small left">Here are some buttons to set the modals.</p>
+		<div class="row stretch">
+			<button class="small left" onclick="alertDialog('This is an alert dialog')">Spawn alert dialog</button>
+			<button class="small left" onclick="promptDialog('This is a prompt dialog', { placeholder: 'This is a custom hint' })">Spawn prompt dialog</button>
+			<button class="small left" onclick="confirmDialog('This is a confirm dialog', { approveText: 'Confirm' })">Spawn confirm dialog</button>
+			<button class="small left" onclick="progressScreen('Sleeping for 10 seconds', sleep(10 * 1000))">Spawn loading screen</button>
 		</div>
 	</body>
 </html>
