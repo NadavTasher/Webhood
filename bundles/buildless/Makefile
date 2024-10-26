@@ -7,4 +7,4 @@ develop:
 
 .PHONY: clean
 clean:
-	@docker compose down --volumes
+	@docker compose down --volumes --remove-orphans
