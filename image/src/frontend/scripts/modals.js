@@ -50,12 +50,12 @@ function makeOverlay(children) {
 }
 
 function makeModal(children, buttons) {
-	return make("div", ["modal", "coasted"], [...children, make("div", ["buttons"], buttons)]);
+	return make("div", ["modal", "coasted"], [...children, make("div", ["buttons", "stretch"], buttons)]);
 }
 
 function progressScreen(message, promise = undefined) {
 	// Create the progress screen
-	const overlay = makeOverlay([make("div", ["spinner", "spinning"]), make("p", ["large", "center"]).write(message)]);
+	const overlay = makeOverlay([make("span", ["spinner", "spinning"]), make("p", ["large", "center"]).write(message)]);
 
 	// Add the overlay to the screen
 	document.body.appendChild(overlay);
@@ -91,7 +91,7 @@ function alertDialog(message, { closeText = "Ok" } = {}) {
 	const messageParagraph = make("p", ["medium", "left"]).write(message);
 
 	// Create the close button
-	const closeButton = make("button", ["small", "center", "approve", "decline"]).write(closeText);
+	const closeButton = make("button", ["small", "center", "borderless", "approve", "decline"]).write(closeText);
 
 	// Create overlay
 	const overlay = makeOverlay([makeModal([messageParagraph], [closeButton])]);
@@ -123,8 +123,8 @@ function confirmDialog(message, { approveText = "Ok", declineText = "Cancel" } =
 	const titleParagraph = make("p", ["medium", "left"]).write(message);
 
 	// Create the approve and decline buttons
-	const approveButton = make("button", ["small", "center", "approve"]).write(approveText);
-	const declineButton = make("button", ["small", "center", "decline"]).write(declineText);
+	const approveButton = make("button", ["small", "center", "borderless", "approve"]).write(approveText);
+	const declineButton = make("button", ["small", "center", "borderless", "decline"]).write(declineText);
 
 	// Create overlay
 	const overlay = makeOverlay([makeModal([titleParagraph], [declineButton, approveButton])]);
@@ -162,8 +162,8 @@ function promptDialog(title, { placeholder = "Enter here", inputType = "text", a
 	inputElement.placeholder = placeholder;
 
 	// Create the approve and decline buttons
-	const approveButton = make("button", ["small", "center", "approve"]).write(approveText);
-	const declineButton = make("button", ["small", "center", "decline"]).write(declineText);
+	const approveButton = make("button", ["small", "center", "borderless", "approve"]).write(approveText);
+	const declineButton = make("button", ["small", "center", "borderless", "decline"]).write(declineText);
 
 	// Create overlay
 	const overlay = makeOverlay([makeModal([titleParagraph, inputElement], [declineButton, approveButton])]);

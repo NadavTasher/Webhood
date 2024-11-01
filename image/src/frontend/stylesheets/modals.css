@@ -59,12 +59,15 @@ html:has(.overlay) {
 	/* Add some margins to the spinner */
 	margin: 2vh;
 
+	/* Align the spinner vertically */
+	align-self: center;
+
 	/* Explicitly set the spinner's dimensions */
-	width: 6vh;
-	height: 6vh;
+	width: 4vh;
+	height: 4vh;
 
 	/* Style the spinner - this is the actual graphics */
-	border-width: 1vh;
+	border-width: 0.75vh;
 	border-radius: 50%;
 	border-style: solid;
 	border-color: transparent;
