@@ -101,6 +101,11 @@ html {
 	background-color: var(--passive);
 }
 
+.borderless {
+	/* Border properties */
+	border-color: transparent;
+}
+
 .tiny {
 	/* Font properties */
 	font-size: 1vh;
