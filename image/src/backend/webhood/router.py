@@ -212,7 +212,7 @@ class Router:
 
 
 # Initialize the router
-router = Router("/application/frontend")
+router = Router("../frontend")
 
 # Add explicit exports
 __all__ = ["WebSocket", "Request", "Response", "PlainTextResponse", "JSONResponse", "UploadFile", "router"]
