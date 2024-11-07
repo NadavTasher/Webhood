@@ -7,7 +7,6 @@ export IMAGE_TAG IMAGE_NAME
 
 # Paths to sources
 SOURCE_DIRECTORY := application
-SOURCE_FILES := $(shell find $(SOURCE_DIRECTORY) -type f)
 
 # Base repository branch
 SOURCE_BRANCH := master
@@ -38,7 +37,7 @@ push: image
 endif
 
 .PHONY: image
-image: $(SOURCE_FILES)
+image:
 	@docker build $(SOURCE_DIRECTORY) --pull --tag $(IMAGE_NAME):$(IMAGE_TAG)
 
 .PHONY: develop
