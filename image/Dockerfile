@@ -33,6 +33,3 @@ WORKDIR /application/backend
 
 # Set the entrypoint to the entrypoint script
 CMD [ "python", "/application/entrypoint.py" ]
-
-# Create the certificate and the key
-RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj / -keyout /etc/ssl/private/server.key -out /etc/ssl/private/server.crt

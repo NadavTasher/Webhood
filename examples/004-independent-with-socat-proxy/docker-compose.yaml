@@ -35,6 +35,19 @@ services:
             # Mount persistent volume
             - redis:/data
 
+    # Socat service
+
+    socat:
+        image: alpine/socat:1.8.0.0
+        command: OPENSSL-LISTEN:8443,cert=/ssl/server.crt,key=/ssl/server.key,verify=0,fork TCP:server:8080
+        restart: unless-stopped
+        ports:
+            - 443:8443
+        volumes:
+            # Mount key and certificate
+            - ./private/server.key:/ssl/server.key:ro
+            - ./private/server.crt:/ssl/server.crt:ro
+
 volumes:
     # Persistent volume for server and worker
     data: {}
