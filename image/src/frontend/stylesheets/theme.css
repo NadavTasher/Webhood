@@ -52,19 +52,37 @@ html {
 	padding: 0.5vh;
 }
 
+.borderless {
+	/* Border properties */
+	border-color: transparent;
+}
+
+.coasted, .button, button {
+	/* Border properties */
+	border-width: 1px;
+	border-style: solid;
+
+	/* Theming properties */
+	border-color: var(--active);
+	background-color: var(--passive);
+}
+
+.coasted {
+	/* Sizing properties */
+	margin: 1vh;
+	padding: 1vh;
+
+	/* Border properties */
+	border-radius: 1vh;
+}
+
 .button, button {
 	/* Sizing properties */
 	margin: 0.5vh;
 	padding: 0.75vh;
 
 	/* Border properties */
-	border-style: solid;
-	border-width: 1px;
 	border-radius: 0.75vh;
-
-	/* Theming properties */
-	border-color: var(--text);
-	background-color: var(--passive);
 }
 
 .button:hover, button:hover {
@@ -86,24 +104,6 @@ html {
 	border-top-color: var(--passive);
 	border-bottom-color: var(--active);
 	background-color: var(--passive);
-}
-
-.coasted {
-	/* Sizing properties */
-	margin: 1vh;
-	padding: 1vh;
-
-	/* Border properties */
-	border-radius: 1vh;
-
-	/* Theming properties */
-	filter: drop-shadow(0 0 0.5vh var(--active));
-	background-color: var(--passive);
-}
-
-.borderless {
-	/* Border properties */
-	border-color: transparent;
 }
 
 .tiny {
