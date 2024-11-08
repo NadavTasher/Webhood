@@ -1,6 +1,7 @@
 # mypy: disable-error-code=valid-type
 # pylint: disable=no-member, unused-wildcard-import
 
+import time
 import logging
 
 # Import utilities
@@ -28,7 +29,18 @@ def startup() -> None:
 
 
 def shutdown() -> None:
-    pass
+    # Clear the database
+    DATABASE.clear()
+
+
+def worker() -> None:
+    # Loop until the database is empty
+    while DATABASE:
+        # Log the amount of clicks
+        logging.info("There were %d clicks so far", DATABASE.count)
+
+        # Wait for 10 seconds
+        time.sleep(10)
 
 
 @router.get("/api/clicks")

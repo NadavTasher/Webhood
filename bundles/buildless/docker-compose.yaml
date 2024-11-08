@@ -1,20 +1,34 @@
 services:
     # Application service
 
-    application:
+    server:
         image: webhood/3.10
+        command: python /application/server.py
         restart: unless-stopped
         ports:
             - 80:8080
-            - 443:8443
         volumes:
             # Sources mounts
-            - ./src/backend/app.py:/application/backend/app.py:ro
-            - ./src/backend/worker.py:/application/backend/worker.py:ro
+            - ./src/backend:/application/backend:ro
             - ./src/frontend/index.html:/application/frontend/index.html:ro
             - ./src/frontend/application:/application/frontend/application:ro
             # Mount persistent volume
-            - application:/data
+            - data:/data
+        environment:
+            # Address to redis instance
+            - REDIS=redis://redis/
+
+    worker:
+        image: webhood/3.10
+        command: python /application/worker.py
+        restart: unless-stopped
+        volumes:
+            # Sources mounts
+            - ./src/backend:/application/backend:ro
+            - ./src/frontend/index.html:/application/frontend/index.html:ro
+            - ./src/frontend/application:/application/frontend/application:ro
+            # Mount persistent volume
+            - data:/data
         environment:
             # Address to redis instance
             - REDIS=redis://redis/
@@ -30,8 +44,8 @@ services:
             - redis:/data
 
 volumes:
+    # Persistent volume for server and worker
+    data: {}
+
     # Persistent volume for database
     redis: {}
-
-    # Persistent volume for application
-    application: {}
