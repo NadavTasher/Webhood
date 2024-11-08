@@ -29,7 +29,10 @@ html:has(.overlay) {
 	align-items: center;
 	justify-content: center;
 
-	/* Make the background a transparent-ish black */
+	/* Blur the background */
+	backdrop-filter: blur(5px);
+
+	/* Make the background a transparent-ish color */
 	background-color: var(--overlay);
 }
 
@@ -50,6 +53,9 @@ html:has(.overlay) {
 }
 
 .modal {
+	/* Sizing properties */
+	padding: 1vh;
+
 	/* Limit the width of the modal */
 	min-width: 40vw;
 	max-width: 70vw;
