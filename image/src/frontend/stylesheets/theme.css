@@ -57,26 +57,20 @@ html {
 	border-color: transparent;
 }
 
-.coasted, .button, button {
-	/* Border properties */
-	border-width: 1px;
-	border-style: solid;
-
-	/* Theming properties */
-	border-color: var(--active);
-	background-color: var(--passive);
-}
 
 .coasted {
 	/* Sizing properties */
-	margin: 1vh;
-	padding: 1vh;
+	margin: 0.5vh;
+	padding: 0.5vh;
 
 	/* Border properties */
 	border-radius: 1vh;
+
+	/* Theming properties */
+	background: linear-gradient(135deg, var(--passive), var(--theme));
 }
 
-.button, button {
+.button, button, select {
 	/* Sizing properties */
 	margin: 0.5vh;
 	padding: 0.75vh;
@@ -85,12 +79,21 @@ html {
 	border-radius: 0.75vh;
 }
 
-.button:hover, button:hover {
+.button:hover, button:hover, select:hover {
 	/* Theming properties */
 	background-color: var(--active);
 }
 
-.input, input, select, textarea {
+.coasted, .button, button, select {
+	/* Border properties */
+	border-width: 1px;
+	border-style: solid;
+
+	/* Theming properties */
+	border-color: var(--active);
+}
+
+.input, input, textarea {
 	/* Sizing properties */
 	margin: 0.5vh;
 	padding: 0.75vh;
