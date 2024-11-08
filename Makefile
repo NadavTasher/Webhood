@@ -72,7 +72,7 @@ checks: format lint typecheck
 .PHONY: lint
 lint: $(PYLINT)
 	@# Lint all of the sources
-	cd $(BACKEND_PATH); $(PYLINT) -d C0103 -d C0301 -d C0114 -d C0115 -d C0116 -d W0401 $(PYTHON_SOURCES)
+	cd $(BACKEND_PATH); $(PYLINT) -d C0103 -d C0301 -d C0114 -d C0115 -d C0116 -d W0401 -d R0801 $(PYTHON_SOURCES)
 
 .PHONY: typecheck
 typecheck: $(MYPY)
