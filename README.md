@@ -14,9 +14,12 @@ Get yourself a copy of the repository. You can [clone it](https://github.com/Nad
 
 Choose the bundle thats right for you:
 
-1. [Headless](https://github.com/NadavTasher/Webhood/tree/master/bundles/headless) - if you only mean to use Webhood's frontend utilities **or** need a self-contained no-external-resources boilerplate, this one is for you.
-2. [Buildless](https://github.com/NadavTasher/Webhood/tree/master/bundles/buildless) - if you do not plan on doing any build changes (like adding more libraries) and are not planning on a complex backend API, this bundle leverages the use of `docker`'s read-only bind mounts to secure your sources in the container.
-3. [Independent](https://github.com/NadavTasher/Webhood/tree/master/bundles/independent) - this bundle is the All-Star bundle. It allows you to tinker, extend, customize and build your application the way you want.
+1. [Headless](https://github.com/NadavTasher/Webhood/tree/master/bundles/headless) - if you only want to use Webhood's frontend utilities **or** need a self-contained single-page-application boilerplate, this bundle is for you.
+   It provides an [example-page.html](https://github.com/NadavTasher/Webhood/blob/master/bundles/headless/example-page.html) and an [empty-page.html](https://github.com/NadavTasher/Webhood/blob/master/bundles/headless/empty-page.html) that will help you get up-to-speed on all the features.
+2. [Buildless](https://github.com/NadavTasher/Webhood/tree/master/bundles/buildless) - if you don't have any special build requirements (like installing more dependencies) and don't need a complex backend API, this bundle might fit your needs.
+   It leverages the use of `docker`'s read-only bind mounts and uses a static `docker` image.
+3. [Independent](https://github.com/NadavTasher/Webhood/tree/master/bundles/independent) - if you plan on building you own container images based on Webhood, this bundle provides the best setup to tinker, develop and test your changes.
+   It contains a customized [Makefile](https://github.com/NadavTasher/Webhood/blob/master/bundles/independent/Makefile) that helps develop applications in record times.
 
 ### Step-by-step guide for creating a new application
 
@@ -33,24 +36,24 @@ git add --all
 git commit -m "Initial commit"
 ```
 
+### Using examples to create new applications
+
+You can easily spin up one of the example applications found [here](https://github.com/NadavTasher/Webhood/tree/master/examples).
+
+These example might help you get started as they have some application code.
+
 ## Tech stack
 
 Webhood is based on popular projects and strives to keep the application architecture simple efficient.
 
-1. Python backend is powered by [Starlette](https://www.starlette.io/) - an open-source ASGI framework. See [usage](https://github.com/NadavTasher/Webhood/blob/master/image/src/backend/webhood/router.py).
-1. Web server duties are handled by [Uvicorn](https://www.uvicorn.org/) - an open-source ASGI server. See [usage](https://github.com/NadavTasher/Webhood/blob/master/image/src/server.py).
-1. Database duties are handled by [Redis](https://redis.io/) using the [rednest](https://pypi.org/project/rednest/) library.
-1. Frontend duties are handled by custom JS and CSS files in [src/frontend](https://github.com/NadavTasher/Webhood/tree/master/image/src/frontend). An example can be seen [here](https://github.com/NadavTasher/Webhood/blob/master/resources/headless/example-page.html) or [here](https://github.com/NadavTasher/Webhood/blob/master/bundles/headless/example-page.html).
+-   Python backend is powered by [Starlette](https://www.starlette.io/) - an open-source ASGI framework. See [usage](https://github.com/NadavTasher/Webhood/blob/master/image/webhood/router.py).
+-   Web server duties are handled by [Uvicorn](https://www.uvicorn.org/) - an open-source ASGI server. See [usage](https://github.com/NadavTasher/Webhood/blob/master/image/src/server.py).
+-   Database duties are handled by [Redis](https://redis.io/) using the [rednest](https://pypi.org/project/rednest/) library.
+-   Frontend duties are handled by custom JS and CSS files in [src/frontend](https://github.com/NadavTasher/Webhood/tree/master/image/src/frontend). Examples can be seen [here](https://github.com/NadavTasher/Webhood/blob/master/resources/headless/example-page.html) or [here](https://github.com/NadavTasher/Webhood/blob/master/bundles/headless/example-page.html).
 
-## Examples
+## Frontend features
 
-You can easily spin up one of the example applications found [here](https://github.com/NadavTasher/Webhood/tree/master/examples).
-
-## Features
-
-### Frontend
-
-#### Built-in automatic dark mode
+### Built-in automatic dark mode
 
 By default, the color scheme is defined by the system configuration.
 
@@ -65,7 +68,7 @@ This behaviour can be disabled - exclude the [`/stylesheets/colors.css`](https:/
 }
 ```
 
-#### Built-in CSS classes
+### Built-in CSS classes
 
 All of these classes can be demoed using the `example-page.html` file, provided [here](https://github.com/NadavTasher/Webhood/blob/master/resources/headless/example-page.html) or [here (headless bundle)](https://github.com/NadavTasher/Webhood/blob/master/bundles/headless/example-page.html)
 
@@ -160,7 +163,7 @@ Hidden elements:
 </div>
 ```
 
-#### Built-in modal support
+### Built-in modal support
 
 Progress screen:
 
@@ -208,7 +211,7 @@ try {
 }
 ```
 
-#### JavaScript element shortcuts
+### JavaScript element shortcuts
 
 Selecting elements using queries:
 
@@ -283,13 +286,13 @@ myItem.find("some-button").addEventListener("click", () => {
 });
 ```
 
-#### General utilities
+### General utilities
 
 Sleep promise function:
 
 ```javascript
 // Sleep 1 second
-await sleep(1000);
+await sleep(1);
 ```
 
 String interpolation using format strings:
@@ -302,7 +305,7 @@ const myString = `My name is ${name} and I'm ${age} years old`;
 const myString = "My name is ${name} and I'm ${age} years old".interpolate({ name, age });
 ```
 
-#### Backend interaction utilities
+### Backend interaction utilities
 
 GET API function:
 
@@ -328,15 +331,52 @@ WebSocket connection function:
 socket("/socket/notifications", (data, socket) => console.log(data));
 ```
 
-### Backend
+## Backend features
 
-#### Background worker
+### Background worker
 
-A background worker can be configured to run background jobs.
+If implemented in `app.py` and configured in `docker-compose.yaml`, the `worker()` function will run in the background (in another process / container).
 
-This is a convenience feature that can be disabled using the entrypoint configuration file. Just set `count=0` and the process will never be launched.
+This function can be used to run periodic tasks, such as database backups or indexing jobs.
+It is not required for the application to function normally, and if it is not required it is recommended to remove the `worker` service from your `docker-compose.yaml`.
 
-#### Request type checking & casting
+Here's an example of database monitoring using `worker()`:
+
+```python
+def worker() -> None:
+    # Loop until the database is empty
+    while DATABASE:
+        # Log the amount of clicks
+        logging.info("There were %d clicks so far", DATABASE.count)
+
+        # Wait for 10 seconds
+        time.sleep(10)
+```
+
+### Startup / Shutdown functions
+
+If implemented in `app.py`, the `startup()` and `shutdown()` functions will execute once, before and after the application / worker execution.
+
+This functions can be leveraged for environment setup, such as database provisioning.
+Both functions are not required for the application to function normally.
+
+Here's an example of database provisioning using `startup()` and `shutdown()`:
+
+```python
+def startup() -> None:
+    # Wait for redis to ping back before operating on database
+    wait_for_redis_sync()
+
+    # Initialize click value
+    DATABASE.setdefaults(count=0)
+
+
+def shutdown() -> None:
+    # Clear the database
+    DATABASE.clear()
+```
+
+### Request type checking & casting
 
 A `flask` like routing mechanism takes place, with an addition of runtime type-checking or casting using the [runtypes](https://pypi.org/project/runtypes) library.
 
@@ -411,7 +451,7 @@ def code_request(head: Optional[int] = None):
 	...
 ```
 
-#### File upload support
+### File upload support
 
 File upload support requires to use of `asyncio` and `cast=False`.
 
@@ -432,13 +472,11 @@ async def upload_file(file: UploadFile) -> str:
 	return hashlib.md5(data).hexdigest()
 ```
 
-#### WebSocket support
+### WebSocket support
 
 WebSocket integration requires the use of `asyncio`.
 
 ```python
-import hashlib
-
 from runtypes import Text
 
 from webhood.router import WebSocket, router
@@ -463,13 +501,11 @@ async def notifications_socket(websocket: WebSocket, id: Text) -> None:
         await websocket.send_text("New data")
 ```
 
-#### Redis database support
+### Redis database support
 
 The following example showcases and example usage of [rednest](https://pypi.org/project/rednest) with Redis:
 
 ```python
-import hashlib
-
 from webhood.router import router
 from webhood.database import wait_for_redis_sync, redict
 
@@ -490,13 +526,11 @@ def click():
 	return DATABASE.clicks
 ```
 
-#### Redis Pub / Sub support
+### Redis Pub / Sub support
 
-The [`webhood/database.py`](https://github.com/NadavTasher/Webhood/blob/master/image/src/backend/webhood/database.py) file implements simple `broadcast_(sync/async)` / `receive_(sync/async)` interfaces for using Pub / Sub for realtime applications.
+The [`webhood/database.py`](https://github.com/NadavTasher/Webhood/blob/master/image/webhood/database.py) file implements simple `broadcast_(sync/async)` / `receive_(sync/async)` interfaces for using Pub / Sub for realtime applications.
 
 ```python
-import hashlib
-
 from webhood.router import router
 from webhood.database import wait_for_redis_sync, broadcast_sync, receive_async, redict
 
@@ -536,15 +570,6 @@ async def notify_clicks(websocket):
 	async for click in receive_async("clicks"):
 		websocket.send_text(click.index)
 ```
-
-### Container entrypoint
-
-The entrypoint of the image, is [`entrypoint.py`](https://github.com/NadavTasher/Webhood/blob/master/image/src/entrypoint.py).
-
-This entrypoint is a simple Python process watcher.
-It stops when one of it's direct children exits, and terminates the others.
-
-A sample configuration can be found [here](https://github.com/NadavTasher/Webhood/blob/master/image/resources/entrypoint.conf).
 
 ## Contributing
 
