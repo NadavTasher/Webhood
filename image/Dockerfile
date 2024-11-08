@@ -4,6 +4,9 @@ ARG PYTHON_VERSION=3.10
 # Select the base image
 FROM python:${PYTHON_VERSION}-slim-bookworm
 
+# We use the python version argument
+ARG PYTHON_VERSION
+
 # Expose the HTTP and HTTPs ports
 EXPOSE 8080 8443
 
@@ -13,17 +16,12 @@ VOLUME /data
 # Specify stop signal
 STOPSIGNAL SIGINT
 
-# Install socat
-RUN apt update && \
-	apt install -y socat && \
-	rm -rf /var/lib/apt/lists
-
 # Upgrade pip and install dependencies
-RUN --mount=type=bind,source=resources/requirements.txt,target=/tmp/requirements.txt \
-    pip install --no-cache-dir --prefer-binary --upgrade --requirement /tmp/requirements.txt pip ipython
+RUN --mount=type=bind,source=dependencies.txt,target=/tmp/dependencies.txt \
+    pip install --no-cache-dir --prefer-binary --upgrade --requirement /tmp/dependencies.txt pip ipython
 
-# Copy default configurations
-COPY resources/entrypoint.conf /etc/entrypoint.conf
+# Copy the webhood library
+COPY webhood /usr/local/lib/python${PYTHON_VERSION}/webhood
 
 # Copy the sources
 COPY src /application
@@ -32,7 +30,4 @@ COPY src /application
 WORKDIR /application/backend
 
 # Set the entrypoint to the entrypoint script
-CMD [ "python", "/application/entrypoint.py" ]
-
-# Create the certificate and the key
-RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj / -keyout /etc/ssl/private/server.key -out /etc/ssl/private/server.crt
+CMD [ "python", "/application/server.py" ]

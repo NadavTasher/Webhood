@@ -1,15 +1,26 @@
 services:
-    # Application service
+    # Application services
 
-    application:
+    server:
         image: ${IMAGE_NAME}:${IMAGE_TAG}
+        command: python /application/server.py
         restart: unless-stopped
         ports:
             - 80:8080
-            - 443:8443
         volumes:
             # Mount persistent volume
-            - application:/data
+            - data:/data
+        environment:
+            # Address to redis instance
+            - REDIS=redis://redis/
+
+    worker:
+        image: ${IMAGE_NAME}:${IMAGE_TAG}
+        command: python /application/worker.py
+        restart: unless-stopped
+        volumes:
+            # Mount persistent volume
+            - data:/data
         environment:
             # Address to redis instance
             - REDIS=redis://redis/
@@ -25,8 +36,8 @@ services:
             - redis:/data
 
 volumes:
+    # Persistent volume for server and worker
+    data: {}
+
     # Persistent volume for database
     redis: {}
-
-    # Persistent volume for application
-    application: {}

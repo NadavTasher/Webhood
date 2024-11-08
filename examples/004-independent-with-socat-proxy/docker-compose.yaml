@@ -1,17 +1,13 @@
 services:
-    # Application service
+    # Application services
 
     server:
-        image: webhood/3.10
+        image: ${IMAGE_NAME}:${IMAGE_TAG}
         command: python /application/server.py
         restart: unless-stopped
         ports:
             - 80:8080
         volumes:
-            # Sources mounts
-            - ./src/backend:/application/backend:ro
-            - ./src/frontend/index.html:/application/frontend/index.html:ro
-            - ./src/frontend/application:/application/frontend/application:ro
             # Mount persistent volume
             - data:/data
         environment:
@@ -19,14 +15,10 @@ services:
             - REDIS=redis://redis/
 
     worker:
-        image: webhood/3.10
+        image: ${IMAGE_NAME}:${IMAGE_TAG}
         command: python /application/worker.py
         restart: unless-stopped
         volumes:
-            # Sources mounts
-            - ./src/backend:/application/backend:ro
-            - ./src/frontend/index.html:/application/frontend/index.html:ro
-            - ./src/frontend/application:/application/frontend/application:ro
             # Mount persistent volume
             - data:/data
         environment:
@@ -42,6 +34,19 @@ services:
         volumes:
             # Mount persistent volume
             - redis:/data
+
+    # Socat service
+
+    socat:
+        image: alpine/socat:1.8.0.0
+        command: OPENSSL-LISTEN:8443,cert=/ssl/server.crt,key=/ssl/server.key,verify=0,fork TCP:server:8080
+        restart: unless-stopped
+        ports:
+            - 443:8443
+        volumes:
+            # Mount key and certificate
+            - ./private/server.key:/ssl/server.key:ro
+            - ./private/server.crt:/ssl/server.crt:ro
 
 volumes:
     # Persistent volume for server and worker

@@ -41,9 +41,17 @@ image:
 	@docker build $(SOURCE_DIRECTORY) --pull --tag $(IMAGE_NAME):$(IMAGE_TAG)
 
 .PHONY: develop
-develop: image
+develop: image private/server.key private/server.crt
 	@docker compose up
 
 .PHONY: clean
 clean:
 	@docker compose down --volumes --remove-orphans
+
+private/server.key:
+	@mkdir -p $(@D)
+	@openssl genrsa -out $@ 2048
+
+private/server.crt: private/server.key
+	@mkdir -p $(@D)
+	@openssl req -x509 -days 365 -key $< -out $@ -subj /

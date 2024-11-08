@@ -127,8 +127,8 @@ HTMLElement.prototype.populate = function (parameters = {}) {
 	return wrapperElement;
 };
 
-function sleep(milliseconds) {
-	return new Promise((resolve) => setTimeout(resolve, milliseconds));
+function sleep(seconds) {
+	return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }
 
 function preserve() {

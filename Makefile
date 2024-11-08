@@ -1,5 +1,5 @@
 # Python version for builds
-PYTHON_VERSION ?= 3.8
+PYTHON_VERSION ?= 3.10
 
 # Generate image name from python version
 IMAGE_NAME ?= webhood/$(PYTHON_VERSION)
@@ -32,7 +32,7 @@ BACKEND_PATH := $(IMAGE_PATH)/src/backend
 FRONTEND_PATH := $(IMAGE_PATH)/src/frontend
 
 # Path to image requirements
-REQUIREMENTS_PATH := $(IMAGE_PATH)/resources/requirements.txt
+REQUIREMENTS_PATH := $(IMAGE_PATH)/dependencies.txt
 
 # Bundle paths
 HEADLESS_BUNDLE_PATH := $(BUNDLES_PATH)/headless
@@ -72,7 +72,7 @@ checks: format lint typecheck
 .PHONY: lint
 lint: $(PYLINT)
 	@# Lint all of the sources
-	cd $(BACKEND_PATH); $(PYLINT) -d C0103 -d C0301 -d C0114 -d C0115 -d C0116 -d W0401 $(PYTHON_SOURCES)
+	cd $(BACKEND_PATH); $(PYLINT) -d C0103 -d C0301 -d C0114 -d C0115 -d C0116 -d W0401 -d R0801 $(PYTHON_SOURCES)
 
 .PHONY: typecheck
 typecheck: $(MYPY)
@@ -108,10 +108,10 @@ bundles: headless buildless independent
 headless: $(HEADLESS_BUNDLE_EMPTY_PAGE_PATH) $(HEADLESS_BUNDLE_EXAMPLE_PAGE_PATH)
 
 .PHONY: buildless
-buildless: $(BUILDLESS_BUNDLE_BACKEND_PATH)/app.py $(BUILDLESS_BUNDLE_BACKEND_PATH)/worker.py $(BUILDLESS_BUNDLE_FRONTEND_PATH)/index.html $(BUILDLESS_BUNDLE_FRONTEND_PATH)/application/application.css $(BUILDLESS_BUNDLE_FRONTEND_PATH)/application/application.js
+buildless: $(BUILDLESS_BUNDLE_BACKEND_PATH)/app.py $(BUILDLESS_BUNDLE_FRONTEND_PATH)/index.html $(BUILDLESS_BUNDLE_FRONTEND_PATH)/application/application.css $(BUILDLESS_BUNDLE_FRONTEND_PATH)/application/application.js
 
 .PHONY: independent
-independent: $(INDEPENDENT_BUNDLE_BACKEND_PATH)/app.py $(INDEPENDENT_BUNDLE_BACKEND_PATH)/worker.py $(INDEPENDENT_BUNDLE_FRONTEND_PATH)/index.html $(INDEPENDENT_BUNDLE_FRONTEND_PATH)/application/application.css $(INDEPENDENT_BUNDLE_FRONTEND_PATH)/application/application.js
+independent: $(INDEPENDENT_BUNDLE_BACKEND_PATH)/app.py $(INDEPENDENT_BUNDLE_FRONTEND_PATH)/index.html $(INDEPENDENT_BUNDLE_FRONTEND_PATH)/application/application.css $(INDEPENDENT_BUNDLE_FRONTEND_PATH)/application/application.js
 
 # Local prerequisites
 
@@ -183,15 +183,15 @@ test-ipython:
 	$(MAKE) test COMMAND=ipython
 
 .PHONY: test-buildless-bundle
-test-buildless-bundle: buildless
+test-buildless-bundle: image buildless
 	$(MAKE) -C $(BUILDLESS_BUNDLE_PATH) develop
 
 .PHONY: test-independent-bundle
-test-independent-bundle: independent
+test-independent-bundle: image independent
 	$(MAKE) -C $(INDEPENDENT_BUNDLE_PATH) develop
 
 .PHONY: test-independent-makefile
-test-independent-makefile: independent
+test-independent-makefile: image independent
 	$(MAKE) -C $(INDEPENDENT_BUNDLE_PATH) image
 
 # Cleanups
