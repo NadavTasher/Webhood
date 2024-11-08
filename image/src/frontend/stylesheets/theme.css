@@ -20,7 +20,7 @@ html {
 	overflow-wrap: anywhere;
 
 	/* Transition properties */
-	transition-duration: 0.5s;
+	transition-duration: 0.25s;
 
 	/* Other properties */
 	outline: none;
