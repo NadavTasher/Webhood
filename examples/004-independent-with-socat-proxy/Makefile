@@ -1,6 +1,6 @@
 # Change this to your image name
-IMAGE_TAG := latest
-IMAGE_NAME := your/image
+IMAGE_TAG ?= latest
+IMAGE_NAME ?= your/image
 
 # Export variables for usage in recipes
 export IMAGE_TAG IMAGE_NAME
@@ -55,4 +55,3 @@ private/server.key:
 private/server.crt: private/server.key
 	@mkdir -p $(@D)
 	@openssl req -x509 -days 365 -key $< -out $@ -subj /
-

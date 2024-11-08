@@ -16,7 +16,7 @@ services:
 
     worker:
         image: ${IMAGE_NAME}:${IMAGE_TAG}
-        command: python /application/backend/worker.py
+        command: python /application/worker.py
         restart: unless-stopped
         volumes:
             # Mount persistent volume
