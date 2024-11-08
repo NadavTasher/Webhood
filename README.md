@@ -61,10 +61,10 @@ This behaviour can be disabled - exclude the [`/stylesheets/colors.css`](https:/
 
 ```css
 :root {
-	--text: #707070;
-	--theme: #ffffff;
-	--active: #c0c0c0;
-	--passive: #f0f0f0;
+	--text: #ffffff;
+	--theme: #1a233a;
+	--active: #7181a1;
+	--passive: #39415a;
 }
 ```
 
