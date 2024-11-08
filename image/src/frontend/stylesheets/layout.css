@@ -16,7 +16,6 @@ div, body, html {
 
 	/* Make center as the default alignment */
 	justify-content: center;
-	align-content: center;
 
 	/* Make all items' widths stretched by default */
 	align-items: stretch;
