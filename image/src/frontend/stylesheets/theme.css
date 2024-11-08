@@ -55,7 +55,7 @@ html {
 .button, button {
 	/* Sizing properties */
 	margin: 0.5vh;
-	padding: 1vh;
+	padding: 0.75vh;
 
 	/* Border properties */
 	border-style: solid;
@@ -74,8 +74,8 @@ html {
 
 .input, input, select, textarea {
 	/* Sizing properties */
-	margin: 1vh;
-	padding: 0.5vh;
+	margin: 0.5vh;
+	padding: 0.75vh;
 
 	/* Border properties */
 	border-style: solid;
