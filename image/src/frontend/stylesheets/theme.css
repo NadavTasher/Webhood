@@ -48,8 +48,8 @@ html {
 
 .text, p {
 	/* Sizing properties */
-	margin: 0.5vh;
-	padding: 0.5vh;
+	margin: 0.3rem;
+	padding: 0.3rem;
 }
 
 .borderless {
@@ -60,11 +60,11 @@ html {
 
 .coasted {
 	/* Sizing properties */
-	margin: 0.5vh;
-	padding: 0.5vh;
+	margin: 0.3rem;
+	padding: 0.3rem;
 
 	/* Border properties */
-	border-radius: 1vh;
+	border-radius: 0.75rem;
 
 	/* Theming properties */
 	background: linear-gradient(135deg, var(--passive), var(--theme));
@@ -72,11 +72,11 @@ html {
 
 .button, button, select {
 	/* Sizing properties */
-	margin: 0.5vh;
-	padding: 0.75vh;
+	margin: 0.3rem;
+	padding: 0.5rem;
 
 	/* Border properties */
-	border-radius: 0.75vh;
+	border-radius: 0.5rem;
 }
 
 .button:hover, button:hover, select:hover {
@@ -95,13 +95,13 @@ html {
 
 .input, input, textarea {
 	/* Sizing properties */
-	margin: 0.5vh;
-	padding: 0.75vh;
+	margin: 0.3rem;
+	padding: 0.5rem;
 
 	/* Border properties */
 	border-style: solid;
-	border-width: 0.35vh 0;
-	border-radius: 0.75vh;
+	border-width: 0.25rem 0;
+	border-radius: 0.5rem;
 
 	/* Theming properties */
 	border-top-color: var(--passive);
@@ -111,27 +111,27 @@ html {
 
 .tiny {
 	/* Font properties */
-	font-size: 1vh;
+	font-size: 0.8rem;
 }
 
 .small {
 	/* Font properties */
-	font-size: 1.5vh;
+	font-size: 1.1rem;
 }
 
 .medium {
 	/* Font properties */
-	font-size: 2vh;
+	font-size: 1.5rem;
 }
 
 .large {
 	/* Font properties */
-	font-size: 3vh;
+	font-size: 2.5rem;
 }
 
 .huge {
 	/* Font properties */
-	font-size: 4.5vh;
+	font-size: 3rem;
 }
 
 [hidden], .hidden, *::-webkit-scrollbar {

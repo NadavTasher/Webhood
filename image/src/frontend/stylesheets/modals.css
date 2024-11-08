@@ -51,7 +51,7 @@ html:has(.overlay) {
 
 .modal {
 	/* Sizing properties */
-	padding: 1vh;
+	padding: 0.5rem;
 
 	/* Limit the width of the modal */
 	min-width: 40vw;
@@ -60,17 +60,17 @@ html:has(.overlay) {
 
 .spinner {
 	/* Add some margins to the spinner */
-	margin: 2vh;
+	margin: 1.5rem;
 
 	/* Align the spinner vertically */
 	align-self: center;
 
 	/* Explicitly set the spinner's dimensions */
-	width: 4vh;
-	height: 4vh;
+	width: 3rem;
+	height: 3rem;
 
 	/* Style the spinner - this is the actual graphics */
-	border-width: 0.75vh;
+	border-width: 0.5rem;
 	border-radius: 50%;
 	border-style: solid;
 	border-color: transparent;
