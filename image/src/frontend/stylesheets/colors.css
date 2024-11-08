@@ -4,6 +4,7 @@
 		--theme: #0f172a;
 		--active: #7674af;
 		--passive: #1e293b;
+		--overlay: #00000060;
 	}
 }
 
@@ -13,5 +14,6 @@
 		--theme: #ffffff;
 		--active: #c0c0c0;
 		--passive: #f0f0f0;
+		--overlay: #ffffff90;
 	}
 }

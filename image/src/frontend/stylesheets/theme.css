@@ -54,7 +54,7 @@ html {
 
 .button, button {
 	/* Sizing properties */
-	margin: 1vh;
+	margin: 0.5vh;
 	padding: 1vh;
 
 	/* Border properties */
