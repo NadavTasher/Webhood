@@ -40,6 +40,15 @@ html {
 	background-color: transparent;
 }
 
+.input, .button, input, button, select, textarea {
+	/* Sizing properties */
+	margin: 0.3rem;
+	padding: 0.5rem;
+
+	/* Border properties */
+	border-radius: 0.5rem;
+}
+
 .button, .pointer, button, select {
 	/* User interaction properties */
 	cursor: pointer;
@@ -57,7 +66,6 @@ html {
 	border-color: transparent;
 }
 
-
 .coasted {
 	/* Sizing properties */
 	margin: 0.3rem;
@@ -68,15 +76,6 @@ html {
 
 	/* Theming properties */
 	background: linear-gradient(135deg, var(--passive), var(--theme));
-}
-
-.button, button, select {
-	/* Sizing properties */
-	margin: 0.3rem;
-	padding: 0.5rem;
-
-	/* Border properties */
-	border-radius: 0.5rem;
 }
 
 .button:hover, button:hover, select:hover {
@@ -94,14 +93,9 @@ html {
 }
 
 .input, input, textarea {
-	/* Sizing properties */
-	margin: 0.3rem;
-	padding: 0.5rem;
-
 	/* Border properties */
 	border-style: solid;
 	border-width: 0.25rem 0;
-	border-radius: 0.5rem;
 
 	/* Theming properties */
 	border-top-color: var(--passive);
