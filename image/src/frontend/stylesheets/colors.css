@@ -10,8 +10,8 @@
 @media (prefers-color-scheme: light) {
 	:root {
 		--text: #656565;
-		--theme: #f5f5f5;
-		--active: #b3b3b3;
-		--passive: #ededed;
+		--theme: #f1f1f1;
+		--active: #c1c1c1;
+		--passive: #ffffff;
 	}
 }
