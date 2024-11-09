@@ -30,7 +30,7 @@ html:has(.overlay) {
 	justify-content: center;
 
 	/* Blur the background */
-	backdrop-filter: blur(0.4rem);
+	backdrop-filter: blur(1rem);
 }
 
 .overlay, .modal {
