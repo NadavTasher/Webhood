@@ -8,3 +8,4 @@ munch==4.0.0
 rednest==0.7.0
 runtypes==0.6.3
 guardify==0.4.0
+requests==2.32.3
