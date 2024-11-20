@@ -83,3 +83,8 @@ div.right {
 	/* Align flex items to the right */
 	justify-content: right;
 }
+
+[hidden], .hidden {
+	/* Hide element */
+	display: none !important;
+}
