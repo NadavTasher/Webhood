@@ -1,7 +1,7 @@
 uvicorn==0.32.0
 starlette==0.41.0
 websockets==13.1
-python-multipart==0.0.12
+python-multipart==0.0.19
 redis==5.1.1
 hiredis==3.0.0
 munch==4.0.0
