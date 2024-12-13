@@ -32,7 +32,7 @@ BACKEND_PATH := $(IMAGE_PATH)/src/backend
 FRONTEND_PATH := $(IMAGE_PATH)/src/frontend
 
 # Path to image requirements
-REQUIREMENTS_PATH := $(IMAGE_PATH)/dependencies.txt
+REQUIREMENTS_PATH := $(IMAGE_PATH)/requirements.txt
 
 # Bundle paths
 HEADLESS_BUNDLE_PATH := $(BUNDLES_PATH)/headless

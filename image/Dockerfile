@@ -17,8 +17,8 @@ VOLUME /data
 STOPSIGNAL SIGINT
 
 # Upgrade pip and install dependencies
-RUN --mount=type=bind,source=dependencies.txt,target=/tmp/dependencies.txt \
-	pip install --no-cache-dir --prefer-binary --upgrade --requirement /tmp/dependencies.txt pip ipython
+RUN --mount=type=bind,source=requirements.txt,target=requirements.txt \
+	pip install --no-cache-dir --prefer-binary --upgrade --requirement requirements.txt pip ipython
 
 # Copy the webhood library
 COPY webhood /usr/local/lib/python${PYTHON_VERSION}/webhood
