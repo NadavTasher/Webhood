@@ -3,6 +3,8 @@
 
 import os
 import sys
+import asyncio
+import inspect
 import logging
 import argparse
 import contextlib
@@ -34,8 +36,11 @@ def main():
         # Import the startup function
         from app import startup
 
-        # Execute the function
-        startup()
+        # If the function is a coroutine, execute using asyncio
+        if inspect.iscoroutinefunction(startup):
+            asyncio.run(startup())
+        else:
+            startup()
 
     try:
         # Setup the logging formats
@@ -65,8 +70,11 @@ def main():
             # Import the shutdown function
             from app import shutdown
 
-            # Execute the function
-            shutdown()
+            # If the function is a coroutine, execute using asyncio
+            if inspect.iscoroutinefunction(shutdown):
+                asyncio.run(shutdown())
+            else:
+                shutdown()
 
 
 if __name__ == "__main__":

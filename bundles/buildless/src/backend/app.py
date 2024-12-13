@@ -1,7 +1,7 @@
 # mypy: disable-error-code=valid-type
 # pylint: disable=no-member, unused-wildcard-import
 
-import time
+import asyncio
 import logging
 
 # Import utilities
@@ -33,14 +33,14 @@ def shutdown() -> None:
     DATABASE.clear()
 
 
-def worker() -> None:
+async def worker() -> None:
     # Loop until the database is empty
     while DATABASE:
         # Log the amount of clicks
         logging.info("There were %d clicks so far", DATABASE.count)
 
         # Wait for 10 seconds
-        time.sleep(10)
+        await asyncio.sleep(10)
 
 
 @router.get("/api/clicks")
