@@ -7,7 +7,7 @@ html {
 	background-color: var(--theme);
 }
 
-.text, .button, .input, p, button, input, select, textarea, div, body, html {
+.text, .button, .input, p, button, input, select, textarea, div, form, body, html {
 	/* Sizing properties */
 	box-sizing: border-box;
 	min-height: fit-content;

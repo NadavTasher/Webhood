@@ -9,7 +9,7 @@ body {
 	margin: auto !important;
 }
 
-div, body, html {
+div, form, body, html {
 	/* Make the element a flex column by default */
 	display: flex;
 	flex-direction: column;
@@ -57,7 +57,7 @@ div, body, html {
 	text-align-last: center;
 }
 
-div.center {
+div.center, form.center {
 	/* Align flex items to the center */
 	justify-content: center;
 }
@@ -68,7 +68,7 @@ div.center {
 	text-align-last: start;
 }
 
-div.left {
+div.left, form.left {
 	/* Align flex items to the left */
 	justify-content: left;
 }
@@ -79,7 +79,7 @@ div.left {
 	text-align-last: end;
 }
 
-div.right {
+div.right, form.right {
 	/* Align flex items to the right */
 	justify-content: right;
 }
