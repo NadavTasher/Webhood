@@ -66,24 +66,13 @@ function progressScreen(message, promise = undefined) {
 	// If no promise is defined, just return the callback
 	if (!promise) return () => overlay.remove();
 
-	// Wrap promise with closing function
-	return new Promise((resolve, reject) => {
-		promise
-			.then((value) => {
-				// Remove from DOM
-				overlay.remove();
-
-				// Resolve with original value
-				resolve(value);
-			})
-			.catch((error) => {
-				// Remove from DOM
-				overlay.remove();
-
-				// Reject with original error
-				reject(error);
-			});
-	});
+	try {
+		// Await the original promise
+		return await promise;
+	} finally {
+		// Always remove overlay from DOM
+		overlay.remove();
+	}
 }
 
 function alertDialog(message, { closeText = "Ok" } = {}) {
