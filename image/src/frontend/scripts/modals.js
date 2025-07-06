@@ -53,7 +53,7 @@ function makeModal(children, buttons) {
 	return make("div", ["modal", "coasted"], [...children, make("div", ["buttons", "stretch"], buttons)]);
 }
 
-function progressScreen(message, promise = undefined) {
+async function progressScreen(message, promise) {
 	// Create the progress screen
 	const overlay = makeOverlay([make("span", ["spinner", "spinning"]), make("p", ["large", "center"]).write(message)]);
 
@@ -62,9 +62,6 @@ function progressScreen(message, promise = undefined) {
 
 	// Unfocus all elements
 	for (const element of $$("*")) element.blur();
-
-	// If no promise is defined, just return the callback
-	if (!promise) return () => overlay.remove();
 
 	try {
 		// Await the original promise
